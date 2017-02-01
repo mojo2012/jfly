@@ -1,0 +1,13 @@
+<!-- Single button -->
+<div class="btn-group">
+	<button type="button" class="btn dropdown-toggle ${component.getStyleClasses()}"
+		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		
+		{{componentStates.$!{component.uuid()}.text}} <span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu">
+		#foreach($menuItem in ${component.menuItems()})
+			<li>${menuItem.render()}</li>
+		#end
+	</ul>
+</div>

@@ -1,0 +1,8 @@
+<head>
+	#foreach($!stylesheet in $!component.stylesheets())
+		$!stylesheet.render()	
+	#end
+	#foreach($!script in $!component.scripts())
+		$!script.render()	
+	#end
+</head>

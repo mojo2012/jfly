@@ -1,0 +1,24 @@
+<nav uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" 
+				data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			$!{component.header().render()}
+		</div>
+
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				#foreach( $!child in $!component.children() )
+					<li>$!child.render()</li>
+				#end
+			</ul>
+		</div>
+	</div>
+</nav>

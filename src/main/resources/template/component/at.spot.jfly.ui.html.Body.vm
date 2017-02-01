@@ -1,0 +1,7 @@
+<body uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}">
+	<div id="content">
+		#foreach( $!child in $!component.children() )
+			$!child.render()
+		#end
+	</div>
+</body>
