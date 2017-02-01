@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,13 +24,12 @@ import io.gsonfire.annotations.ExposeMethodResult;
 public abstract class AbstractComponent implements Component, Comparable<AbstractComponent> {
 
 	private final String uuid;
+	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
+	private final transient Set<String> styleClasses = new HashSet<>();
 
 	private transient ComponentHandler handler;
 	private transient ComponentType componentType;
-	private final transient Set<String> styleClasses = new HashSet<>();
 	private boolean visible = true;
-
-	private DrawCommand drawCommand = null;
 
 	/*
 	 * Event handlers
@@ -148,12 +148,17 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 
 	@Override
 	public boolean needsRedraw() {
-		return drawCommand != null;
+		return drawCommands.size() > 0;
 	}
 
 	@Override
-	public DrawCommand getDrawCommand() {
-		return drawCommand;
+	public void clearDrawCommands() {
+		drawCommands.clear();
+	}
+
+	@Override
+	public List<DrawCommand> getDrawCommands() {
+		return drawCommands;
 	}
 
 	/*
@@ -186,6 +191,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 
 	@Override
 	public String render() {
+		clearDrawCommands();
 		return handler().renderComponent(this);
 	}
 
@@ -196,15 +202,15 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	}
 
 	protected void updateClientComponent() {
-		drawCommand = new DrawCommand(DrawCommandType.ComponentStateUpdate, null, null, null);
+		drawCommands.add(new DrawCommand(DrawCommandType.ComponentStateUpdate, null, null, null));
 	}
 
 	protected void updateClientComponent(final String method, final Object... params) {
-		drawCommand = new DrawCommand(DrawCommandType.ObjectManipulation, null, method, params);
+		drawCommands.add(new DrawCommand(DrawCommandType.ObjectManipulation, null, method, params));
 	}
 
 	protected void updateClient(final String object, final String function, final Object... params) {
-		drawCommand = new DrawCommand(DrawCommandType.FunctionCall, object, function, params);
+		drawCommands.add(new DrawCommand(DrawCommandType.FunctionCall, object, function, params));
 	}
 
 	@Override

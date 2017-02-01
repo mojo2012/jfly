@@ -1,5 +1,7 @@
 package at.spot.jfly.ui.base;
 
+import java.util.List;
+
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
@@ -56,5 +58,12 @@ public interface Component {
 	 */
 	boolean needsRedraw();
 
-	DrawCommand getDrawCommand();
+	/**
+	 * This is an ordered list of draw commands. First added is on top.
+	 * 
+	 * @return
+	 */
+	List<DrawCommand> getDrawCommands();
+
+	void clearDrawCommands();
 }

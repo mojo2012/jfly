@@ -210,7 +210,7 @@ public class Server implements ClientCommunicationHandler {
 	public void sendMessage(final Object message) {
 		try {
 			getCurrentSession().getRemote().sendString(GsonUtil.toJson(message));
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			LOG.trace("Cannot send message to client.");
 		}
 	}

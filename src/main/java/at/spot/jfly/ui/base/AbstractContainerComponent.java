@@ -11,11 +11,11 @@ import j2html.tags.ContainerTag;
 
 public abstract class AbstractContainerComponent extends AbstractComponent {
 
+	protected final transient List<Component> children = new ArrayList<>();
+
 	public AbstractContainerComponent(final ComponentHandler handler) {
 		super(handler);
 	}
-
-	protected List<Component> children = new ArrayList<>();
 
 	public List<Component> children() {
 		return Collections.unmodifiableList(children);
@@ -31,13 +31,21 @@ public abstract class AbstractContainerComponent extends AbstractComponent {
 
 	public <C extends AbstractContainerComponent> C addChildren(final Component... components) {
 		children.addAll(Arrays.asList(components));
-		updateClient("jfly", "appendComponent", this.uuid(), render());
+
+		for (Component c : components) {
+			updateClient("jfly", "addChildComponent", this.uuid(), c.render());
+		}
+
 		return (C) this;
 	}
 
 	public <C extends AbstractContainerComponent> C removeChildren(final Component... components) {
 		children.removeAll(Arrays.asList(components));
-		updateClient("jfly", "removeComponent", this.uuid());
+
+		for (Component c : components) {
+			updateClient("jfly", "removeChildComponent", this.uuid(), c.uuid());
+		}
+
 		return (C) this;
 	}
 

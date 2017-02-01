@@ -5,8 +5,8 @@ import at.spot.jfly.ui.base.AbstractContainerComponent;
 
 public class Html extends AbstractContainerComponent {
 
-	private Head head;
-	private Body body;
+	private transient Head head;
+	private transient Body body;
 
 	public Html(final ComponentHandler handler) {
 		super(handler);

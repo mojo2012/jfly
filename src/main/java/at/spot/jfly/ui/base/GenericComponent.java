@@ -4,7 +4,7 @@ import at.spot.jfly.ComponentHandler;
 import j2html.tags.ContainerTag;
 
 public class GenericComponent extends AbstractComponent {
-	final ContainerTag raw;
+	private final transient ContainerTag raw;
 
 	public GenericComponent(final ComponentHandler handler, final ContainerTag tag) {
 		super(handler);

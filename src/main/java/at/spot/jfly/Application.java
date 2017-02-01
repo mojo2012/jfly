@@ -126,21 +126,25 @@ public abstract class Application implements ComponentHandler {
 
 		for (final Component c : getRegisteredComponents().values()) {
 			if (c.needsRedraw()) {
-				final DrawCommand cmd = component.getDrawCommand();
-
-				switch (cmd.getType()) {
-				case ComponentStateUpdate:
-					updateComponentData(component);
-					break;
-				case FunctionCall:
-					invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
-					break;
-				case ObjectManipulation:
-					invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
-					break;
-				default:
-					break;
+				for (DrawCommand cmd : c.getDrawCommands()) {
+					switch (cmd.getType()) {
+					case ComponentStateUpdate:
+						updateComponentData(component);
+						break;
+					case FunctionCall:
+						invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
+						break;
+					case ObjectManipulation:
+						invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
+						break;
+					default:
+						break;
+					}
 				}
+
+				// clear draw commands of the current component, as they have
+				// all been worked off
+				c.clearDrawCommands();
 			}
 		}
 	}

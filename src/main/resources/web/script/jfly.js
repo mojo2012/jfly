@@ -24,6 +24,10 @@ jfly.websockethandler = {
 	// event handling
 	onopen: function (event) {
 		console.log('WebSocket onopen ' + event);
+		
+		jfly.callAsync(function() {
+			jfly.websockethandler.send({ "messageType": 'hello' });
+		});
 	},
 	
 	onclose: function (event) {
@@ -50,7 +54,7 @@ jfly.websockethandler = {
 			component[message.method].apply(component, message.params);
 		} else if (message.type == "functionCall") {
 			var func = window[message.object][message.func];
-			func.apply(func, message.params)
+			func.apply(func, message.params);
 		} else if (message.type == "componentUpdate") {
 			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
 		}
@@ -183,10 +187,6 @@ jfly.initEventHandling = function() {
 jfly.init = function() {
 	jfly.websockethandler.init();
 	
-	jfly.callAsync(function() {
-		jfly.websockethandler.send({ "messageType": 'hello' });
-	});
-	
 //	jfly.initEventHandling();
 };
 
@@ -203,7 +203,7 @@ jfly.initVue = function(states) {
 						"payload": event,
 				};
 				
-				jfly.callAsync(new function() {
+				jfly.callAsync(function() {
 					jfly.websockethandler.send(message);
 				})
 			},
