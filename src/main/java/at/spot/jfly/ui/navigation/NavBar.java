@@ -1,5 +1,6 @@
 package at.spot.jfly.ui.navigation;
 
+import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.layout.Alignment;
 import at.spot.jfly.style.ComponentType;
 import at.spot.jfly.style.NavbarStyle;
@@ -11,7 +12,8 @@ public class NavBar extends AbstractContainerComponent {
 	private transient Alignment placement = Alignment.Top;
 	private AbstractTextComponent header = null;
 
-	public NavBar(NavbarStyle style) {
+	public NavBar(final ComponentHandler handler, final NavbarStyle style) {
+		super(handler);
 		componentType(ComponentType.NavBar);
 		addStyleClasses(style);
 	}

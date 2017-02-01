@@ -6,12 +6,22 @@ import at.spot.jfly.ui.html.Html;
 
 public abstract class Window {
 
-	private Html html;
+	private final Application application;
+	private final Html html;
 
-	public Window() {
-		html = new Html();
+	public Window(final Application application) {
+		this.application = application;
+		html = new Html(application());
 		html.head(createHeader());
 		html.body(createBody());
+	}
+
+	/*
+	 * Rendering.
+	 */
+
+	public Application application() {
+		return this.application;
 	}
 
 	protected abstract Head createHeader();

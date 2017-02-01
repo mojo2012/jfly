@@ -6,9 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import at.spot.jfly.ComponentHandler;
 import j2html.tags.ContainerTag;
 
 public abstract class AbstractContainerComponent extends AbstractComponent {
+
+	public AbstractContainerComponent(final ComponentHandler handler) {
+		super(handler);
+	}
+
 	protected List<Component> children = new ArrayList<>();
 
 	public List<Component> children() {
@@ -16,8 +22,8 @@ public abstract class AbstractContainerComponent extends AbstractComponent {
 	}
 
 	public <C extends AbstractContainerComponent> C addChildren(final ContainerTag... tags) {
-		final Component[] comps = Arrays.stream(tags).map((t) -> new GenericComponent(t)).collect(Collectors.toList())
-				.toArray(new Component[0]);
+		final Component[] comps = Arrays.stream(tags).map((t) -> new GenericComponent(handler(), t))
+				.collect(Collectors.toList()).toArray(new Component[0]);
 
 		addChildren(comps);
 		return (C) this;

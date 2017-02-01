@@ -1,5 +1,6 @@
 package at.spot.jfly.ui.action;
 
+import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractActionComponent;
 
 /**
@@ -8,8 +9,8 @@ import at.spot.jfly.ui.base.AbstractActionComponent;
 public class LinkAction extends AbstractActionComponent {
 	private String location;
 
-	public LinkAction(final String text) {
-		super(text);
+	public LinkAction(final ComponentHandler handler, final String text) {
+		super(handler, text);
 	}
 
 	public LinkAction location(final String location) {

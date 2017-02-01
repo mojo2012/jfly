@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import at.spot.jfly.ComponentController;
+import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
@@ -24,9 +24,12 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 
 	private final String uuid;
 
+	private transient ComponentHandler handler;
 	private transient ComponentType componentType;
 	private final transient Set<String> styleClasses = new HashSet<>();
 	private boolean visible = true;
+
+	private DrawCommand drawCommand = null;
 
 	/*
 	 * Event handlers
@@ -37,12 +40,13 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	 * Initialization
 	 */
 
-	protected AbstractComponent() {
+	protected AbstractComponent(final ComponentHandler handler) {
 		// this strange uid is necessary, as we are also using this for vue
 		// property binding
 		// there are no dashes allowed, and each uuid must start with a letter.
 		uuid = "comp" + Math.abs(UUID.randomUUID().toString().hashCode());
-		ComponentController.instance().registerComponent(this);
+		this.handler = handler;
+		handler().registerComponent(this);
 	}
 
 	/*
@@ -75,7 +79,6 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	public <C extends AbstractComponent> C visibe(final boolean visible) {
 		this.visible = visible;
 		updateClientComponent();
-
 		return (C) this;
 	}
 
@@ -100,7 +103,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	public <C extends AbstractComponent> C addStyleClasses(final Style... styles) {
 		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.internalName())
 				.collect(Collectors.toList());
-		this.styleClasses.addAll(stylesClasses);
+		addStyleClasses(stylesClasses.toArray(new String[0]));
 		return (C) this;
 	}
 
@@ -108,7 +111,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.internalName())
 				.collect(Collectors.toList());
 
-		this.styleClasses.removeAll(stylesClasses);
+		removeStyleClasses(stylesClasses.toArray(new String[0]));
 		updateClientComponent();
 		return (C) this;
 
@@ -133,24 +136,32 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 			this.eventHandlers.remove(eventType);
 		}
 
-		updateClientComponent();
-
 		return (C) this;
 	}
 
 	@Override
 	public void handleEvent(final Event event) {
-		final EventHandler handler = eventHandlers.get(event.getEventType());
+		final EventHandler eventHandler = eventHandlers.get(event.getEventType());
 
-		handler.handle(event);
+		eventHandler.handle(event);
+	}
+
+	@Override
+	public boolean needsRedraw() {
+		return drawCommand != null;
+	}
+
+	@Override
+	public DrawCommand getDrawCommand() {
+		return drawCommand;
 	}
 
 	/*
 	 * INTERNAL
 	 */
 
-	protected ComponentController controller() {
-		return ComponentController.instance();
+	protected ComponentHandler handler() {
+		return handler;
 	}
 
 	public String getRegisteredEventsString() {
@@ -175,7 +186,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 
 	@Override
 	public String render() {
-		return controller().renderComponent(this);
+		return handler().renderComponent(this);
 	}
 
 	@Override
@@ -185,21 +196,15 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	}
 
 	protected void updateClientComponent() {
-		if (controller().isCalledInRequest()) {
-			controller().updateComponentData(this);
-		}
+		drawCommand = new DrawCommand(DrawCommandType.ComponentStateUpdate, null, null, null);
 	}
 
 	protected void updateClientComponent(final String method, final Object... params) {
-		if (controller().isCalledInRequest()) {
-			controller().invokeComponentManipulation(this, method, params);
-		}
+		drawCommand = new DrawCommand(DrawCommandType.ObjectManipulation, null, method, params);
 	}
 
 	protected void updateClient(final String object, final String function, final Object... params) {
-		if (controller().isCalledInRequest()) {
-			controller().invokeFunctionCall(object, function, params);
-		}
+		drawCommand = new DrawCommand(DrawCommandType.FunctionCall, object, function, params);
 	}
 
 	@Override

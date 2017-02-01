@@ -1,6 +1,7 @@
 package at.spot.jfly.templating;
 
 import java.io.StringWriter;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.apache.velocity.Template;
@@ -19,9 +20,10 @@ import org.slf4j.LoggerFactory;
 public class VelocityTemplateService implements TemplateService {
 	private static final Logger LOG = LoggerFactory.getLogger(VelocityTemplateService.class);
 
-	private VelocityEngine ve;
+	private final VelocityEngine ve;
+	private final String templateBasePath;
 
-	public VelocityTemplateService() {
+	public VelocityTemplateService(final String templateBasePath) {
 		ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
 		ve.setProperty("runtime.log.logsystem.log4j.logger", LOG.getName());
@@ -32,15 +34,17 @@ public class VelocityTemplateService implements TemplateService {
 		ve.addProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
 		ve.init();
 		ve.init();
+
+		this.templateBasePath = templateBasePath;
 	}
 
 	@Override
-	public String render(Map<String, Object> context, String templateFilePath) {
-		Template tmpl = ve.getTemplate(templateFilePath);
+	public String render(final Map<String, Object> context, final String templateFile) {
+		final Template tmpl = ve.getTemplate(Paths.get(templateBasePath, templateFile).toString());
 
-		StringWriter writer = new StringWriter();
+		final StringWriter writer = new StringWriter();
 
-		VelocityContext ctx = new VelocityContext(context);
+		final VelocityContext ctx = new VelocityContext(context);
 		tmpl.merge(ctx, writer);
 
 		return writer.toString();

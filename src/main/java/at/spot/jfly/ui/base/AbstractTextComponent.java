@@ -1,9 +1,12 @@
 package at.spot.jfly.ui.base;
 
+import at.spot.jfly.ComponentHandler;
+
 public abstract class AbstractTextComponent extends AbstractComponent {
 	private String text;
 
-	public AbstractTextComponent(final String text) {
+	public AbstractTextComponent(final ComponentHandler handler, final String text) {
+		super(handler);
 		text(text);
 	}
 

@@ -14,6 +14,9 @@ jfly.websockethandler = {
 	
 	// send a message to the server
 	send(message) {
+		message.sessionId = jfly.getCookie("jfly", "sessionId");
+		message.urlPath = window.location.pathname;
+		
 		var msg = jfly.toString(message);
 		jfly.websockethandler.connection.send(msg);
 	},
@@ -78,6 +81,34 @@ jfly.handleEvent = function(element, event) {
 jfly.reloadApp = function() {
 	location.reload();
 };
+
+jfly.getCookie = function(cookieId, subKey) {
+	var cookies = jfly.getCookies();
+	
+	if (subKey) {
+		return cookies[cookieId][subKey];
+	} else {
+		return cookies[cookieId]
+	}
+}
+
+jfly.getCookies = function(){
+	var cookies = {};
+	for (c of document.cookie.split(";")) {
+		var obj = c.split("=");
+		
+		var key = obj[0].trim();
+		var value = obj[1];
+		
+		try {
+			value = JSON.parse(JSON.parse(value));
+	    } catch (e) {
+	    }
+	    cookies[key] = value;
+	}
+	
+	return cookies;
+}
 
 jfly.findComponent = function(componentUuid) {
 	var component = $("[uuid='" + componentUuid + "']");

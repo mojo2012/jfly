@@ -48,4 +48,13 @@ public interface Component {
 	default String toJson() {
 		return GsonUtil.toJson(this);
 	}
+
+	/**
+	 * Returns true, if the component needs to be redrawn.
+	 * 
+	 * @return
+	 */
+	boolean needsRedraw();
+
+	DrawCommand getDrawCommand();
 }

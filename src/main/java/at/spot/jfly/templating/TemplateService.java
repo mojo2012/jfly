@@ -10,5 +10,5 @@ public interface TemplateService {
 	 * @param templatePath
 	 * @return
 	 */
-	public String render(Map<String, Object> object, String templateFilePath);
+	public String render(Map<String, Object> object, String templateFile);
 }

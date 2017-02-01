@@ -1,12 +1,13 @@
 package at.spot.jfly.ui.base;
 
+import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.style.GlyphIcon;
 
 public class AbstractActionComponent extends AbstractTextComponent {
 	private GlyphIcon icon;
 
-	public AbstractActionComponent(String text) {
-		super(text);
+	public AbstractActionComponent(final ComponentHandler handler, final String text) {
+		super(handler, text);
 	}
 
 	public <C extends AbstractActionComponent> C glyphIcon(final GlyphIcon icon) {

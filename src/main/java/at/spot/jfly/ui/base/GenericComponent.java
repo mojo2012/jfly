@@ -1,12 +1,13 @@
 package at.spot.jfly.ui.base;
 
+import at.spot.jfly.ComponentHandler;
 import j2html.tags.ContainerTag;
 
 public class GenericComponent extends AbstractComponent {
 	final ContainerTag raw;
 
-	public GenericComponent(final ContainerTag tag) {
-		super();
+	public GenericComponent(final ComponentHandler handler, final ContainerTag tag) {
+		super(handler);
 		this.raw = tag;
 	}
 
