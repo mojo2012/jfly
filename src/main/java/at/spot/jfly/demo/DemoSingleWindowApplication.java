@@ -5,18 +5,14 @@ import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
 import at.spot.jfly.Window;
 import at.spot.jfly.event.JsEvent;
-import at.spot.jfly.style.ButtonStyle;
-import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
-import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
-import at.spot.jfly.ui.display.Badge;
-import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.navigation.NavBar;
-import at.spot.jfly.ui.selection.SingleButtonDropDown;
-import j2html.TagCreator;
+import at.spot.jfly.ui.navigation.SideBar;
+import at.spot.jfly.ui.navigation.SidebarNavContainer;
+import at.spot.jfly.ui.navigation.SidebarNavEntry;
 
 public class DemoSingleWindowApplication extends Application {
 
@@ -49,6 +45,19 @@ public class DemoSingleWindowApplication extends Application {
 
 		@Override
 		protected Body createBody() {
+			final Body body = new Body(application());
+
+			// sidebar
+			SidebarNavContainer navContainer = new SidebarNavContainer(application());
+			navContainer.title("Open files");
+			navContainer.addChildren(new SidebarNavEntry(application(), "Test"));
+
+			SideBar sidebar = new SideBar(application());
+			sidebar.addChildren(navContainer);
+
+			body.addChildren(sidebar);
+
+			// top nav bar
 			final NavBar navBar = new NavBar(application(), NavbarStyle.Inverse);
 
 			navBar.header(new LinkAction(application(), "spOt"));
@@ -57,22 +66,30 @@ public class DemoSingleWindowApplication extends Application {
 				application().invokeFunctionCall("jfly", "reloadApp");
 			}));
 
-			final Body body = new Body(application()).addChildren(navBar).addStyleClasses("hidden");
-			final Button button = new Button(application(), "Say hello!").addStyleClasses(ButtonStyle.Success);
-			body.addChildren(
-					new SingleButtonDropDown(application(), "menu").addMenuItem(new LinkAction(application(), "test")));
-			body.addChildren(button);
-			body.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
-			body.addChildren(new Badge(application(), "42"));
+			body.addChildren(navBar);
 
-			button.onEvent(JsEvent.click, e -> {
-				button.text("clicked");
-				body.addChildren(TagCreator.h1("hello world"));
-			});
+			// content
 
-			button.onEvent(JsEvent.mouseout, e -> {
-				button.text("and out");
-			});
+			// final Button button = new Button(application(), "Say
+			// hello!").addStyleClasses(ButtonStyle.CocoaCapsule);
+			// body.addChildren(
+			// new SingleButtonDropDown(application(), "menu").addMenuItem(new
+			// LinkAction(application(), "test"))
+			// .addStyleClasses(ButtonStyle.CocoaCapsule));
+			// body.addChildren(button);
+			// body.addChildren(new Label(application(),
+			// "test").addStyleClasses(LabelStyle.Danger));
+			// body.addChildren(new Badge(application(), "42"));
+
+			// button.onEvent(JsEvent.click, e -> {
+			// button.text("clicked");
+				// body.addChildren(new GenericComponent(application(),
+				// TagCreator.h1("hello world")));
+			// });
+
+			// button.onEvent(JsEvent.mouseout, e -> {
+			// button.text("and out");
+			// });
 
 			return body;
 		}

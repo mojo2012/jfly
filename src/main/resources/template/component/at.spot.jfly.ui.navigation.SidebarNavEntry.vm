@@ -1,0 +1,6 @@
+<li ng-class="{ selected: isActive('/maverix')}" class="$!{component.selected()}">
+	<a>
+		<span class="$!{component.getCssStyleString()}">
+		</span> $!{component.text()}
+	</a>
+</li>

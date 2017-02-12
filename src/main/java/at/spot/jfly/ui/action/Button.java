@@ -15,6 +15,6 @@ public class Button extends AbstractActionComponent {
 	public Button(final ComponentHandler handler, final String text) {
 		super(handler, text);
 		componentType(ComponentType.Button);
-		addStyleClasses(ButtonStyle.Success);
+		addStyleClasses(ButtonStyle.Default);
 	}
 }

@@ -1,0 +1,5 @@
+<div class="sidebar">
+	#foreach( $!child in $!component.children() )
+		$!child.render()
+	#end
+</div>

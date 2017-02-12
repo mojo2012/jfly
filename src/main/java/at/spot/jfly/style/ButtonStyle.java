@@ -11,7 +11,9 @@ public enum ButtonStyle implements Style {
 	Info("btn btn-info"),
 	Warning("btn btn-warning"),
 	Danger("btn btn-danger"),
-	Link("btn btn-link");
+	Link("btn btn-link"),
+	CocoaSmall("btn btn-sm"),
+	CocoaCapsule("btn btn-capsule");
 
 	private String styleClass;
 

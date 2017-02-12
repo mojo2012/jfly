@@ -7,7 +7,7 @@ import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 
-public class NavBar extends AbstractContainerComponent {
+public class NavBar extends AbstractContainerComponent<AbstractTextComponent> {
 
 	private transient Alignment placement = Alignment.Top;
 	private AbstractTextComponent header = null;
@@ -18,11 +18,11 @@ public class NavBar extends AbstractContainerComponent {
 		addStyleClasses(style);
 	}
 
-	public AbstractTextComponent header() {
-		return this.header;
+	public <C extends AbstractTextComponent> C header() {
+		return (C) this.header;
 	}
 
-	public NavBar header(final AbstractTextComponent header) {
+	public <C extends AbstractTextComponent> NavBar header(final C header) {
 		this.header = header;
 		this.header.addStyleClasses(NavbarStyle.NavBarHeaderBrand);
 		return this;

@@ -1,3 +1,4 @@
+// for bootstrap compatibility reasons
 jfly = {};
 
 jfly.connection = {};
@@ -231,7 +232,8 @@ jfly.initVue = function(states) {
 /*
  * Init jfly when page is ready
  */
-Zepto(function($) {
+//Zepto(function($) {
+$( document ).ready(function() {
 	jfly.init();
 });
 

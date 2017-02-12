@@ -16,7 +16,7 @@ public class SingleButtonDropDown extends Button {
 	public SingleButtonDropDown(final ComponentHandler handler, final String text) {
 		super(handler, text);
 		componentType(ComponentType.Button);
-		addStyleClasses(ButtonStyle.Success);
+		addStyleClasses(ButtonStyle.Default);
 	}
 
 	public SingleButtonDropDown addMenuItem(final LinkAction menuItem) {

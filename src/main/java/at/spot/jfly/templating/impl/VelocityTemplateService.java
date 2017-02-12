@@ -1,4 +1,4 @@
-package at.spot.jfly.templating;
+package at.spot.jfly.templating.impl;
 
 import java.io.StringWriter;
 import java.nio.file.Paths;
@@ -13,6 +13,8 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import at.spot.jfly.templating.TemplateService;
 
 /**
  * This is a small velocity utility, that renders templates and objects.

@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.templating.TemplateService;
-import at.spot.jfly.templating.VelocityTemplateService;
+import at.spot.jfly.templating.impl.VelocityTemplateService;
 import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.Component;
 import at.spot.jfly.ui.base.DrawCommand;
