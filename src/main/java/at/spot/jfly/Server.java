@@ -1,6 +1,7 @@
 package at.spot.jfly;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -79,8 +80,8 @@ public class Server implements ClientCommunicationHandler {
 
 	/**
 	 * The static file location defines the path under which static files, like
-	 * javascripts or css styles sheets are looked for. The path has to be in
-	 * the classpath.<br/>
+	 * javascripts or css styles sheets are looked for. The path has to be in the
+	 * classpath.<br/>
 	 * Default: {@link Server#DEFAULT_STATIC_FILE_PATH}
 	 */
 	public Server staticFileLocation(final String staticFileLocation) {
@@ -89,8 +90,8 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	/**
-	 * This is called before every request is executed. A common usecase is to
-	 * check for authentication.
+	 * This is called before every request is executed. A common usecase is to check
+	 * for authentication.
 	 * 
 	 * @param requestFilter
 	 * @return
@@ -191,13 +192,16 @@ public class Server implements ClientCommunicationHandler {
 			if (app == null) {
 				app = appClass.newInstance();
 				app.init(this, request.session().id());
+				app.onDestroy(() -> {
+					sessionApplications.remove(request.session().id());
+				});
 
 				sessionApplications.put(request.session().id(), app);
 			}
 
 			final Map<String, Object> cookie = new HashMap<>();
 			cookie.put("sessionId", app.sessionId());
-			response.cookie("jfly", GsonUtil.toJson(cookie));
+			response.cookie("jfly", Base64.getEncoder().encodeToString(GsonUtil.toJson(cookie).getBytes()));
 
 			return app.render(request.url());
 		} catch (final Exception e) {

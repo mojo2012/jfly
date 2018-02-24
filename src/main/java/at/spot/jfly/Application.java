@@ -1,7 +1,9 @@
 package at.spot.jfly;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +30,8 @@ public abstract class Application implements ComponentHandler {
 	protected String componentTemplatePath;
 	protected String sessionId;
 
+	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();;
+
 	public <A extends Application> A init(final ClientCommunicationHandler handler, final String sessionId) {
 		sessionId(sessionId);
 		clientCommunicationHandler(handler);
@@ -48,8 +52,8 @@ public abstract class Application implements ComponentHandler {
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering
-	 * the ui components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering the ui
+	 * components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
@@ -167,8 +171,7 @@ public abstract class Application implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given
-	 * parameters.
+	 * Calls a javascript function on the given object with the given parameters.
 	 * 
 	 * @param component
 	 * @param method
@@ -238,5 +241,14 @@ public abstract class Application implements ComponentHandler {
 		compState.put("componentStates", getRegisteredComponents());
 
 		return compState;
+	}
+
+	public void destroy() {
+		onDestroyEventListener.stream().forEach(e -> e.run());
+		invokeFunctionCall("jfly", "reloadApp");
+	}
+
+	public void onDestroy(Runnable eventListener) {
+		onDestroyEventListener.add(eventListener);
 	}
 }

@@ -1,4 +1,4 @@
-<body uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}">
+<body uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}" $!events>
 	<div id="content">
 		#foreach( $!child in $!component.children() )
 			$!child.render()

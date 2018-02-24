@@ -1,7 +1,7 @@
 <!-- Single button -->
 <div class="btn-group">
 	<button type="button" class="btn dropdown-toggle $!{component.getCssStyleString()}"
-		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" $!events>
 		
 		{{componentStates.$!{component.uuid()}.text}} <span class="caret"></span>
 	</button>

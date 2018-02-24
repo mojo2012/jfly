@@ -1,4 +1,4 @@
-<li ng-class="{ selected: isActive('/maverix')}" class="$!{component.selected()}">
+<li ng-class="{ selected: isActive('/maverix')}" class="$!{component.selected()}" $!events>
 	<a>
 		<span class="$!{component.getCssStyleString()}">
 		</span> $!{component.text()}

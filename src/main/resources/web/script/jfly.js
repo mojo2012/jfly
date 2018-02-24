@@ -15,7 +15,9 @@ jfly.websockethandler = {
 	
 	// send a message to the server
 	send(message) {
-		message.sessionId = jfly.getCookie("jfly", "sessionId");
+		var jsonCookieString = atob(jfly.getCookie("jfly"));
+		var jsonCookie = JSON.parse(jsonCookieString);
+		message.sessionId = jsonCookie.sessionId;
 		message.urlPath = window.location.pathname;
 		
 		var msg = jfly.toString(message);
@@ -166,29 +168,8 @@ jfly.replaceElementWithId = function(id, element) {
 	jfly.findElementById(id).replaceWith(element);
 };
 
-jfly.setupEventHandling = function(element, events) {
-	if (events !== "") {
-		element.on(events, function(event){
-			jfly.handleEvent(this, event);
-		});
-	}
-};
-
-jfly.initEventHandling = function() {
-	$("body [uuid]").forEach(function(elem) {
-		var e = $(elem);
-		var regEvents = e.attr("registeredEvents");
-
-		if (regEvents !== undefined && regEvents != "") {
-			jfly.setupEventHandling($(elem), regEvents);
-		}
-	});
-}
-
 jfly.init = function() {
 	jfly.websockethandler.init();
-	
-//	jfly.initEventHandling();
 };
 
 jfly.initVue = function(states) {
