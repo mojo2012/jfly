@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import at.spot.jfly.event.Event;
@@ -21,6 +24,8 @@ import at.spot.jfly.ui.base.DrawCommand;
 import at.spot.jfly.util.GsonUtil;
 
 public abstract class Application implements ComponentHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+
 	public static final String DEFAULT_COMPONENT_TEMPLATE_PATH = "/template/component";
 
 	protected final Map<String, Component> registeredComponents = new ConcurrentHashMap<>();
@@ -101,14 +106,20 @@ public abstract class Application implements ComponentHandler {
 
 			retVal = getInitialComponentStates();
 		} else { // this is a regular message, most likely an event
-			final String componentUuid = msg.get("uuid").getAsString();
+			JsonElement uuidElem = msg.get("uuid");
 
-			if (StringUtils.isNotBlank(componentUuid)) {
-				final Component component = getRegisteredComponents().get(componentUuid);
-				final String event = msg.get("event").getAsString();
-				final Map<String, Object> payload = GsonUtil.fromJson(msg.get("payload"), Map.class);
+			if (uuidElem != null) {
+				final String componentUuid = uuidElem.getAsString();
 
-				handleEvent(component, event, payload);
+				if (StringUtils.isNotBlank(componentUuid)) {
+					final Component component = getRegisteredComponents().get(componentUuid);
+					final String event = msg.get("event").getAsString();
+					final Map<String, Object> payload = GsonUtil.fromJson(msg.get("payload"), Map.class);
+
+					handleEvent(component, event, payload);
+				}
+			} else {
+				LOG.warn("Received message of unknown sender component.");
 			}
 		}
 

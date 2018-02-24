@@ -81,11 +81,10 @@ public class DemoSingleWindowApplication extends Application {
 
 			final Button button = new Button(application(), "Say hello!").addStyleClasses(ButtonStyle.CocoaCapsule);
 			body.addChildren(new SingleButtonDropDown(application(), "menu"));
-			body.addChildren(
-					new SingleButtonDropDown(application(), "menu 2").addMenuItem(new LinkAction(application(), "test"))
-							.addStyleClasses(ButtonStyle.CocoaCapsule).onEvent(JsEvent.click, (e) -> {
-								System.out.println("menu entry clicked");
-							}));
+			body.addChildren(new SingleButtonDropDown(application(), "menu 2")
+					.addMenuItem(new LinkAction(application(), "test").onEvent(JsEvent.click, (e) -> {
+						System.out.println("menu entry clicked");
+					})).addStyleClasses(ButtonStyle.CocoaCapsule));
 			body.addChildren(button);
 			body.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
 			body.addChildren(new Badge(application(), "42"));
