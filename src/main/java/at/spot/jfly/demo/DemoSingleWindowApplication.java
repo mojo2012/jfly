@@ -5,7 +5,6 @@ import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
 import at.spot.jfly.Window;
 import at.spot.jfly.event.JsEvent;
-import at.spot.jfly.style.ButtonStyle;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.ui.action.Button;
@@ -13,6 +12,7 @@ import at.spot.jfly.ui.action.LinkAction;
 import at.spot.jfly.ui.base.GenericComponent;
 import at.spot.jfly.ui.display.Badge;
 import at.spot.jfly.ui.display.Label;
+import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.navigation.NavBar;
@@ -70,6 +70,8 @@ public class DemoSingleWindowApplication extends Application {
 			navBar.header(new LinkAction(application(), "spOt").onEvent(JsEvent.click, (e) -> {
 				System.out.println("Clicked on logo");
 			}));
+
+			navBar.addChildren(new VSpacer(application()));
 			navBar.addChildren(new LinkAction(application(), "Settings").location("#settings"));
 			navBar.addChildren(new LinkAction(application(), "Logout").onEvent(JsEvent.click, (e) -> {
 				application().destroy();
@@ -79,16 +81,7 @@ public class DemoSingleWindowApplication extends Application {
 
 			// content
 
-			final Button button = new Button(application(), "Say hello!").addStyleClasses(ButtonStyle.CocoaCapsule);
-			body.addChildren(new SingleButtonDropDown(application(), "menu"));
-			body.addChildren(new SingleButtonDropDown(application(), "menu 2")
-					.addMenuItem(new LinkAction(application(), "test").onEvent(JsEvent.click, (e) -> {
-						System.out.println("menu entry clicked");
-					})).addStyleClasses(ButtonStyle.CocoaCapsule));
-			body.addChildren(button);
-			body.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
-			body.addChildren(new Badge(application(), "42"));
-
+			final Button button = new Button(application(), "Say hello!");
 			button.onEvent(JsEvent.click, e -> {
 				button.text("clicked");
 				body.addChildren(new GenericComponent(application(), TagCreator.h1("hello world")));
@@ -97,6 +90,19 @@ public class DemoSingleWindowApplication extends Application {
 			button.onEvent(JsEvent.mouseout, e -> {
 				button.text("and out");
 			});
+
+			SingleButtonDropDown dropdown = new SingleButtonDropDown(application(), "dropdown menu");
+			dropdown.addMenuItem(new LinkAction(application(), "test").onEvent(JsEvent.click, (e) -> {
+				System.out.println("menu 1 entry clicked");
+			}));
+			dropdown.addMenuItem(new LinkAction(application(), "test 2").onEvent(JsEvent.click, (e) -> {
+				System.out.println("menu 2 entry clicked");
+			}));
+
+			body.addChildren(dropdown);
+			body.addChildren(button);
+			body.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
+			body.addChildren(new Badge(application(), "42"));
 
 			return body;
 		}

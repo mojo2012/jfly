@@ -1,13 +1,11 @@
 <!-- Single button -->
-<div class="btn-group">
-	<button type="button" uuid="$!{component.uuid()}" class="btn dropdown-toggle $!{component.getCssStyleString()}"
-		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" $!events>
+<div data-app>
+	<v-select uuid="$!{component.uuid()}" $!events
+		class="$!{component.getCssStyleString()}"
+		label="$!{component.text()}"
+		:items="componentStates['${component.uuid()}'].menuItems"
+		editable item-value="text"
+	>
 		
-		{{componentStates.$!{component.uuid()}.text}} <span class="caret"></span>
-	</button>
-	<ul class="dropdown-menu">
-		#foreach($menuItem in ${component.menuItems()})
-			<li>${menuItem.render()}</li>
-		#end
-	</ul>
+	</v-select>
 </div>

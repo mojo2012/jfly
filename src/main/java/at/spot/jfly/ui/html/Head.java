@@ -20,20 +20,20 @@ public class Head extends AbstractComponent {
 	}
 
 	private Head addDefaultStyles() {
-		stylesheet(new Stylesheet(handler(), "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"));
-		stylesheet(new Stylesheet(handler(), "style/maverix.css"));
-		// stylesheet(new
-		// Stylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"));
+		stylesheet(new Stylesheet(handler(), "https://www.w3schools.com/w3css/4/w3.css"));
+		stylesheet(new Stylesheet(handler(),
+				"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"));
+		stylesheet(new Stylesheet(handler(), "https://unpkg.com/vuetify/dist/vuetify.min.css"));
 
 		return this;
 	}
 
 	protected Head addDefaultScripts() {
 		// vue.js draws the client components
-		script(new Script(handler(), "/script/vue-2.1.8.js"));
+		script(new Script(handler(), "https://unpkg.com/vue/dist/vue.js"));
 
 		script(new Script(handler(), "https://code.jquery.com/jquery-3.1.1.min.js"));
-		script(new Script(handler(), "/script/bootstrap.min.js"));
+		script(new Script(handler(), "https://unpkg.com/vuetify/dist/vuetify.js"));
 
 		// jfly custom javascript
 		script(new Script(handler(), "/script/jfly.js"));
