@@ -1,7 +1,7 @@
 <body uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}" $!events>
-	<div id="content">
+	<v-app data-app>
 		#foreach( $!child in $!component.children() )
 			$!child.render()
 		#end
-	</div>
+	</v-app>
 </body>

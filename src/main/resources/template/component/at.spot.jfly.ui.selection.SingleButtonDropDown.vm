@@ -1,11 +1,8 @@
 <!-- Single button -->
-<div data-app>
-	<v-select uuid="$!{component.uuid()}" $!events
-		class="$!{component.getCssStyleString()}"
-		label="$!{component.text()}"
-		:items="componentStates['${component.uuid()}'].menuItems"
-		editable item-value="text"
-	>
-		
-	</v-select>
-</div>
+<v-select uuid="$!{component.uuid()}" $!events 
+	class="$!{component.getCssStyleString()}"
+	label="$!{component.text()}"
+	:items="componentStates['${component.uuid()}'].menuItems"
+	editable item-value="text"
+>
+</v-select>

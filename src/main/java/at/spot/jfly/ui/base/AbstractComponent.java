@@ -1,12 +1,11 @@
 package at.spot.jfly.ui.base;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +18,7 @@ import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.style.ComponentType;
 import at.spot.jfly.style.Style;
+import at.spot.jfly.util.KeyValueListMapping;
 import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractComponent implements Component, Comparable<AbstractComponent> {
@@ -26,6 +26,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	private final String uuid;
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
 	private final transient Set<String> styleClasses = new HashSet<>();
+	private final transient List<String> eventData = new ArrayList<>();
 
 	private transient ComponentHandler handler;
 	private transient ComponentType componentType;
@@ -34,7 +35,7 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	/*
 	 * Event handlers
 	 */
-	protected transient Map<JsEvent, EventHandler> eventHandlers = new HashMap<>();
+	protected transient KeyValueListMapping<JsEvent, EventHandler> eventHandlers = new KeyValueListMapping<>();
 
 	/*
 	 * Initialization
@@ -131,19 +132,21 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	@Override
 	public <C extends AbstractComponent> C onEvent(final JsEvent eventType, final EventHandler handler) {
 		if (handler != null) {
-			this.eventHandlers.put(eventType, handler);
-		} else {
-			this.eventHandlers.remove(eventType);
+			this.eventHandlers.putOrAdd(eventType, handler);
 		}
 
 		return (C) this;
 	}
 
+	public void unregisterEventHandler(JsEvent eventType, EventHandler handler) {
+		eventHandlers.remove(eventType, handler);
+	}
+
 	@Override
 	public void handleEvent(final Event event) {
-		final EventHandler eventHandler = eventHandlers.get(event.getEventType());
+		final List<EventHandler> handlers = eventHandlers.get(event.getEventType());
 
-		eventHandler.handle(event);
+		handlers.stream().forEach((h) -> h.handle(event));
 	}
 
 	@Override
@@ -159,6 +162,14 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	@Override
 	public List<DrawCommand> getDrawCommands() {
 		return drawCommands;
+	}
+
+	public void eventData(String data) {
+		this.eventData.add(data);
+	}
+
+	public List<String> eventData() {
+		return this.eventData;
 	}
 
 	/*

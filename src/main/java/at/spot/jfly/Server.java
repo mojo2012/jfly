@@ -122,7 +122,7 @@ public class Server implements ClientCommunicationHandler {
 
 	@OnWebSocketMessage
 	public void message(final Session session, final String message) throws IOException {
-		System.out.println("Got: " + message); // Print message
+		System.out.println("Received message: " + message);
 
 		setCurrentSession(session);
 
@@ -212,8 +212,11 @@ public class Server implements ClientCommunicationHandler {
 
 	@Override
 	public void sendMessage(final Object message) {
+
 		try {
-			getCurrentSession().getRemote().sendString(GsonUtil.toJson(message));
+			String messageString = GsonUtil.toJson(message);
+			System.out.println("Sending message: " + GsonUtil.toJson(message));
+			getCurrentSession().getRemote().sendString(messageString);
 		} catch (final Exception e) {
 			LOG.trace("Cannot send message to client.");
 		}

@@ -64,7 +64,7 @@ jfly.websockethandler = {
 	},
 }
 
-//converts objects to json strings
+// converts objects to json strings
 jfly.toString = function(object) {
 	return JSON.stringify(object);
 },
@@ -72,18 +72,6 @@ jfly.toString = function(object) {
 jfly.callAsync = function(func) {
 	setTimeout(func, 0);
 }
-
-jfly.handleEvent = function(element, event) {
-	var message = {
-		"messageType": "event",
-		"uuid": $(element).attr("uuid"),
-		"event": event.type,
-		"payload": event,
-	}
-	
-	jfly.websockethandler.send(message);
-};
-
 
 jfly.reloadApp = function() {
 	location.reload();
@@ -174,15 +162,24 @@ jfly.init = function() {
 
 jfly.initVue = function(states) {
 	jfly.uicontroller = new Vue({
-		el: '#content',
+		el: 'v-app',
 		components: {
 		},
 		methods: {
-			handleEvent: function(event) {
+			handleEvent: function(event, componentUuid, eventData) {
+				var payload = null;
+				
+				if (typeof(eventData) === "object" ) {
+					payload = eventData;
+				} else {
+					payload = {"value": eventData};
+				}
+				
 				var message = {
-						"uuid": $(event.currentTarget).attr("uuid"),
-						"event": event.type,
-						"payload": event,
+					"messageType": "event",
+					"event": event,
+					"componentUuid": componentUuid,
+					"payload": payload,
 				};
 				
 				jfly.callAsync(function() {
@@ -199,9 +196,9 @@ jfly.initVue = function(states) {
 		data: {
 			componentStates: states
 		},
-//		template: {
+// template: {
 //			
-//		},
+// },
 		beforeCreate: function() {
 		},
 		created: function() {
@@ -213,7 +210,7 @@ jfly.initVue = function(states) {
 /*
  * Init jfly when page is ready
  */
-//Zepto(function($) {
+// Zepto(function($) {
 $( document ).ready(function() {
 	jfly.init();
 });

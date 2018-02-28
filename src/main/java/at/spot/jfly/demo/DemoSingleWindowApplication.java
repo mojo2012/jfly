@@ -7,6 +7,7 @@ import at.spot.jfly.Window;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
+import at.spot.jfly.ui.GenericContainer;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
 import at.spot.jfly.ui.base.GenericComponent;
@@ -81,10 +82,18 @@ public class DemoSingleWindowApplication extends Application {
 
 			// content
 
+			GenericContainer mainContainer = new GenericContainer(application(), "v-content");
+			GenericContainer fluidContainer = new GenericContainer(application(), "v-container");
+			GenericContainer actualContainer = new GenericContainer(application(), "div");
+
+			mainContainer.addChildren(fluidContainer);
+			fluidContainer.addChildren(actualContainer);
+			body.addChildren(mainContainer);
+
 			final Button button = new Button(application(), "Say hello!");
 			button.onEvent(JsEvent.click, e -> {
 				button.text("clicked");
-				body.addChildren(new GenericComponent(application(), TagCreator.h1("hello world")));
+				actualContainer.addChildren(new GenericComponent(application(), TagCreator.h1("hello world")));
 			});
 
 			button.onEvent(JsEvent.mouseout, e -> {
@@ -92,17 +101,17 @@ public class DemoSingleWindowApplication extends Application {
 			});
 
 			SingleButtonDropDown dropdown = new SingleButtonDropDown(application(), "dropdown menu");
-			dropdown.addMenuItem(new LinkAction(application(), "test").onEvent(JsEvent.click, (e) -> {
+			dropdown.addMenuItem("test", "test", (e) -> {
 				System.out.println("menu 1 entry clicked");
-			}));
-			dropdown.addMenuItem(new LinkAction(application(), "test 2").onEvent(JsEvent.click, (e) -> {
+			});
+			dropdown.addMenuItem("test2", "test 2", (e) -> {
 				System.out.println("menu 2 entry clicked");
-			}));
+			});
 
-			body.addChildren(dropdown);
-			body.addChildren(button);
-			body.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
-			body.addChildren(new Badge(application(), "42"));
+			actualContainer.addChildren(dropdown);
+			actualContainer.addChildren(button);
+			actualContainer.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
+			actualContainer.addChildren(new Badge(application(), "42"));
 
 			return body;
 		}

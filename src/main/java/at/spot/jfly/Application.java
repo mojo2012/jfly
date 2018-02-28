@@ -106,7 +106,7 @@ public abstract class Application implements ComponentHandler {
 
 			retVal = getInitialComponentStates();
 		} else { // this is a regular message, most likely an event
-			JsonElement uuidElem = msg.get("uuid");
+			JsonElement uuidElem = msg.get("componentUuid");
 
 			if (uuidElem != null) {
 				final String componentUuid = uuidElem.getAsString();
@@ -137,7 +137,13 @@ public abstract class Application implements ComponentHandler {
 
 	protected void handleEvent(final Component component, final String event, final Map<String, Object> payload) {
 		final JsEvent e = JsEvent.valueOf(event);
-		component.handleEvent(new Event(e, component, payload));
+		
+		try {
+			component.handleEvent(new Event(e, component, payload));
+		} catch (Exception ex) {
+			System.out.println(String.format("Exception during handleEvent for component %s", component.uuid()));
+			ex.printStackTrace();
+		}
 
 		for (final Component c : getRegisteredComponents().values()) {
 			if (c.needsRedraw()) {
@@ -232,7 +238,8 @@ public abstract class Application implements ComponentHandler {
 			String events = "";
 
 			for (final JsEvent event : component.registeredEvents()) {
-				events += " v-on:" + event.toString() + "=\"handleEvent\" ";
+				events += String.format(" v-on:%s=\"handleEvent('%s', '%s', $event)\"", event.toString(),
+						event.toString(), component.uuid());
 			}
 
 			final Map<String, Object> context = new HashMap<>();
