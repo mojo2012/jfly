@@ -6,7 +6,7 @@ import at.spot.jfly.ui.base.AbstractContainerComponent;
 
 public class GenericContainer extends AbstractContainerComponent<AbstractComponent> {
 
-	protected String tagName;
+	private String tagName;
 
 	public GenericContainer(ComponentHandler handler, String tagName) {
 		super(handler);
@@ -16,4 +16,5 @@ public class GenericContainer extends AbstractContainerComponent<AbstractCompone
 	public String tagName() {
 		return tagName;
 	}
+
 }

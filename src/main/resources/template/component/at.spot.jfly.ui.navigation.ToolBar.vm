@@ -1,4 +1,6 @@
-<v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events>
+<v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events
+	v-model="componentStates['${component.uuid()}']">
+	
 	<v-toolbar-side-icon></v-toolbar-side-icon>
 	
 	<v-toolbar-title>$!{component.header().text()}</v-toolbar-title>

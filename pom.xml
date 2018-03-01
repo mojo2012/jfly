@@ -130,6 +130,12 @@
 			<artifactId>j2html</artifactId>
 			<version>1.2.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.11.2</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

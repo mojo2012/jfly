@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	$!component.head().render()
 	$!component.body().render()

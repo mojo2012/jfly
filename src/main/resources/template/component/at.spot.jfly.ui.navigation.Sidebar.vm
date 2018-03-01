@@ -1,5 +1,5 @@
-<div class="sidebar">
+<v-navigation-drawer v-model="componentStates['${component.uuid()}']">
 	#foreach( $!child in $!component.children() )
 		$!child.render()
 	#end
-</div>
+</v-navigation-drawer>

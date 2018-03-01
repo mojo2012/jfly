@@ -37,6 +37,10 @@ public abstract class Window {
 	}
 
 	public String render() {
+		// Document doc = Jsoup.parseBodyFragment(html.render());
+		//
+		// return doc.outerHtml();
+
 		return html.render();
 	}
 

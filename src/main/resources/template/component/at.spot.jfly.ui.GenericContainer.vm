@@ -1,4 +1,6 @@
-<${component.tagName()} uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}" $!events fluid>
+<${component.tagName()} uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}"
+	$!{component.getAttributeString()}  $!events>
+	
 	#foreach( $!child in $!component.children() )
 		$!child.render()
 	#end

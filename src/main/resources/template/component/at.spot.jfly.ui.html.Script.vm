@@ -1,1 +1,1 @@
-<script src="$!component.location()" /></script>
+<script src="$!component.location()"></script>

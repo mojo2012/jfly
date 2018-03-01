@@ -1,4 +1,4 @@
-<div class="sidebar-navicontainer">
+<div class="sidebar-navicontainer" >
 	<div class="sidebar-headbox">
 		<span class="sidebar-header">$!{component.title()}</span>
 		<a class="sidebar-toggle">

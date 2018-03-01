@@ -25,6 +25,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	private final String uuid;
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
+	private final transient Set<String> attributes = new HashSet<>();
 	private final transient Set<String> styleClasses = new HashSet<>();
 	private final transient List<String> eventData = new ArrayList<>();
 
@@ -115,7 +116,28 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		removeStyleClasses(stylesClasses.toArray(new String[0]));
 		updateClientComponent();
 		return (C) this;
+	}
 
+	public <C extends AbstractComponent> C addAttributes(final String... attributes) {
+		final List<String> styles = Arrays.stream(attributes).filter(s -> StringUtils.isNotBlank(s))
+				.collect(Collectors.toList());
+
+		this.attributes.addAll(styles);
+		updateClientComponent();
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C removeAttributes(final String... attributes) {
+		final List<String> styles = Arrays.stream(attributes).filter(s -> StringUtils.isNotBlank(s))
+				.collect(Collectors.toList());
+
+		this.attributes.removeAll(styles);
+		updateClientComponent();
+		return (C) this;
+	}
+
+	public String getAttributeString() {
+		return attributes.stream().collect(Collectors.joining(" "));
 	}
 
 	/**

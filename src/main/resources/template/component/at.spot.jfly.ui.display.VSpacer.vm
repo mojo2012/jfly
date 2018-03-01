@@ -1,1 +1,3 @@
-<v-spacer></v-spacer>
+<v-spacer uuid="$!{component.uuid()}" v-model="componentStates['${component.uuid()}']">
+
+</v-spacer>

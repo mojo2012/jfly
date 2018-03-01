@@ -17,6 +17,7 @@ import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
+import at.spot.jfly.ui.navigation.SideBar;
 import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
 import at.spot.jfly.ui.navigation.ToolBar;
@@ -61,15 +62,14 @@ public class DemoSingleWindowApplication extends Application {
 			navContainer.title("Open files");
 			navContainer.addChildren(new SidebarNavEntry(application(), "Test"));
 
-			// SideBar sidebar = new SideBar(application());
-			// sidebar.addChildren(navContainer);
-			//
-			// body.addChildren(sidebar);
+			SideBar sidebar = new SideBar(application());
+			sidebar.addChildren(navContainer);
 
 			// top nav bar
 			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
 
 			toolBar.header(new Label(application(), "spOt"));
+			toolBar.addAttributes("app absolute clipped-left");
 
 			toolBar.addChildren(new VSpacer(application()));
 			toolBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
@@ -79,16 +79,22 @@ public class DemoSingleWindowApplication extends Application {
 				application().destroy();
 			}));
 
+			body.addChildren(sidebar);
 			body.addChildren(toolBar);
 
 			// content
 
 			GenericContainer mainContainer = new GenericContainer(application(), "v-content");
 			GenericContainer fluidContainer = new GenericContainer(application(), "v-container");
-			GenericContainer actualContainer = new GenericContainer(application(), "div");
+			fluidContainer.addAttributes("fluid fill-height");
+			GenericContainer actualContainer = new GenericContainer(application(), "v-layout");
+			actualContainer.addAttributes("justify-center align-center");
+			GenericContainer flexContainer = new GenericContainer(application(), "v-flex");
+			flexContainer.addAttributes("shrink");
 
 			mainContainer.addChildren(fluidContainer);
 			fluidContainer.addChildren(actualContainer);
+			actualContainer.addChildren(flexContainer);
 			body.addChildren(mainContainer);
 
 			final LinkAction linkAction = new LinkAction(application(), "google.at", "https://google.at",
