@@ -2,9 +2,6 @@ package at.spot.jfly.ui.base;
 
 import java.util.List;
 
-import at.spot.jfly.event.Event;
-import at.spot.jfly.event.EventHandler;
-import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.util.GsonUtil;
 
 public interface Component {
@@ -19,23 +16,6 @@ public interface Component {
 	 * Renders the raw j2html item - accessible with {@link #raw()}.
 	 */
 	String render();
-
-	/**
-	 * Registers an event handler for the given javascript event. The event can
-	 * be unregistered by passing null as handler.
-	 * 
-	 * @param eventType
-	 * @param handler
-	 * @return
-	 */
-	<C extends AbstractComponent> C onEvent(JsEvent eventType, EventHandler handler);
-
-	/**
-	 * Pass an event for the component to process.
-	 * 
-	 * @param event
-	 */
-	<E extends Event> void handleEvent(final E event);
 
 	/**
 	 * Redraws the component on the client side.

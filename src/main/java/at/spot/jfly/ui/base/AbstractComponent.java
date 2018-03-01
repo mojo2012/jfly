@@ -21,7 +21,7 @@ import at.spot.jfly.style.Style;
 import at.spot.jfly.util.KeyValueListMapping;
 import io.gsonfire.annotations.ExposeMethodResult;
 
-public abstract class AbstractComponent implements Component, Comparable<AbstractComponent> {
+public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
 
 	private final String uuid;
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
@@ -129,8 +129,15 @@ public abstract class AbstractComponent implements Component, Comparable<Abstrac
 	 * Events
 	 */
 
-	@Override
-	public <C extends AbstractComponent> C onEvent(final JsEvent eventType, final EventHandler handler) {
+	/**
+	 * Registers an event handler for the given javascript event. The event can be
+	 * unregistered by passing null as handler.
+	 * 
+	 * @param eventType
+	 * @param handler
+	 * @return
+	 */
+	protected <C extends AbstractComponent> C onEvent(final JsEvent eventType, final EventHandler handler) {
 		if (handler != null) {
 			this.eventHandlers.putOrAdd(eventType, handler);
 		}

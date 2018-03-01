@@ -21,6 +21,7 @@ import at.spot.jfly.templating.impl.VelocityTemplateService;
 import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.Component;
 import at.spot.jfly.ui.base.DrawCommand;
+import at.spot.jfly.ui.base.EventTarget;
 import at.spot.jfly.util.GsonUtil;
 
 public abstract class Application implements ComponentHandler {
@@ -139,7 +140,7 @@ public abstract class Application implements ComponentHandler {
 		final JsEvent e = JsEvent.valueOf(event);
 		
 		try {
-			component.handleEvent(new Event(e, component, payload));
+			((EventTarget) component).handleEvent(new Event(e, component, payload));
 		} catch (Exception ex) {
 			System.out.println(String.format("Exception during handleEvent for component %s", component.uuid()));
 			ex.printStackTrace();

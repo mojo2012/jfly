@@ -1,8 +1,11 @@
 <!-- Single button -->
 <v-select uuid="$!{component.uuid()}" $!events 
 	class="$!{component.getCssStyleString()}"
-	label="$!{component.text()}"
+	label="$!{component.text()}" dense 
 	:items="componentStates['${component.uuid()}'].menuItems"
-	editable item-value="id" item-text="text"
+	prepend-icon="$!{component.leftIcon()}"
+	append-icon="$!{component.rightIcon()}"
+	v-model="componentStates['${component.uuid()}'].selectMenuItem"
+	editable item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"
 >
 </v-select>

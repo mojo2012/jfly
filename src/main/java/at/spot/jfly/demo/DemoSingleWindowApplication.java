@@ -4,7 +4,7 @@ import at.spot.jfly.Application;
 import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
 import at.spot.jfly.Window;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.ui.GenericContainer;
@@ -68,13 +68,13 @@ public class DemoSingleWindowApplication extends Application {
 			// top nav bar
 			final NavBar navBar = new NavBar(application(), NavbarStyle.Inverse);
 
-			navBar.header(new LinkAction(application(), "spOt").onEvent(JsEvent.click, (e) -> {
+			navBar.header(new LinkAction(application(), "spOt").onClick(e -> {
 				System.out.println("Clicked on logo");
 			}));
 
 			navBar.addChildren(new VSpacer(application()));
 			navBar.addChildren(new LinkAction(application(), "Settings").location("#settings"));
-			navBar.addChildren(new LinkAction(application(), "Logout").onEvent(JsEvent.click, (e) -> {
+			navBar.addChildren(new LinkAction(application(), "Logout").onClick(e -> {
 				application().destroy();
 			}));
 
@@ -91,20 +91,21 @@ public class DemoSingleWindowApplication extends Application {
 			body.addChildren(mainContainer);
 
 			final Button button = new Button(application(), "Say hello!");
-			button.onEvent(JsEvent.click, e -> {
+			button.onClick(e -> {
 				button.text("clicked");
 				actualContainer.addChildren(new GenericComponent(application(), TagCreator.h1("hello world")));
 			});
 
-			button.onEvent(JsEvent.mouseout, e -> {
+			button.onMouseOut(e -> {
 				button.text("and out");
 			});
 
 			SingleButtonDropDown dropdown = new SingleButtonDropDown(application(), "dropdown menu");
-			dropdown.addMenuItem("test", "test", (e) -> {
+			dropdown.leftIcon(GlyphIcon.Map);
+			dropdown.addMenuItem("test", "test", e -> {
 				System.out.println("menu 1 entry clicked");
 			});
-			dropdown.addMenuItem("test2", "test 2", (e) -> {
+			dropdown.addMenuItem("test2", "test 2", e -> {
 				System.out.println("menu 2 entry clicked");
 			});
 

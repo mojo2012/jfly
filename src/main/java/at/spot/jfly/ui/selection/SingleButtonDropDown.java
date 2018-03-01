@@ -1,25 +1,26 @@
 package at.spot.jfly.ui.selection;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
-import at.spot.jfly.style.ButtonStyle;
-import at.spot.jfly.style.ComponentType;
-import at.spot.jfly.ui.action.Button;
+import at.spot.jfly.style.GlyphIcon;
+import at.spot.jfly.ui.base.AbstractTextComponent;
 import io.gsonfire.annotations.ExposeMethodResult;
 
-public class SingleButtonDropDown extends Button {
+public class SingleButtonDropDown extends AbstractTextComponent {
+	final private transient Map<String, SelectMenuItem> menuItems = new TreeMap<>();
 
-	final private transient Map<String, SelectMenuItem> menuItems = new HashMap<>();
+	private GlyphIcon leftIcon;
+	private GlyphIcon rightIcon;
 
 	public SingleButtonDropDown(final ComponentHandler handler, final String text) {
 		super(handler, text);
-		componentType(ComponentType.Button);
-		addStyleClasses(ButtonStyle.None);
+
+		// set up event handling
 		super.eventData("'value'");
 		super.eventData("$event");
 
@@ -35,7 +36,7 @@ public class SingleButtonDropDown extends Button {
 	}
 
 	public SingleButtonDropDown addMenuItem(final String itemId, String text, final EventHandler handler) {
-		menuItems.put(itemId, new SelectMenuItem(itemId, text, null, handler));
+		menuItems.put(itemId, new SelectMenuItem(itemId, text, false, null, handler));
 
 		return this;
 	}
@@ -51,6 +52,24 @@ public class SingleButtonDropDown extends Button {
 
 	}
 
+	public GlyphIcon leftIcon() {
+		return leftIcon;
+	}
+
+	public <C extends AbstractTextComponent> C leftIcon(GlyphIcon leftIcon) {
+		this.leftIcon = leftIcon;
+		return (C) this;
+	}
+
+	public GlyphIcon rightIcon() {
+		return rightIcon;
+	}
+
+	public <C extends AbstractTextComponent> C rightIcon(GlyphIcon rightIcon) {
+		this.rightIcon = rightIcon;
+		return (C) this;
+	}
+
 	@ExposeMethodResult("menuItems")
 	public Collection<SelectMenuItem> menuItems() {
 		return menuItems.values();
@@ -60,21 +79,15 @@ public class SingleButtonDropDown extends Button {
 		private String id;
 		private String text;
 		private String icon;
+		private boolean disabled;
 		private transient EventHandler handler;
 
-		public SelectMenuItem(String id, String text, String icon, EventHandler handler) {
+		public SelectMenuItem(String id, String text, boolean disabled, String icon, EventHandler handler) {
 			this.id = id;
 			this.text = text;
 			this.icon = icon;
+			this.disabled = disabled;
 			this.handler = handler;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public String getText() {
-			return text;
 		}
 	}
 }
