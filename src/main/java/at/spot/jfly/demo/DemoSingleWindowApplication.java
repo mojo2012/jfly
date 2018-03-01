@@ -73,8 +73,10 @@ public class DemoSingleWindowApplication extends Application {
 			}));
 
 			navBar.addChildren(new VSpacer(application()));
-			navBar.addChildren(new LinkAction(application(), "Settings").location("#settings"));
-			navBar.addChildren(new LinkAction(application(), "Logout").onClick(e -> {
+			navBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
+				// show settings dialog
+			}));
+			navBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
 				application().destroy();
 			}));
 
@@ -106,7 +108,7 @@ public class DemoSingleWindowApplication extends Application {
 				System.out.println("menu 1 entry clicked");
 			});
 			dropdown.addMenuItem("test2", "test 2", e -> {
-				System.out.println("menu 2 entry clicked");
+				dropdown.addMenuItem("addedItem" + dropdown.menuItems().size(), "This has been added manually", null);
 			});
 
 			actualContainer.addChildren(dropdown);

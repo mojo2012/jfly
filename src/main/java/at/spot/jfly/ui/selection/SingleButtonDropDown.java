@@ -16,6 +16,8 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 
 	private GlyphIcon leftIcon;
 	private GlyphIcon rightIcon;
+	private boolean editable = false;
+	private SelectMenuItem selectedItem;
 
 	public SingleButtonDropDown(final ComponentHandler handler, final String text) {
 		super(handler, text);
@@ -28,28 +30,51 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 			// forward the select event to the appropriate menu item event handler
 
 			Object itemId = e.getPayload().get("value");
-			SelectMenuItem item = menuItems.get(itemId);
+			selectedItem = menuItems.get(itemId);
 
-			if (item != null && item.handler != null)
-				item.handler.handle(e);
+			if (selectedItem != null && selectedItem.handler != null)
+				selectedItem.handler.handle(e);
 		});
 	}
 
 	public SingleButtonDropDown addMenuItem(final String itemId, String text, final EventHandler handler) {
+		SelectMenuItem item = menuItems.get(itemId);
+
+		// remove previously added item with the same id -> unregisters event handler
+		if (item != null) {
+			removeMenuItem(itemId);
+		}
+
 		menuItems.put(itemId, new SelectMenuItem(itemId, text, false, null, handler));
 
+		updateClientComponent();
+
 		return this;
+	}
+
+	public String selectedItemId() {
+		return selectedItem != null ? selectedItem.id : null;
+	}
+
+	public <C extends AbstractTextComponent> C selectedItem(String itemId) {
+		selectedItem = menuItems.get(itemId);
+		updateClientComponent();
+		return (C) this;
 	}
 
 	public SingleButtonDropDown removeMenuItem(final String itemId) {
 		SelectMenuItem item = menuItems.get(itemId);
 
-		if (item != null && item.handler != null) {
-			unregisterEventHandler(JsEvent.select, item.handler);
-		}
-
 		return this;
+	}
 
+	public boolean editable() {
+		return editable;
+	}
+
+	public <C extends AbstractTextComponent> C editable(boolean editable) {
+		this.editable = editable;
+		return (C) this;
 	}
 
 	public GlyphIcon leftIcon() {

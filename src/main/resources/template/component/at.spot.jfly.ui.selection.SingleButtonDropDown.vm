@@ -5,7 +5,8 @@
 	:items="componentStates['${component.uuid()}'].menuItems"
 	prepend-icon="$!{component.leftIcon()}"
 	append-icon="$!{component.rightIcon()}"
-	v-model="componentStates['${component.uuid()}'].selectMenuItem"
-	editable item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"
+	v-model="componentStates['${component.uuid()}'].selectedItem"
+	#if ( $!{component.editable()} ) editable #end
+	 item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"
 >
 </v-select>
