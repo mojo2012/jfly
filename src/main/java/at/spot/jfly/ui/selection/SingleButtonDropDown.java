@@ -1,10 +1,8 @@
 package at.spot.jfly.ui.selection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
@@ -12,10 +10,11 @@ import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.style.ButtonStyle;
 import at.spot.jfly.style.ComponentType;
 import at.spot.jfly.ui.action.Button;
+import io.gsonfire.annotations.ExposeMethodResult;
 
 public class SingleButtonDropDown extends Button {
 
-	final private List<SelectMenuItem> menuItems = new ArrayList<>();
+	final private transient Map<String, SelectMenuItem> menuItems = new HashMap<>();
 
 	public SingleButtonDropDown(final ComponentHandler handler, final String text) {
 		super(handler, text);
@@ -23,42 +22,50 @@ public class SingleButtonDropDown extends Button {
 		addStyleClasses(ButtonStyle.None);
 		super.eventData("'value'");
 		super.eventData("$event");
-	}
-
-	public SingleButtonDropDown addMenuItem(final String itemId, String text, final EventHandler handler) {
-		menuItems.add(new SelectMenuItem(itemId, text, handler));
 
 		this.onEvent(JsEvent.input, (e) -> {
 			// forward the select event to the appropriate menu item event handler
-			Stream<SelectMenuItem> items = menuItems.stream().filter(m -> m.text.equals(e.getPayload().get("value")));
-			items.forEach(m -> handler.handle(e));
+
+			Object itemId = e.getPayload().get("value");
+			SelectMenuItem item = menuItems.get(itemId);
+
+			if (item != null && item.handler != null)
+				item.handler.handle(e);
 		});
+	}
+
+	public SingleButtonDropDown addMenuItem(final String itemId, String text, final EventHandler handler) {
+		menuItems.put(itemId, new SelectMenuItem(itemId, text, null, handler));
+
 		return this;
 	}
 
 	public SingleButtonDropDown removeMenuItem(final String itemId) {
-		Optional<SelectMenuItem> menuItem = menuItems.stream().filter(m -> itemId.equals(m.id)).findFirst();
+		SelectMenuItem item = menuItems.get(itemId);
 
-		if (menuItem.isPresent() && menuItem.get().handler != null) {
-			unregisterEventHandler(JsEvent.select, menuItem.get().handler);
+		if (item != null && item.handler != null) {
+			unregisterEventHandler(JsEvent.select, item.handler);
 		}
 
 		return this;
 
 	}
 
-	public List<SelectMenuItem> menuItems() {
-		return Collections.unmodifiableList(menuItems);
+	@ExposeMethodResult("menuItems")
+	public Collection<SelectMenuItem> menuItems() {
+		return menuItems.values();
 	}
 
 	private static class SelectMenuItem {
 		private String id;
 		private String text;
+		private String icon;
 		private transient EventHandler handler;
 
-		public SelectMenuItem(String id, String text, EventHandler handler) {
+		public SelectMenuItem(String id, String text, String icon, EventHandler handler) {
 			this.id = id;
 			this.text = text;
+			this.icon = icon;
 			this.handler = handler;
 		}
 

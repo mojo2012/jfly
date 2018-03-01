@@ -3,6 +3,6 @@
 	class="$!{component.getCssStyleString()}"
 	label="$!{component.text()}"
 	:items="componentStates['${component.uuid()}'].menuItems"
-	editable item-value="text"
+	editable item-value="id" item-text="text"
 >
 </v-select>
