@@ -1,3 +1,7 @@
-<v-btn type="$!{component.componentType().internalName()}" uuid="$!{component.uuid()}" depressed flat #if ($component.localtion()) href="$component.location()" #end class="$!{component.getCssStyleString()}" $!events>
+<v-btn type="$!{component.componentType().internalName()}" uuid="$!{component.uuid()}" depressed flat 
+	#if ($component.location()) href="$component.location()" #end 
+	target="$!{component.navigationTarget()}"
+	class="$!{component.getCssStyleString()}" $!events>
+	
 	{{componentStates.$!{component.uuid()}.text}}
 </v-btn>

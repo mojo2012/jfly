@@ -7,12 +7,12 @@ import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 
-public class NavBar extends AbstractContainerComponent<AbstractTextComponent> {
+public class ToolBar extends AbstractContainerComponent<AbstractTextComponent> {
 
 	private transient Alignment placement = Alignment.Top;
 	private AbstractTextComponent header = null;
 
-	public NavBar(final ComponentHandler handler, final NavbarStyle style) {
+	public ToolBar(final ComponentHandler handler, final NavbarStyle style) {
 		super(handler);
 		componentType(ComponentType.NavBar);
 		addStyleClasses(style);
@@ -22,7 +22,7 @@ public class NavBar extends AbstractContainerComponent<AbstractTextComponent> {
 		return (C) this.header;
 	}
 
-	public <C extends AbstractTextComponent> NavBar header(final C header) {
+	public <C extends AbstractTextComponent> ToolBar header(final C header) {
 		this.header = header;
 		this.header.addStyleClasses(NavbarStyle.NavBarHeaderBrand);
 		return this;
@@ -32,7 +32,7 @@ public class NavBar extends AbstractContainerComponent<AbstractTextComponent> {
 		return this.placement;
 	}
 
-	public NavBar placement(final Alignment placement) {
+	public ToolBar placement(final Alignment placement) {
 		this.placement = placement;
 		return this;
 	}

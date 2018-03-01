@@ -1,7 +1,7 @@
 package at.spot.jfly.style;
 
 /**
- * NavBar related styles.
+ * ToolBar related styles.
  */
 public enum NavbarStyle implements Style {
 	Default("navbar-default"), Inverse("navbar-inverse"), NavBarHeader("navbar-header"), NavBarContent(

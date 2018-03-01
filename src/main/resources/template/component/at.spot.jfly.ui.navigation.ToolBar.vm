@@ -1,6 +1,7 @@
 <v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events>
 	<v-toolbar-side-icon></v-toolbar-side-icon>
-	<v-toolbar-title>$!{component.header().render()}</v-toolbar-title>
+	
+	<v-toolbar-title>$!{component.header().text()}</v-toolbar-title>
 	
 	<v-spacer></v-spacer>
 	
@@ -9,4 +10,6 @@
 			$!child.render()
 		#end
     </v-toolbar-items>
+    
+    <v-toolbar-side-icon></v-toolbar-side-icon>
 </v-toolbar>

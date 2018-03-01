@@ -2,6 +2,7 @@ package at.spot.jfly.event;
 
 public enum JsEvent {
 	click("click"),
+	hover("hover"),
 	input("input"),
 	mousedown("mousedown"),
 	mouseup("mouseup"),

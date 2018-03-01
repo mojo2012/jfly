@@ -11,7 +11,7 @@ import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 import io.gsonfire.annotations.ExposeMethodResult;
 
-public class SingleButtonDropDown extends AbstractTextComponent {
+public class DropDownBox extends AbstractTextComponent {
 	final private transient Map<String, SelectMenuItem> menuItems = new TreeMap<>();
 
 	private GlyphIcon leftIcon;
@@ -19,7 +19,7 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 	private boolean editable = false;
 	private SelectMenuItem selectedItem;
 
-	public SingleButtonDropDown(final ComponentHandler handler, final String text) {
+	public DropDownBox(final ComponentHandler handler, final String text) {
 		super(handler, text);
 
 		// set up event handling
@@ -37,7 +37,7 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 		});
 	}
 
-	public SingleButtonDropDown addMenuItem(final String itemId, String text, final EventHandler handler) {
+	public DropDownBox addMenuItem(final String itemId, String text, final EventHandler handler) {
 		SelectMenuItem item = menuItems.get(itemId);
 
 		// remove previously added item with the same id -> unregisters event handler
@@ -46,7 +46,6 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 		}
 
 		menuItems.put(itemId, new SelectMenuItem(itemId, text, false, null, handler));
-
 		updateClientComponent();
 
 		return this;
@@ -56,14 +55,14 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 		return selectedItem != null ? selectedItem.id : null;
 	}
 
-	public <C extends AbstractTextComponent> C selectedItem(String itemId) {
+	public DropDownBox selectedItem(String itemId) {
 		selectedItem = menuItems.get(itemId);
 		updateClientComponent();
-		return (C) this;
+		return this;
 	}
 
-	public SingleButtonDropDown removeMenuItem(final String itemId) {
-		SelectMenuItem item = menuItems.get(itemId);
+	public DropDownBox removeMenuItem(final String itemId) {
+		menuItems.get(itemId);
 
 		return this;
 	}
@@ -72,27 +71,27 @@ public class SingleButtonDropDown extends AbstractTextComponent {
 		return editable;
 	}
 
-	public <C extends AbstractTextComponent> C editable(boolean editable) {
+	public DropDownBox editable(boolean editable) {
 		this.editable = editable;
-		return (C) this;
+		return this;
 	}
 
 	public GlyphIcon leftIcon() {
 		return leftIcon;
 	}
 
-	public <C extends AbstractTextComponent> C leftIcon(GlyphIcon leftIcon) {
+	public DropDownBox leftIcon(GlyphIcon leftIcon) {
 		this.leftIcon = leftIcon;
-		return (C) this;
+		return this;
 	}
 
 	public GlyphIcon rightIcon() {
 		return rightIcon;
 	}
 
-	public <C extends AbstractTextComponent> C rightIcon(GlyphIcon rightIcon) {
+	public DropDownBox rightIcon(GlyphIcon rightIcon) {
 		this.rightIcon = rightIcon;
-		return (C) this;
+		return this;
 	}
 
 	@ExposeMethodResult("menuItems")

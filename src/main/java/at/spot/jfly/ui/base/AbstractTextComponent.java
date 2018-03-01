@@ -1,6 +1,8 @@
 package at.spot.jfly.ui.base;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.event.EventHandler;
+import at.spot.jfly.event.JsEvent;
 
 public abstract class AbstractTextComponent extends AbstractComponent {
 	private String text;
@@ -18,5 +20,11 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 
 	public String text() {
 		return this.text;
+	}
+
+	public <C extends AbstractActionComponent> C onHover(final EventHandler handler) {
+		onEvent(JsEvent.hover, handler);
+
+		return (C) this;
 	}
 }

@@ -7,6 +7,7 @@ import at.spot.jfly.Window;
 import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
+import at.spot.jfly.style.NavigationTarget;
 import at.spot.jfly.ui.GenericContainer;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
@@ -16,10 +17,10 @@ import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
-import at.spot.jfly.ui.navigation.NavBar;
 import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
-import at.spot.jfly.ui.selection.SingleButtonDropDown;
+import at.spot.jfly.ui.navigation.ToolBar;
+import at.spot.jfly.ui.selection.DropDownBox;
 import j2html.TagCreator;
 
 public class DemoSingleWindowApplication extends Application {
@@ -66,21 +67,19 @@ public class DemoSingleWindowApplication extends Application {
 			// body.addChildren(sidebar);
 
 			// top nav bar
-			final NavBar navBar = new NavBar(application(), NavbarStyle.Inverse);
+			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
 
-			navBar.header(new LinkAction(application(), "spOt").onClick(e -> {
-				System.out.println("Clicked on logo");
-			}));
+			toolBar.header(new Label(application(), "spOt"));
 
-			navBar.addChildren(new VSpacer(application()));
-			navBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
+			toolBar.addChildren(new VSpacer(application()));
+			toolBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
 				// show settings dialog
 			}));
-			navBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
+			toolBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
 				application().destroy();
 			}));
 
-			body.addChildren(navBar);
+			body.addChildren(toolBar);
 
 			// content
 
@@ -92,6 +91,9 @@ public class DemoSingleWindowApplication extends Application {
 			fluidContainer.addChildren(actualContainer);
 			body.addChildren(mainContainer);
 
+			final LinkAction linkAction = new LinkAction(application(), "google.at", "https://google.at",
+					NavigationTarget.Blank);
+
 			final Button button = new Button(application(), "Say hello!");
 			button.onClick(e -> {
 				button.text("clicked");
@@ -102,15 +104,30 @@ public class DemoSingleWindowApplication extends Application {
 				button.text("and out");
 			});
 
-			SingleButtonDropDown dropdown = new SingleButtonDropDown(application(), "dropdown menu");
+			DropDownBox dropdown = new DropDownBox(application(), "dropdown menu");
 			dropdown.leftIcon(GlyphIcon.Map);
-			dropdown.addMenuItem("test", "test", e -> {
-				System.out.println("menu 1 entry clicked");
+
+			// TODO: pushing data asynchronously doesn't work yet
+			dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
+				System.out.println("Starting timer");
+				// new Thread(() -> {
+				// for (byte b = 0; b < 4; b++) {
+				// GenericComponent comp = new GenericComponent(application(),
+				// TagCreator.h2("Time: " + System.currentTimeMillis()));
+				// actualContainer.addChildren(comp);
+				// try {
+				// Thread.sleep(1000);
+				// } catch (InterruptedException e1) {
+				// e1.printStackTrace();
+				// }
+				// }
+				// }).start();
 			});
 			dropdown.addMenuItem("test2", "test 2", e -> {
 				dropdown.addMenuItem("addedItem" + dropdown.menuItems().size(), "This has been added manually", null);
 			});
 
+			actualContainer.addChildren(linkAction);
 			actualContainer.addChildren(dropdown);
 			actualContainer.addChildren(button);
 			actualContainer.addChildren(new Label(application(), "test").addStyleClasses(LabelStyle.Danger));
