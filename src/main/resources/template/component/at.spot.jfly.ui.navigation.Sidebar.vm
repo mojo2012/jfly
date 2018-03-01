@@ -1,4 +1,5 @@
-<v-navigation-drawer v-model="componentStates['${component.uuid()}']">
+<v-navigation-drawer v-model="componentStates['${component.uuid()}']"
+	fixed clipped app>
 	#foreach( $!child in $!component.children() )
 		$!child.render()
 	#end

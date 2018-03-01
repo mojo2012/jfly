@@ -1,5 +1,5 @@
 <v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events
-	v-model="componentStates['${component.uuid()}']">
+	v-model="componentStates['${component.uuid()}']" app absolute clipped-left>
 	
 	<v-toolbar-side-icon></v-toolbar-side-icon>
 	

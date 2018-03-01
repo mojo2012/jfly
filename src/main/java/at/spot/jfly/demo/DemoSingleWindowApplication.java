@@ -69,7 +69,6 @@ public class DemoSingleWindowApplication extends Application {
 			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
 
 			toolBar.header(new Label(application(), "spOt"));
-			toolBar.addAttributes("app absolute clipped-left");
 
 			toolBar.addChildren(new VSpacer(application()));
 			toolBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
