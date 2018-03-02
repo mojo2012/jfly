@@ -70,6 +70,7 @@ public class DemoSingleWindowApplication extends Application {
 
 			toolBar.header(new Label(application(), "spOt"));
 
+			toolBar.setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
 			toolBar.addChildren(new VSpacer(application()));
 			toolBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
 				// show settings dialog

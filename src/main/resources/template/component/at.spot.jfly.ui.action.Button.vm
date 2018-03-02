@@ -1,6 +1,6 @@
 <v-btn type="$!{component.componentType().internalName()}" uuid="$!{component.uuid()}" 
 	class="$!{component.getCssStyleString()}" $!events
-	v-model="componentStates['${component.uuid()}']">
+	v-model="componentStates['${component.uuid()}']" color="info">
 	
 	{{componentStates.$!{component.uuid()}.text}}
 </v-btn>
