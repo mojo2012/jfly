@@ -8,6 +8,11 @@
 	#foreach($!stylesheet in $!component.stylesheets())
 		$!stylesheet.render()	
 	#end
+	<style type="text/css">
+		.hidden {
+			display: none;
+		}
+	</style>
 	
 	<!-- scripts -->
 	#foreach($!script in $!component.scripts())
