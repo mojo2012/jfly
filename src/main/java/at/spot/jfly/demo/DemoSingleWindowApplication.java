@@ -1,5 +1,7 @@
 package at.spot.jfly.demo;
 
+import java.util.Date;
+
 import at.spot.jfly.Application;
 import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
@@ -8,13 +10,12 @@ import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.style.NavigationTarget;
-import at.spot.jfly.ui.GenericContainer;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
-import at.spot.jfly.ui.base.GenericComponent;
 import at.spot.jfly.ui.display.Badge;
 import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.display.VSpacer;
+import at.spot.jfly.ui.generic.GenericContainer;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.navigation.SideBar;
@@ -22,7 +23,6 @@ import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
 import at.spot.jfly.ui.navigation.ToolBar;
 import at.spot.jfly.ui.selection.DropDownBox;
-import j2html.TagCreator;
 
 public class DemoSingleWindowApplication extends Application {
 
@@ -86,11 +86,13 @@ public class DemoSingleWindowApplication extends Application {
 
 			GenericContainer mainContainer = new GenericContainer(application(), "v-content");
 			GenericContainer fluidContainer = new GenericContainer(application(), "v-container");
-			fluidContainer.addAttributes("fluid fill-height");
+			fluidContainer.addAttribute("fluid", null);
+			fluidContainer.addAttribute("fill-height", null);
 			GenericContainer actualContainer = new GenericContainer(application(), "v-layout");
-			actualContainer.addAttributes("justify-center align-center");
+			actualContainer.addAttribute("justify-center", null);
+			actualContainer.addAttribute("align-center", null);
 			GenericContainer flexContainer = new GenericContainer(application(), "v-flex");
-			flexContainer.addAttributes("shrink");
+			flexContainer.addAttribute("shrink", null);
 
 			mainContainer.addChildren(fluidContainer);
 			fluidContainer.addChildren(actualContainer);
@@ -103,7 +105,9 @@ public class DemoSingleWindowApplication extends Application {
 			final Button button = new Button(application(), "Say hello!");
 			button.onClick(e -> {
 				button.text("clicked");
-				actualContainer.addChildren(new GenericComponent(application(), TagCreator.h1("hello world")));
+				
+				Label label = new Label(application(), "Current time: " + new Date().toString());
+				actualContainer.addChildren(label);
 			});
 
 			button.onMouseOut(e -> {

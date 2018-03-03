@@ -19,15 +19,17 @@ import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.style.ComponentType;
 import at.spot.jfly.style.Style;
 import at.spot.jfly.util.KeyValueListMapping;
+import at.spot.jfly.util.KeyValueMapping;
 import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
 
-	private final String uuid;
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
-	private final transient Set<String> attributes = new HashSet<>();
 	private final transient Set<String> styleClasses = new HashSet<>();
 	private final transient List<String> eventData = new ArrayList<>();
+
+	private final String uuid;
+	private final KeyValueMapping<String, String> attributes = new KeyValueMapping<>();
 
 	private transient ComponentHandler handler;
 	private transient ComponentType componentType;
@@ -118,26 +120,22 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return (C) this;
 	}
 
-	public <C extends AbstractComponent> C addAttributes(final String... attributes) {
-		final List<String> styles = Arrays.stream(attributes).filter(s -> StringUtils.isNotBlank(s))
-				.collect(Collectors.toList());
-
-		this.attributes.addAll(styles);
+	public <C extends AbstractComponent> C addAttribute(final String name, String value) {
+		this.attributes.put(name, value);
 		updateClientComponent();
 		return (C) this;
 	}
 
 	public <C extends AbstractComponent> C removeAttributes(final String... attributes) {
-		final List<String> styles = Arrays.stream(attributes).filter(s -> StringUtils.isNotBlank(s))
-				.collect(Collectors.toList());
-
-		this.attributes.removeAll(styles);
+		this.attributes.removeAll(attributes);
 		updateClientComponent();
 		return (C) this;
 	}
 
 	public String getAttributeString() {
-		return attributes.stream().collect(Collectors.joining(" "));
+		return attributes.entrySet().stream() //
+				.map(e -> e.getKey() + (e.getValue() != null ? "=" + e.getValue() : "")) //
+				.collect(Collectors.joining(" "));
 	}
 
 	/**
@@ -260,5 +258,51 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		}
 
 		return uuid().compareTo(o.uuid());
+	}
+
+	/*
+	 * EVENT HANDLERS
+	 */
+
+	public <C extends AbstractComponent> C onClick(final EventHandler handler) {
+		onEvent(JsEvent.click, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseOut(final EventHandler handler) {
+		onEvent(JsEvent.mouseout, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseMove(final EventHandler handler) {
+		onEvent(JsEvent.mousemove, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseDown(final EventHandler handler) {
+		onEvent(JsEvent.mousedown, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseOver(final EventHandler handler) {
+		onEvent(JsEvent.mouseover, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseUp(final EventHandler handler) {
+		onEvent(JsEvent.mouseup, handler);
+
+		return (C) this;
+	}
+
+	public <C extends AbstractComponent> C onMouseWheel(final EventHandler handler) {
+		onEvent(JsEvent.mousewheel, handler);
+
+		return (C) this;
 	}
 }

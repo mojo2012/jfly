@@ -120,7 +120,12 @@ jfly.removeChildComponent = function(containerUuid, childUuid) {
 };
 
 jfly.addChildComponent = function(containerUuid, child) {
-	jfly.findComponent(containerUuid).append(child);
+	var Component = Vue.extend({
+		template: child,
+		});
+		 
+	var component = new Component().$mount()
+	jfly.findComponent(containerUuid).append(component.$el);
 };
 
 jfly.replaceComponent = function(componentUuid, component) {

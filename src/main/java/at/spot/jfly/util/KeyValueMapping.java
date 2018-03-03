@@ -1,6 +1,9 @@
 package at.spot.jfly.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class KeyValueMapping<K, V> extends HashMap<K, V> {
@@ -26,5 +29,21 @@ public class KeyValueMapping<K, V> extends HashMap<K, V> {
 		if (value == null && consumer != null) {
 			consumer.accept(value);
 		}
+	}
+
+	public List<V> removeAll(K... keys) {
+		List<V> removedValues = null;
+
+		if (keys != null) {
+			removedValues = new ArrayList<>();
+
+			for (K key : keys) {
+				removedValues.add(remove(key));
+			}
+		} else {
+			removedValues = Collections.emptyList();
+		}
+
+		return removedValues;
 	}
 }

@@ -1,4 +1,4 @@
-package at.spot.jfly.ui;
+package at.spot.jfly.ui.generic;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractComponent;

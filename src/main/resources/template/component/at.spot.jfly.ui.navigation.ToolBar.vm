@@ -1,38 +1,13 @@
 <v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events
-	v-model="componentStates['${component.uuid()}']" app absolute clipped-left dense >
-	
-	#if ($component.leftActionItem())
-		<v-toolbar-side-icon uuid="$!{component.leftActionItem.uuid()}" @click="handleevent"></v-toolbar-side-icon>
-	#end
+	v-model="componentStates['${component.uuid()}']" app absolute clipped-left>
+
+	$!{component.getLeftActionItem().render()}
 	
 	<v-toolbar-title>$!{component.header().text()}</v-toolbar-title>
 	
-	#set ($spacerIndex = -1)
-	
-    <v-toolbar-items class="hidden-sm-and-down">
-		#foreach( $!child in $!component.children() )
-			#if (!($!child.isSpacer()))
-				$!child.render()
-			#else
-				#set ($spacerIndex = $velocityCount)
-				#break
-			#end
-		#end
-    </v-toolbar-items>
-	
-	#if ($spacerIndex >= 0)
-		<v-spacer></v-spacer>
+	#foreach( $!child in $!component.children() )
+		$!child.render()
 	#end
-	
-    <v-toolbar-items class="hidden-sm-and-down">
-		#foreach( $!child in $!component.children() )
-			#if ($velocityCount >= $spacerIndex && !($!child.isSpacer()))
-				$!child.render()
-			#end
-		#end
-    </v-toolbar-items>
     
-    #if ($component.rightActionItem)
-		<v-toolbar-side-icon></v-toolbar-side-icon>
-	#end
+    $!{component.getRightActionItem().render()}
 </v-toolbar>
