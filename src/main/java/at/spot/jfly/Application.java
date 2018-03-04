@@ -151,13 +151,13 @@ public abstract class Application implements ComponentHandler {
 				for (DrawCommand cmd : c.getDrawCommands()) {
 					switch (cmd.getType()) {
 					case ComponentStateUpdate:
-						updateComponentData(component);
+						updateComponentData(c);
 						break;
 					case FunctionCall:
 						invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
 						break;
 					case ObjectManipulation:
-						invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
+						invokeComponentManipulation(c, cmd.getFunction(), cmd.getParamters());
 						break;
 					default:
 						break;
