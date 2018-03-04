@@ -25,14 +25,13 @@ public class ToolBar extends AbstractContainerComponent<AbstractTextComponent> {
 		addStyleClasses(style);
 	}
 
-	public <C extends AbstractTextComponent> C header() {
-		return (C) this.header;
+	public AbstractTextComponent getHeader() {
+		return this.header;
 	}
 
-	public <C extends AbstractTextComponent> ToolBar header(final C header) {
+	public void setHeader(final AbstractTextComponent header) {
 		this.header = header;
 		this.header.addStyleClasses(NavbarStyle.NavBarHeaderBrand);
-		return this;
 	}
 
 	public Alignment placement() {

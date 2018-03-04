@@ -7,6 +7,7 @@ import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
 import at.spot.jfly.Window;
 import at.spot.jfly.style.GlyphIcon;
+import at.spot.jfly.style.HorizontalOrientation;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.style.NavigationTarget;
@@ -18,6 +19,7 @@ import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.generic.GenericContainer;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
+import at.spot.jfly.ui.navigation.Drawer;
 import at.spot.jfly.ui.navigation.SideBar;
 import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
@@ -57,6 +59,8 @@ public class DemoSingleWindowApplication extends Application {
 		protected Body createBody() {
 			final Body body = new Body(application());
 
+			Label spotLabel = new Label(application(), "spOt");
+
 			// sidebar
 			SidebarNavContainer navContainer = new SidebarNavContainer(application());
 			navContainer.title("Open files");
@@ -65,21 +69,27 @@ public class DemoSingleWindowApplication extends Application {
 			SideBar sidebar = new SideBar(application());
 			sidebar.addChildren(navContainer);
 
+			Drawer rightDrawer = new Drawer(application(), HorizontalOrientation.Right);
+			rightDrawer.setToolBar(new ToolBar(application(), NavbarStyle.Default));
+			rightDrawer.getToolBar().setHeader(spotLabel);
+			rightDrawer.getToolBar().setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
+			rightDrawer.visibe(false);
+
 			// top nav bar
 			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
-
-			toolBar.header(new Label(application(), "spOt"));
+			toolBar.setHeader(spotLabel);
 
 			toolBar.setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
 			toolBar.addChildren(new VSpacer(application()));
-			toolBar.addChildren(new LinkAction(application(), "Settings").location("#settings").onClick(e -> {
-				// show settings dialog
-			}));
 			toolBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
 				application().destroy();
 			}));
+			toolBar.addChildren(new LinkAction(application(), "Settings").onClick(e -> {
+				rightDrawer.visibe(!rightDrawer.visibility());
+			}));
 
 			body.addChildren(sidebar);
+			body.addChildren(rightDrawer);
 			body.addChildren(toolBar);
 
 			// content

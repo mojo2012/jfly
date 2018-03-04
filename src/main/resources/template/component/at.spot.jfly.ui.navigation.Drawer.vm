@@ -1,8 +1,8 @@
 <v-navigation-drawer 
 	v-model="componentStates['${component.uuid()}'].visible"
 	:mini-variant.sync="componentStates['${component.uuid()}'].minimized"
-	clipped app :stateless="true" :touchless="true" 
-	:disable-resize-watcher="true" >
+	app :stateless="true" :temporary="componentStates['${component.uuid()}'].floating"
+	:disable-resize-watcher="true" #if ( $!component.getHorizontalOrientation().internalName() == "right" ) right #end >
 	
 	$!{component.getToolBar().render()}
 	
