@@ -26,7 +26,7 @@ jfly.websockethandler = {
 	
 	// event handling
 	onopen: function (event) {
-		console.log('WebSocket onopen ' + event);
+		console.debug('WebSocket onopen ' + event);
 		
 		jfly.callAsync(function() {
 			jfly.websockethandler.send({ "messageType": 'hello' });
@@ -34,18 +34,17 @@ jfly.websockethandler = {
 	},
 	
 	onclose: function (event) {
-		console.log('WebSocket onclose ' + event);
+		console.debug('WebSocket onclose ' + event);
 	},
 	
 	// Log errors
 	onerror: function (event) {
-		console.log('WebSocket onerror ' + event);
+		console.debug('WebSocket onerror ' + event);
 	},
 	
 	// Log messages from the server
 	onmessage: function (event) {
-		console.log('WebSocket onmessage');
-		
+		console.debug('WebSocket onmessage');
 		var message = JSON.parse(event.data);
 		
 		if (message.type == "componentInitialization") {
@@ -119,13 +118,8 @@ jfly.removeChildComponent = function(containerUuid, childUuid) {
 	jfly.findComponent(containerUuid).find("[uuid='" + uuid + "']").remove();
 };
 
-jfly.addChildComponent = function(containerUuid, child) {
-	var Component = Vue.extend({
-		template: child,
-		});
-		 
-	var component = new Component().$mount()
-	jfly.findComponent(containerUuid).append(component.$el);
+jfly.addChildComponent = function(containerUuid, childHtml, childContext) {
+	jfly.uicontroller.addChildComponent(containerUuid, childHtml, childContext);
 };
 
 jfly.replaceComponent = function(componentUuid, component) {
@@ -191,8 +185,29 @@ jfly.initVue = function(states) {
 					jfly.websockethandler.send(message);
 				})
 			},
+			
 			getComponentStateProperty(componentUuid, propertyName) {
 				jfly.uicontroller.data[property]
+			},
+			
+			addChildComponent: function(containerUuid, childHtml, childContext) {
+				var childUuid = childContext.uuid;
+
+				this.componentStates[childContext.uuid] = childContext;
+				
+				// this can't be referenced within the data function,
+				// so we have to create a wrapper for it
+				var parent = this;
+				var Component = Vue.extend({
+					parent: jfly.uicontroller,
+					template: childHtml,
+					data: function() {
+						return parent.$data
+					}
+				});
+					 
+				var component = new Component().$mount();
+				jfly.findComponent(containerUuid).append(component.$el);
 			}
 		},
 		computed: {

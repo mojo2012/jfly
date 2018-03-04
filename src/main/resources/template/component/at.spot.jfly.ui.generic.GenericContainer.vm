@@ -1,7 +1,22 @@
-<${component.tagName()} uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}"
-	$!{component.getAttributeString()}  $!events>
+#macro( attributes )
+	uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}" $!{component.getAttributeString()}  $!events
+#end
+
+<${component.tagName()} #if (!${component.isUseWrapper()}) #attributes() #end>
 	
-	#foreach( $!child in $!component.children() )
-		$!child.render()
+	#if (${component.isUseWrapper()})
+		<!--
+			this is a hack to be able  to transport the attributes, 
+			vue is not preserving them if it is on a v-container or something like that
+		-->
+		<div #attributes()>
+	#end
+		
+			#foreach( $!child in $!component.children() )
+				$!child.render()
+			#end
+		
+	#if (${component.isUseWrapper()})
+		</div>
 	#end
 </${component.tagName()}>

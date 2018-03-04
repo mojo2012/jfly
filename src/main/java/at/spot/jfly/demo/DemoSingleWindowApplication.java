@@ -91,12 +91,11 @@ public class DemoSingleWindowApplication extends Application {
 			GenericContainer actualContainer = new GenericContainer(application(), "v-layout");
 			actualContainer.addAttribute("justify-center", null);
 			actualContainer.addAttribute("align-center", null);
-			GenericContainer flexContainer = new GenericContainer(application(), "v-flex");
-			flexContainer.addAttribute("shrink", null);
+			actualContainer.setUseWrapper(true);
+			actualContainer.addStyleClasses("container");
 
 			mainContainer.addChildren(fluidContainer);
 			fluidContainer.addChildren(actualContainer);
-			actualContainer.addChildren(flexContainer);
 			body.addChildren(mainContainer);
 
 			final LinkAction linkAction = new LinkAction(application(), "google.at", "https://google.at",

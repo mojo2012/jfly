@@ -7,6 +7,7 @@ import at.spot.jfly.ui.base.AbstractContainerComponent;
 public class GenericContainer extends AbstractContainerComponent<AbstractComponent> {
 
 	private String tagName;
+	private boolean useWrapper = false;
 
 	public GenericContainer(ComponentHandler handler, String tagName) {
 		super(handler);
@@ -15,6 +16,18 @@ public class GenericContainer extends AbstractContainerComponent<AbstractCompone
 
 	public String tagName() {
 		return tagName;
+	}
+
+	public boolean isUseWrapper() {
+		return useWrapper;
+	}
+
+	/**
+	 * Indicates that the renderer should create an additional wrapper element
+	 * around the child components.
+	 */
+	public void setUseWrapper(boolean renderWrapper) {
+		this.useWrapper = renderWrapper;
 	}
 
 }

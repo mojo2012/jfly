@@ -33,7 +33,7 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		children.addAll(Arrays.asList(components));
 
 		for (Component c : components) {
-			updateClient("jfly", "addChildComponent", this.uuid(), c.render());
+			updateClient("jfly", "addChildComponent", this.uuid(), c.render(), c);
 		}
 
 		return (S) this;
