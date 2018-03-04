@@ -2,5 +2,7 @@
 	class="$!{component.getCssStyleString()}" $!events
 	v-model="componentStates['${component.uuid()}']" color="info">
 	
+	{{componentStates.$!{component.uuid()}.icon}}
 	{{componentStates.$!{component.uuid()}.text}}
+	
 </v-btn>

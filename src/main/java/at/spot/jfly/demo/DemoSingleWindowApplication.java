@@ -59,8 +59,6 @@ public class DemoSingleWindowApplication extends Application {
 		protected Body createBody() {
 			final Body body = new Body(application());
 
-			Label spotLabel = new Label(application(), "spOt");
-
 			// sidebar
 			SidebarNavContainer navContainer = new SidebarNavContainer(application());
 			navContainer.title("Open files");
@@ -71,13 +69,17 @@ public class DemoSingleWindowApplication extends Application {
 
 			Drawer rightDrawer = new Drawer(application(), HorizontalOrientation.Right);
 			rightDrawer.setToolBar(new ToolBar(application(), NavbarStyle.Default));
-			rightDrawer.getToolBar().setHeader(spotLabel);
-			rightDrawer.getToolBar().setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
+			rightDrawer.getToolBar().setHeader(new Label(application(), "Settings"));
 			rightDrawer.visibe(false);
+			rightDrawer.getToolBar().addChildren();
+
+			Button drawerCloseButton = new Button(application());
+			// drawerCloseButton.setIcon(MaterialIcon.favorite);
+			rightDrawer.getToolBar().addChildren(drawerCloseButton);
 
 			// top nav bar
 			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
-			toolBar.setHeader(spotLabel);
+			toolBar.setHeader(new Label(application(), "spOt"));
 
 			toolBar.setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
 			toolBar.addChildren(new VSpacer(application()));
