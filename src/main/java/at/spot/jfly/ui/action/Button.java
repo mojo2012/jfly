@@ -9,6 +9,7 @@ import at.spot.jfly.ui.display.Icon;
 public class Button extends AbstractActionComponent {
 
 	private Icon icon;
+	private boolean isFlat;
 
 	public Button(final ComponentHandler handler, final String text) {
 		super(handler, text);
@@ -30,5 +31,12 @@ public class Button extends AbstractActionComponent {
 		this.icon = icon;
 	}
 
+	public boolean isFlat() {
+		return isFlat;
+	}
+
+	public void setFlat(boolean isFlat) {
+		this.isFlat = isFlat;
+	}
 
 }

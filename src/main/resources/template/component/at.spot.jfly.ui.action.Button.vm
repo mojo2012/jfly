@@ -1,8 +1,11 @@
 <v-btn type="$!{component.componentType().internalName()}" uuid="$!{component.uuid()}" 
 	class="$!{component.getCssStyleString()}" $!events
-	v-model="componentStates['${component.uuid()}']" color="info">
+	v-model="componentStates['${component.uuid()}']" color="info" :flat="componentStates.${component.uuid()}.isFlat" 
+	#if ( ${component.getIcon()} && !${component.text()} ) icon #end
+	>
 	
-	{{componentStates.$!{component.getIcon().uuid()}.icon}}
+	$!{component.getIcon().render()}
+	
 	{{componentStates.$!{component.uuid()}.text}}
 	
 </v-btn>

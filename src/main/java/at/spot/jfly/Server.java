@@ -29,7 +29,6 @@ import spark.Spark;
 
 @WebSocket
 public class Server implements ClientCommunicationHandler {
-
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
 
 	public static final int DEFAULT_PORT = 8080;
@@ -122,7 +121,7 @@ public class Server implements ClientCommunicationHandler {
 
 	@OnWebSocketMessage
 	public void message(final Session session, final String message) throws IOException {
-		System.out.println("Received message: " + message);
+		LOG.debug("Received message: " + message);
 
 		setCurrentSession(session);
 
@@ -215,10 +214,10 @@ public class Server implements ClientCommunicationHandler {
 
 		try {
 			String messageString = GsonUtil.toJson(message);
-			System.out.println("Sending message: " + GsonUtil.toJson(message));
+			LOG.debug("Sending message: " + GsonUtil.toJson(message));
 			getCurrentSession().getRemote().sendString(messageString);
 		} catch (final Exception e) {
-			LOG.trace("Cannot send message to client.");
+			LOG.error("Cannot send message to client.");
 		}
 	}
 

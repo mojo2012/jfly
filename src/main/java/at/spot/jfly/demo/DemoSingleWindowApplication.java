@@ -2,6 +2,9 @@ package at.spot.jfly.demo;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.spot.jfly.Application;
 import at.spot.jfly.ClientCommunicationHandler;
 import at.spot.jfly.Server;
@@ -29,6 +32,7 @@ import at.spot.jfly.ui.navigation.ToolBar;
 import at.spot.jfly.ui.selection.DropDownBox;
 
 public class DemoSingleWindowApplication extends Application {
+	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
 
 	protected Window window;
 
@@ -61,6 +65,8 @@ public class DemoSingleWindowApplication extends Application {
 		protected Body createBody() {
 			final Body body = new Body(application());
 
+			VSpacer vSpacer = new VSpacer(application());
+
 			// sidebar
 			SidebarNavContainer navContainer = new SidebarNavContainer(application());
 			navContainer.title("Open files");
@@ -76,7 +82,10 @@ public class DemoSingleWindowApplication extends Application {
 			rightDrawer.getToolBar().addChildren();
 
 			Button drawerCloseButton = new Button(application());
-			drawerCloseButton.setIcon(new Icon(application(), MaterialIcon.favorite));
+			drawerCloseButton.setIcon(new Icon(application(), MaterialIcon.close));
+			drawerCloseButton.setFlat(true);
+			drawerCloseButton.onClick(e -> rightDrawer.visibe(false));
+			rightDrawer.getToolBar().addChildren(vSpacer);
 			rightDrawer.getToolBar().addChildren(drawerCloseButton);
 
 			// top nav bar
@@ -84,7 +93,7 @@ public class DemoSingleWindowApplication extends Application {
 			toolBar.setHeader(new Label(application(), "spOt"));
 
 			toolBar.setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
-			toolBar.addChildren(new VSpacer(application()));
+			toolBar.addChildren(vSpacer);
 			toolBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
 				application().destroy();
 			}));
@@ -132,7 +141,7 @@ public class DemoSingleWindowApplication extends Application {
 
 			// TODO: pushing data asynchronously doesn't work yet
 			dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
-				System.out.println("Starting timer");
+				LOG.debug("Starting timer");
 				// new Thread(() -> {
 				// for (byte b = 0; b < 4; b++) {
 				// GenericComponent comp = new GenericComponent(application(),

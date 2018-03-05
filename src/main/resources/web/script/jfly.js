@@ -220,8 +220,10 @@ jfly.initVue = function(states) {
 //			
 // },
 		beforeCreate: function() {
+			console.debug("Vue beforeCreate");
 		},
 		created: function() {
+			console.debug("Vue create");
 			$("body").removeClass("hidden");
 		}
 	});

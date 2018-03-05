@@ -142,7 +142,7 @@ public abstract class Application implements ComponentHandler {
 		try {
 			((EventTarget) component).handleEvent(new Event(e, component, payload));
 		} catch (Exception ex) {
-			System.out.println(String.format("Exception during handleEvent for component %s", component.uuid()));
+			LOG.debug(String.format("Exception during handleEvent for component %s", component.uuid()));
 			ex.printStackTrace();
 		}
 
