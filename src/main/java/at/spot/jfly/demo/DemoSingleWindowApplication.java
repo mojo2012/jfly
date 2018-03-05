@@ -9,11 +9,13 @@ import at.spot.jfly.Window;
 import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.style.HorizontalOrientation;
 import at.spot.jfly.style.LabelStyle;
+import at.spot.jfly.style.MaterialIcon;
 import at.spot.jfly.style.NavbarStyle;
 import at.spot.jfly.style.NavigationTarget;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
 import at.spot.jfly.ui.display.Badge;
+import at.spot.jfly.ui.display.Icon;
 import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.generic.GenericContainer;
@@ -74,7 +76,7 @@ public class DemoSingleWindowApplication extends Application {
 			rightDrawer.getToolBar().addChildren();
 
 			Button drawerCloseButton = new Button(application());
-			// drawerCloseButton.setIcon(MaterialIcon.favorite);
+			drawerCloseButton.setIcon(new Icon(application(), MaterialIcon.favorite));
 			rightDrawer.getToolBar().addChildren(drawerCloseButton);
 
 			// top nav bar
@@ -116,7 +118,7 @@ public class DemoSingleWindowApplication extends Application {
 			final Button button = new Button(application(), "Say hello!");
 			button.onClick(e -> {
 				button.text("clicked");
-				
+
 				Label label = new Label(application(), "Current time: " + new Date().toString());
 				actualContainer.addChildren(label);
 			});
