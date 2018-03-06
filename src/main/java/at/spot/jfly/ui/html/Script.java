@@ -9,14 +9,14 @@ public class Script extends AbstractComponent {
 
 	public Script(final ComponentHandler handler, final String scriptLocation) {
 		super(handler);
-		this.location(scriptLocation);
+		this.setLocation(scriptLocation);
 	}
 
-	public String location() {
+	public String getLocation() {
 		return location;
 	}
 
-	public Script location(final String location) {
+	public Script setLocation(final String location) {
 		this.location = location;
 
 		return this;

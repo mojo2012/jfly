@@ -1,5 +1,5 @@
 <!DOCTYPE html>
 <html>
-	$!component.head().render()
-	$!component.body().render()
+	$!{component.head.render()}
+	$!{component.body.render()}
 </html>

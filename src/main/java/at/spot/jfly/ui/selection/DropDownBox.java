@@ -1,8 +1,11 @@
 package at.spot.jfly.ui.selection;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
@@ -23,8 +26,8 @@ public class DropDownBox extends AbstractTextComponent {
 		super(handler, text);
 
 		// set up event handling
-		super.eventData("'value'");
-		super.eventData("$event");
+		super.setEventData("'value'");
+		super.setEventData("$event");
 
 		this.onEvent(JsEvent.input, (e) -> {
 			// forward the select event to the appropriate menu item event handler
@@ -51,7 +54,7 @@ public class DropDownBox extends AbstractTextComponent {
 		return this;
 	}
 
-	public String selectedItemId() {
+	public String getSelectedItemId() {
 		return selectedItem != null ? selectedItem.id : null;
 	}
 
@@ -67,43 +70,45 @@ public class DropDownBox extends AbstractTextComponent {
 		return this;
 	}
 
-	public boolean editable() {
+	public boolean isEditable() {
 		return editable;
 	}
 
-	public DropDownBox editable(boolean editable) {
+	public DropDownBox setEditable(boolean editable) {
 		this.editable = editable;
 		return this;
 	}
 
-	public GlyphIcon leftIcon() {
+	public GlyphIcon getLeftIcon() {
 		return leftIcon;
 	}
 
-	public DropDownBox leftIcon(GlyphIcon leftIcon) {
+	public DropDownBox setLeftIcon(GlyphIcon leftIcon) {
 		this.leftIcon = leftIcon;
 		return this;
 	}
 
-	public GlyphIcon rightIcon() {
+	public GlyphIcon getRightIcon() {
 		return rightIcon;
 	}
 
-	public DropDownBox rightIcon(GlyphIcon rightIcon) {
+	public void setRightIcon(GlyphIcon rightIcon) {
 		this.rightIcon = rightIcon;
-		return this;
 	}
 
 	@ExposeMethodResult("menuItems")
-	public Collection<SelectMenuItem> menuItems() {
+	public Collection<SelectMenuItem> getMenuItems() {
 		return menuItems.values();
 	}
 
-	private static class SelectMenuItem {
+	private static class SelectMenuItem implements Serializable {
+		private static final long serialVersionUID = 1L;
+
 		private String id;
 		private String text;
 		private String icon;
 		private boolean disabled;
+		@JsonIgnore
 		private transient EventHandler handler;
 
 		public SelectMenuItem(String id, String text, boolean disabled, String icon, EventHandler handler) {
@@ -111,6 +116,46 @@ public class DropDownBox extends AbstractTextComponent {
 			this.text = text;
 			this.icon = icon;
 			this.disabled = disabled;
+			this.handler = handler;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		public String getIcon() {
+			return icon;
+		}
+
+		public void setIcon(String icon) {
+			this.icon = icon;
+		}
+
+		public boolean isDisabled() {
+			return disabled;
+		}
+
+		public void setDisabled(boolean disabled) {
+			this.disabled = disabled;
+		}
+
+		public EventHandler getHandler() {
+			return handler;
+		}
+
+		public void setHandler(EventHandler handler) {
 			this.handler = handler;
 		}
 	}

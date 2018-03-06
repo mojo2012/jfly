@@ -1,12 +1,12 @@
 <v-navigation-drawer 
-	v-model="componentStates['${component.uuid()}'].visible"
-	:mini-variant.sync="componentStates['${component.uuid()}'].minimized"
-	clipped app :stateless="true" :touchless="true" 
+	v-model="componentStates['${component.uuid}'].visible"
+	:mini-variant.sync="componentStates['${component.uuid}'].minimized"
+	clipped app :stateless="true" :touchless="true" :temporary="false"
 	:disable-resize-watcher="true" >
 	
-	$!{component.getToolBar().render()}
+	$!{component.toolBar.render()}
 	
-	#foreach( $!child in $!component.children() )
+	#foreach( $!child in $!component.children )
 		$!child.render()
 	#end
 </v-navigation-drawer>

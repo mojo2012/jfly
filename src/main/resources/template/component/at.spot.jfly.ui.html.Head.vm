@@ -2,11 +2,11 @@
 	<meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title>$component.title()</title>
+    <title>$component.title</title>
     
     <!-- stylesheets -->
-	#foreach($!stylesheet in $!component.stylesheets())
-		$!stylesheet.render()	
+	#foreach($!stylesheet in $!component.stylesheets)
+		$!stylesheet.render()
 	#end
 	<style type="text/css">
 		.hidden {
@@ -15,7 +15,7 @@
 	</style>
 	
 	<!-- scripts -->
-	#foreach($!script in $!component.scripts())
-		$!script.render()	
+	#foreach($!script in $!component.scripts)
+		$!script.render()
 	#end
 </head>

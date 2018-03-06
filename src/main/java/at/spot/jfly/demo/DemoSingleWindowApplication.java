@@ -56,7 +56,7 @@ public class DemoSingleWindowApplication extends Application {
 
 		@Override
 		protected Head createHeader() {
-			final Head head = new Head(application()).title("Hello world");
+			final Head head = new Head(application()).setTitle("Hello world");
 
 			return head;
 		}
@@ -69,7 +69,7 @@ public class DemoSingleWindowApplication extends Application {
 
 			// sidebar
 			SidebarNavContainer navContainer = new SidebarNavContainer(application());
-			navContainer.title("Open files");
+			navContainer.setTitle("Open files");
 			navContainer.addChildren(new SidebarNavEntry(application(), "Test"));
 
 			SideBar sidebar = new SideBar(application());
@@ -78,13 +78,13 @@ public class DemoSingleWindowApplication extends Application {
 			Drawer rightDrawer = new Drawer(application(), HorizontalOrientation.Right);
 			rightDrawer.setToolBar(new ToolBar(application(), NavbarStyle.Default));
 			rightDrawer.getToolBar().setHeader(new Label(application(), "Settings"));
-			rightDrawer.visibe(false);
+			rightDrawer.setVisibe(false);
 			rightDrawer.getToolBar().addChildren();
 
 			Button drawerCloseButton = new Button(application());
 			drawerCloseButton.setIcon(new Icon(application(), MaterialIcon.close));
 			drawerCloseButton.setFlat(true);
-			drawerCloseButton.onClick(e -> rightDrawer.visibe(false));
+			drawerCloseButton.onClick(e -> rightDrawer.setVisibe(false));
 			rightDrawer.getToolBar().addChildren(vSpacer);
 			rightDrawer.getToolBar().addChildren(drawerCloseButton);
 
@@ -92,13 +92,13 @@ public class DemoSingleWindowApplication extends Application {
 			final ToolBar toolBar = new ToolBar(application(), NavbarStyle.Inverse);
 			toolBar.setHeader(new Label(application(), "spOt"));
 
-			toolBar.setLeftActionItem(e -> sidebar.visibe(!sidebar.visibility()));
+			toolBar.setLeftActionItem(e -> sidebar.setVisibe(!sidebar.isVisible()));
 			toolBar.addChildren(vSpacer);
 			toolBar.addChildren(new LinkAction(application(), "Reload").onClick(e -> {
 				application().destroy();
 			}));
 			toolBar.addChildren(new LinkAction(application(), "Settings").onClick(e -> {
-				rightDrawer.visibe(!rightDrawer.visibility());
+				rightDrawer.setVisibe(!rightDrawer.isVisible());
 			}));
 
 			body.addChildren(sidebar);
@@ -137,7 +137,7 @@ public class DemoSingleWindowApplication extends Application {
 			});
 
 			DropDownBox dropdown = new DropDownBox(application(), "dropdown menu");
-			dropdown.leftIcon(GlyphIcon.Map);
+			dropdown.setLeftIcon(GlyphIcon.Map);
 
 			// TODO: pushing data asynchronously doesn't work yet
 			dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
@@ -156,7 +156,7 @@ public class DemoSingleWindowApplication extends Application {
 				// }).start();
 			});
 			dropdown.addMenuItem("test2", "test 2", e -> {
-				dropdown.addMenuItem("addedItem" + dropdown.menuItems().size(), "This has been added manually", null);
+				dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually", null);
 			});
 
 			actualContainer.addChildren(linkAction);

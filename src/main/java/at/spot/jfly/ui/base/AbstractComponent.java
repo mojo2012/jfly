@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
@@ -24,14 +26,19 @@ import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
 
+	@JsonIgnore
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
+	@JsonIgnore
 	private final transient Set<String> styleClasses = new HashSet<>();
+	@JsonIgnore
 	private final transient List<String> eventData = new ArrayList<>();
 
 	private final String uuid;
 	private final KeyValueMapping<String, String> attributes = new KeyValueMapping<>();
 
+	@JsonIgnore
 	private transient ComponentHandler handler;
+	@JsonIgnore
 	private transient ComponentType componentType;
 	private boolean visible = true;
 
@@ -44,13 +51,17 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 * Initialization
 	 */
 
-	protected AbstractComponent(final ComponentHandler handler) {
+	public AbstractComponent() {
 		// this strange uid is necessary, as we are also using this for vue
 		// property binding
 		// there are no dashes allowed, and each uuid must start with a letter.
 		uuid = "comp" + Math.abs(UUID.randomUUID().toString().hashCode());
+	}
+
+	protected AbstractComponent(final ComponentHandler handler) {
+		this();
 		this.handler = handler;
-		handler().registerComponent(this);
+		getHandler().registerComponent(this);
 	}
 
 	/*
@@ -62,11 +73,11 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	}
 
 	@Override
-	public String uuid() {
+	public String getUuid() {
 		return uuid;
 	}
 
-	public boolean visibility() {
+	public boolean isVisible() {
 		return visible;
 	}
 
@@ -76,11 +87,11 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return (C) this;
 	}
 
-	public ComponentType componentType() {
+	public ComponentType getComponentType() {
 		return this.componentType;
 	}
 
-	public <C extends AbstractComponent> C visibe(final boolean visible) {
+	public <C extends AbstractComponent> C setVisibe(final boolean visible) {
 		this.visible = visible;
 		updateClientComponent();
 		return (C) this;
@@ -191,11 +202,11 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return drawCommands;
 	}
 
-	public void eventData(String data) {
+	public void setEventData(String data) {
 		this.eventData.add(data);
 	}
 
-	public List<String> eventData() {
+	public List<String> getEventData() {
 		return this.eventData;
 	}
 
@@ -203,7 +214,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 * INTERNAL
 	 */
 
-	protected ComponentHandler handler() {
+	protected ComponentHandler getHandler() {
 		return handler;
 	}
 
@@ -215,7 +226,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	public String getCssStyleString() {
 		String classes = StringUtils.join(styleClasses, " ");
 
-		if (!visibility()) {
+		if (!isVisible()) {
 			classes += " hidden";
 		}
 
@@ -223,14 +234,14 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	}
 
 	@ExposeMethodResult("componentType")
-	protected String getComponentType() {
+	protected String getComponentTypeName() {
 		return componentType != null ? componentType.internalName() : null;
 	}
 
 	@Override
 	public String render() {
 		clearDrawCommands();
-		return handler().renderComponent(this);
+		return getHandler().renderComponent(this);
 	}
 
 	@Override
@@ -257,7 +268,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 			return 1;
 		}
 
-		return uuid().compareTo(o.uuid());
+		return getUuid().compareTo(o.getUuid());
 	}
 
 	/*

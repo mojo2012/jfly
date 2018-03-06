@@ -1,8 +1,8 @@
-<v-btn uuid="$!{component.uuid()}" target="$!{component.navigationTarget()}" 
-	#if ($component.location()) href="$component.location()" #end 
-	class="$!{component.getCssStyleString()}" $!events
+<v-btn uuid="$!{component.uuid}" target="$!{component.navigationTarget}" 
+	#if ($component.location) href="$component.location" #end 
+	class="$!{component.cssStyleString}" $!events
 	depressed flat color="primary"
 	>
 	
-	{{componentStates.$!{component.uuid()}.text}}
+	{{componentStates.$!{component.uuid}.text}}
 </v-btn>

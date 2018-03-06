@@ -1,1 +1,1 @@
-<link rel="stylesheet" href="$!component.location()">
+<link rel="stylesheet" href="$!component.location">

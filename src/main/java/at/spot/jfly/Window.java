@@ -12,8 +12,8 @@ public abstract class Window {
 	public Window(final Application application) {
 		this.application = application;
 		html = new Html(application());
-		html.head(createHeader());
-		html.body(createBody());
+		html.setHead(createHeader());
+		html.setBody(createBody());
 	}
 
 	/*
@@ -29,11 +29,11 @@ public abstract class Window {
 	protected abstract Body createBody();
 
 	public Head head() {
-		return html.head();
+		return html.getHead();
 	}
 
 	public Body body() {
-		return html.body();
+		return html.getBody();
 	}
 
 	public String render() {

@@ -9,14 +9,14 @@ public class Stylesheet extends AbstractComponent {
 
 	public Stylesheet(final ComponentHandler handler, final String styleLocation) {
 		super(handler);
-		location(styleLocation);
+		setLocation(styleLocation);
 	}
 
-	public String location() {
+	public String getLocation() {
 		return location;
 	}
 
-	public Stylesheet location(final String location) {
+	public Stylesheet setLocation(final String location) {
 		this.location = location;
 
 		return this;

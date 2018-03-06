@@ -1,7 +1,7 @@
-<v-icon uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()}" $!events
-	#if ( $component.isInverse() ) dark #end
+<v-icon uuid="$!{component.uuid}" class="$!{component.cssStyleString}" $!events
+	#if ( $component.inverse ) dark #end
 	>
 	
-	$!{component.getIcon()}
+	$!{component.icon}
 	
 </v-icon>

@@ -23,23 +23,21 @@ public class LinkAction extends AbstractActionComponent {
 		this.navigationTarget = navigationTarget;
 	}
 
-	public LinkAction location(final String location) {
+	public void setLocation(final String location) {
 		this.location = location;
 		updateClientComponent();
-		return this;
 	}
 
-	public String location() {
+	public String getLocation() {
 		return this.location;
 	}
 
-	public NavigationTarget navigationTarget() {
+	public NavigationTarget getNavigationTarget() {
 		return navigationTarget;
 	}
 
-	public LinkAction navigationTarget(NavigationTarget navigationTarget) {
+	public void setNavigationTarget(NavigationTarget navigationTarget) {
 		this.navigationTarget = navigationTarget;
 		updateClientComponent();
-		return this;
 	}
 }

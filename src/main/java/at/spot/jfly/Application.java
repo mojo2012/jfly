@@ -1,6 +1,5 @@
 package at.spot.jfly;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +57,8 @@ public abstract class Application implements ComponentHandler {
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering the ui
-	 * components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering
+	 * the ui components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
@@ -133,16 +132,16 @@ public abstract class Application implements ComponentHandler {
 
 	@Override
 	public void registerComponent(final Component component) {
-		registeredComponents.put(component.uuid(), component);
+		registeredComponents.put(component.getUuid(), component);
 	}
 
 	protected void handleEvent(final Component component, final String event, final Map<String, Object> payload) {
 		final JsEvent e = JsEvent.valueOf(event);
-		
+
 		try {
 			((EventTarget) component).handleEvent(new Event(e, component, payload));
 		} catch (Exception ex) {
-			LOG.debug(String.format("Exception during handleEvent for component %s", component.uuid()));
+			LOG.debug(String.format("Exception during handleEvent for component %s", component.getUuid()));
 			ex.printStackTrace();
 		}
 
@@ -189,7 +188,8 @@ public abstract class Application implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given parameters.
+	 * Calls a javascript function on the given object with the given
+	 * parameters.
 	 * 
 	 * @param component
 	 * @param method
@@ -201,7 +201,7 @@ public abstract class Application implements ComponentHandler {
 		final Map<String, Object> message = new HashMap<>();
 
 		message.put("type", "objectManipulation");
-		message.put("componentUuid", component.uuid());
+		message.put("componentUuid", component.getUuid());
 		message.put("method", method);
 		message.put("params", parameters);
 
@@ -214,14 +214,14 @@ public abstract class Application implements ComponentHandler {
 		final Map<String, Object> message = new HashMap<>();
 
 		message.put("type", "componentUpdate");
-		message.put("componentUuid", component.uuid());
+		message.put("componentUuid", component.getUuid());
 		message.put("componentState", component);
 
 		sendMessage(message);
 	}
 
 	public void redrawComponentData(final AbstractComponent component) {
-		invokeFunctionCall("jfly", "replaceComponent", component.uuid(), component.render());
+		invokeFunctionCall("jfly", "replaceComponent", component.getUuid(), component.render());
 	}
 
 	public void sendMessage(final Map<String, Object> message) {
@@ -233,14 +233,11 @@ public abstract class Application implements ComponentHandler {
 		String output = "<could not render>";
 
 		if (templateService != null) {
-			final InputStream stream = this.getClass().getClassLoader()
-					.getSystemResourceAsStream(component.getClass().getSimpleName());
-
 			String events = "";
 
 			for (final JsEvent event : component.registeredEvents()) {
 				events += String.format(" v-on:%s=\"handleEvent('%s', '%s', $event)\"", event.toString(),
-						event.toString(), component.uuid());
+						event.toString(), component.getUuid());
 			}
 
 			final Map<String, Object> context = new HashMap<>();

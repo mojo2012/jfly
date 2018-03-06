@@ -1,14 +1,14 @@
-<v-toolbar uuid="$!{component.uuid()}" class="navbar $!{component.getCssStyleString()}" $!events
-	v-model="componentStates['${component.uuid()}']" app absolute clipped-left
+<v-toolbar uuid="$!{component.uuid}" class="navbar $!{component.cssStyleString}" $!events
+	v-model="componentStates['${component.uuid}']" app absolute clipped-left
 	>
 
-	$!{component.getLeftActionItem().render()}
+	$!{component.leftActionItem.render()}
 	
-	<v-toolbar-title>$!{component.getHeader().text()}</v-toolbar-title>
+	<v-toolbar-title>$!{component.header.text}</v-toolbar-title>
 	
-	#foreach( $!child in $!component.children() )
+	#foreach( $!child in $!component.children )
 		$!child.render()
 	#end
     
-    $!{component.getRightActionItem().render()}
+    $!{component.rightActionItem.render()}
 </v-toolbar>

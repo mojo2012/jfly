@@ -1,7 +1,7 @@
-<li ng-class="{ selected: isActive('/maverix')}" class="$!{component.selected()}" $!events
+<li ng-class="{ selected: isActive('/maverix')}" class="$!{selected}" $!events
 	>
 	<a>
-		<span class="$!{component.getCssStyleString()}">
-		</span> $!{component.text()}
+		<span class="$!{cssStyleString}">
+		</span> $!{text}
 	</a>
 </li>

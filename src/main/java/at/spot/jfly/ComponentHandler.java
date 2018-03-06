@@ -6,5 +6,5 @@ import at.spot.jfly.ui.base.Component;
 public interface ComponentHandler {
 	void registerComponent(final Component component);
 
-	String renderComponent(final AbstractComponent component);
+	String renderComponent(final AbstractComponent component) throws IllegalStateException;
 }

@@ -1,12 +1,12 @@
 <div class="sidebar-navicontainer" >
 	<div class="sidebar-headbox">
-		<span class="sidebar-header">$!{component.title()}</span>
+		<span class="sidebar-header">$!{title}</span>
 		<a class="sidebar-toggle">
 			Hide
 		</a>
 	</div>
 	<ul class="nav">
-		#foreach( $!child in $!component.children() )
+		#foreach( $!child in $!children )
 			$!child.render()
 		#end
 	</ul>

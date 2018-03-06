@@ -18,8 +18,12 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 		return (C) this;
 	}
 
-	public String text() {
+	public String getText() {
 		return this.text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public <C extends AbstractActionComponent> C onHover(final EventHandler handler) {

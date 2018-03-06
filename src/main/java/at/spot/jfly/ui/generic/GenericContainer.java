@@ -14,12 +14,16 @@ public class GenericContainer extends AbstractContainerComponent<AbstractCompone
 		this.tagName = tagName;
 	}
 
-	public String tagName() {
+	public String getTagName() {
 		return tagName;
 	}
 
 	public boolean isUseWrapper() {
 		return useWrapper;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
 	/**

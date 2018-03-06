@@ -11,12 +11,11 @@ public class SidebarNavContainer extends AbstractContainerComponent<SidebarNavEn
 		super(handler);
 	}
 
-	public String title() {
+	public String getTitle() {
 		return title;
 	}
 
-	public <S extends SidebarNavContainer> S title(String title) {
+	public void setTitle(String title) {
 		this.title = title;
-		return (S) this;
 	}
 }

@@ -15,38 +15,24 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		super(handler);
 	}
 
-	public List<Component> children() {
+	public List<Component> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
 
-	// public <S extends AbstractContainerComponent> S addChildren(final
-	// ContainerTag... tags) {
-	// final Component[] comps = Arrays.stream(tags).map((t) -> new
-	// GenericComponent(handler(), t))
-	// .collect(Collectors.toList()).toArray(new Component[0]);
-	//
-	// addChildren(comps);
-	// return (S) this;
-	// }
-
-	public <S extends AbstractContainerComponent<C>> S addChildren(final C... components) {
+	public void addChildren(final C... components) {
 		children.addAll(Arrays.asList(components));
 
 		for (Component c : components) {
-			updateClient("jfly", "addChildComponent", this.uuid(), c.render(), c);
+			updateClient("jfly", "addChildComponent", this.getUuid(), c.render(), c);
 		}
-
-		return (S) this;
 	}
 
-	public <S extends AbstractContainerComponent<C>> S removeChildren(final C... components) {
+	public void removeChildren(final C... components) {
 		children.removeAll(Arrays.asList(components));
 
 		for (Component c : components) {
-			updateClient("jfly", "removeChildComponent", this.uuid(), c.uuid());
+			updateClient("jfly", "removeChildComponent", this.getUuid(), c.getUuid());
 		}
-
-		return (S) this;
 	}
 
 }

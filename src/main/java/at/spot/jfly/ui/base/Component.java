@@ -10,7 +10,7 @@ public interface Component {
 	 * This unique identifier is used to identify the component on the client
 	 * and bind it to the server-side component instance.
 	 */
-	String uuid();
+	String getUuid();
 
 	/**
 	 * Renders the raw j2html item - accessible with {@link #raw()}.

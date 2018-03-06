@@ -1,4 +1,4 @@
-<span uuid="$!{component.uuid()}" class="w3-badge $!{component.getCssStyleString()}" $!events>
+<span uuid="$!{component.uuid}" class="w3-badge $!{component.cssStyleString}" $!events>
 	
-	{{componentStates.$!{component.uuid()}.text}}
+	{{componentStates.$!{component.uuid}.text}}
 </span>

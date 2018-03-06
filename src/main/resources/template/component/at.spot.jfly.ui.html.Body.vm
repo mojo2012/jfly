@@ -1,6 +1,6 @@
-<body uuid="$!{component.uuid()}" class="$!{component.getCssStyleString()} hidden" $!events>
+<body uuid="$!{component.uuid}" class="$!{component.cssStyleString} hidden" $!events>
 	<v-app data-app >
-		#foreach( $!child in $!component.children() )
+		#foreach( $!child in $!component.children )
 			$!child.render()
 		#end
 	</v-app>

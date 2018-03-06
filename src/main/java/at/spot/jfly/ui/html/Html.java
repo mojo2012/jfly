@@ -1,33 +1,32 @@
 package at.spot.jfly.ui.html;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 
-public class Html extends AbstractContainerComponent {
+public class Html extends AbstractContainerComponent<AbstractComponent> {
 
-	private transient Head head;
-	private transient Body body;
+	private Head head;
+	private Body body;
 
 	public Html(final ComponentHandler handler) {
 		super(handler);
 	}
 
-	public Head head() {
+	public Head getHead() {
 		return head;
 	}
 
-	public Body body() {
+	public Body getBody() {
 		return body;
 	}
 
-	public Html head(final Head head) {
+	public void setHead(final Head head) {
 		this.head = head;
-		return this;
 	}
 
-	public Html body(final Body body) {
+	public void setBody(final Body body) {
 		this.body = body;
-		return this;
 	}
 
 }

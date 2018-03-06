@@ -34,22 +34,21 @@ public class ToolBar extends AbstractContainerComponent<AbstractTextComponent> {
 		this.header.addStyleClasses(NavbarStyle.NavBarHeaderBrand);
 	}
 
-	public Alignment placement() {
+	public Alignment getPlacement() {
 		return this.placement;
 	}
 
-	public ToolBar placement(final Alignment placement) {
+	public void setPlacement(final Alignment placement) {
 		this.placement = placement;
-		return this;
 	}
 
 	public void setLeftActionItem(EventHandler onClickHandler) {
-		this.leftActionItem = new GenericContainer(handler(), ACTION_ITEM_TAG);
+		this.leftActionItem = new GenericContainer(getHandler(), ACTION_ITEM_TAG);
 		this.leftActionItem.onClick(onClickHandler);
 	}
 
 	public void setRightActionItem(EventHandler onClickHandler) {
-		this.rightActionItem = new GenericContainer(handler(), ACTION_ITEM_TAG);
+		this.rightActionItem = new GenericContainer(getHandler(), ACTION_ITEM_TAG);
 		this.rightActionItem.onClick(onClickHandler);
 	}
 
