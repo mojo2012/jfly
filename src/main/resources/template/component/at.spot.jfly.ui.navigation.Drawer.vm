@@ -2,7 +2,7 @@
 	v-model="componentStates['${component.uuid}'].visible"
 	:mini-variant.sync="componentStates['${component.uuid}'].minimized"
 	app :stateless="true" :temporary="componentStates['${component.uuid}'].floating"
-	:disable-resize-watcher="true" #if ( $!component.horizontalOrientation.internalName == "right" ) right #end >
+	:disable-resize-watcher="true" #if ( $!component.horizontalOrientation.internalName() == "right" ) right #end >
 	
 	$!{component.toolBar.render()}
 	
