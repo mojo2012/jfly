@@ -1,10 +1,10 @@
 <v-navigation-drawer 
 	v-model="componentStates['${component.uuid}'].visible"
 	:mini-variant.sync="componentStates['${component.uuid}'].minimized"
-	clipped app permanent
+	clipped app 
 	:permanent="componentStates['${component.uuid}'].visible"
 	:stateless="true" :touchless="true" 
-	:disable-resize-watcher="true" :temporary="false"
+	:disable-resize-watcher="true" :hide-overlay="false"
 	>
 	
 	$!{component.toolBar.render()}
