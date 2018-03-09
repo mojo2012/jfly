@@ -1,0 +1,15 @@
+<v-list
+	uuid="$!{component.uuid}"
+	class="$!{component.cssStyleString}" $!events
+	:expand="componentStates.${component.uuid}.isExpanded"
+	>
+	
+	<v-expansion-panel-content v-for="(item, i) in componentStates.${component.uuid}.items" :key="i">
+		<div slot="header">{{item.text}}</div>
+		<v-card>
+			<v-card-text class="grey lighten-3">
+				AAAA
+			</v-card-text>
+		</v-card>
+	</v-expansion-panel-content>
+</v-expansion-panel>
