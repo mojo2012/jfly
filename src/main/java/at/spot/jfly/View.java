@@ -4,14 +4,14 @@ import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.html.Html;
 
-public abstract class Window {
+public abstract class View {
 
-	private final Application application;
+	private final Application handler;
 	private final Html html;
 
-	public Window(final Application application) {
-		this.application = application;
-		html = new Html(application());
+	public View(final Application handler) {
+		this.handler = handler;
+		html = new Html(getHandler());
 		html.setHead(createHeader());
 		html.setBody(createBody());
 	}
@@ -20,8 +20,8 @@ public abstract class Window {
 	 * Rendering.
 	 */
 
-	public Application application() {
-		return this.application;
+	public Application getHandler() {
+		return this.handler;
 	}
 
 	protected abstract Head createHeader();

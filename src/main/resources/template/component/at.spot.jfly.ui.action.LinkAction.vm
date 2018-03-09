@@ -3,6 +3,8 @@
 	class="$!{component.cssStyleString}" $!events
 	depressed flat color="primary"
 	>
+
+	$!{component.icon.render()}
 	
 	{{componentStates.$!{component.uuid}.text}}
 </v-btn>

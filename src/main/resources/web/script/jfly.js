@@ -174,6 +174,9 @@ jfly.initVue = function(states) {
 					payload = {"value": eventData};
 				}
 				
+				// add whole component state to the event payload
+				// payload.componentState = this.componentStates[componentUuid];
+				
 				var message = {
 					"messageType": "event",
 					"event": event,

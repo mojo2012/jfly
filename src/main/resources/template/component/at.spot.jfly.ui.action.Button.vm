@@ -1,7 +1,7 @@
 <v-btn uuid="$!{component.uuid}" 
 	class="$!{component.cssStyleString}" $!events
-	v-model="componentStates['${component.uuid}']" color="info" :flat="componentStates.${component.uuid}.isFlat" 
-	#if ( ${component.icon} && !${component.text} ) icon #end
+	:flat="componentStates.${component.uuid}.isFlat"
+	:icon="componentStates.${component.uuid}.icon && !componentStates.${component.uuid}.text" 
 	>
 	
 	$!{component.icon.render()}

@@ -1,0 +1,11 @@
+ <v-text-field
+	uuid="$!{component.uuid}" 
+	class="$!{component.cssStyleString}" $!events
+	name="input-$!{component.uuid}"
+	:label="componentStates.$!{component.uuid}.label"
+	:placeholder="componentStates.$!{component.uuid}.placeholder"
+	:multi-line="componentStates.$!{component.uuid}.multiLine"
+	:value="componentStates.$!{component.uuid}.text"
+	>
+          
+</v-text-field>
