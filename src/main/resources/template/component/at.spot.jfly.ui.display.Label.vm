@@ -1,3 +1,3 @@
-<span uuid="$!{component.uuid}" class="w3-tag $!{component.cssStyleString}" $!events>
+<span uuid="$!{component.uuid}" class="label danger $!{component.cssStyleString}" $!events>
 	{{componentStates.$!{component.uuid}.text}}
 </span>

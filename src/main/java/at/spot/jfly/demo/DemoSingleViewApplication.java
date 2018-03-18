@@ -30,6 +30,9 @@ import at.spot.jfly.ui.navigation.SideBar;
 import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
 import at.spot.jfly.ui.navigation.ToolBar;
+import at.spot.jfly.ui.navigation.TreeNode;
+import at.spot.jfly.ui.navigation.TreeNode.NodeType;
+import at.spot.jfly.ui.navigation.TreeView;
 import at.spot.jfly.ui.selection.DropDownBox;
 
 public class DemoSingleViewApplication extends Application {
@@ -57,7 +60,7 @@ public class DemoSingleViewApplication extends Application {
 
 		@Override
 		protected Head createHeader() {
-			final Head head = new Head(getHandler()).setTitle("Hello world");
+			final Head head = new Head(getHandler()).setTitle("jfly UI framework");
 
 			return head;
 		}
@@ -74,7 +77,6 @@ public class DemoSingleViewApplication extends Application {
 			navContainer.addChildren(new SidebarNavEntry(getHandler(), "Test"));
 
 			SideBar sidebar = new SideBar(getHandler());
-			sidebar.addChildren(navContainer);
 
 			Drawer rightDrawer = new Drawer(getHandler(), HorizontalOrientation.Right);
 			rightDrawer.setToolBar(new ToolBar(getHandler(), NavbarStyle.Default));
@@ -87,6 +89,33 @@ public class DemoSingleViewApplication extends Application {
 			drawerCloseButton.onClick(e -> rightDrawer.setVisibe(false));
 			rightDrawer.getToolBar().addChildren(vSpacer);
 			rightDrawer.getToolBar().addChildren(drawerCloseButton);
+
+			// tree navigation view
+			TreeView treeView = new TreeView(getHandler());
+			sidebar.addChildren(treeView);
+
+			TreeNode infoNode = new TreeNode(getHandler(), "Info");
+			infoNode.setIcon(new Icon(getHandler(), MaterialIcon.info));
+
+			TreeNode splitter = new TreeNode(getHandler(), null);
+			splitter.setNodeType(NodeType.SPLITTER);
+
+			TreeNode apiDocumentation = new TreeNode(getHandler(), "API documentation");
+			apiDocumentation.setNodeType(NodeType.SUB_HEADER);
+
+			TreeNode componentNode = new TreeNode(getHandler(), "Components");
+			componentNode.setIcon(new Icon(getHandler(), MaterialIcon.widgets));
+			componentNode.setExpanded(true);
+			componentNode.setBadge("new");
+			TreeNode selectionComponentNode = new TreeNode(getHandler(), "Status");
+			selectionComponentNode.setSubTitle("Radio buttons, checkboxes ...");
+			selectionComponentNode.setIcon(new Icon(getHandler(), MaterialIcon.select_all));
+
+			// TreeNode demoComponentNode = new TreeNode(getHandler(), "Demo");
+			// selectionComponentNode.addChildren(demoComponentNode);
+
+			componentNode.addChildren(selectionComponentNode);
+			treeView.addChildren(infoNode, splitter, apiDocumentation, componentNode);
 
 			// top nav bar
 			final ToolBar toolBar = new ToolBar(getHandler(), NavbarStyle.Inverse);
@@ -186,7 +215,7 @@ public class DemoSingleViewApplication extends Application {
 			actualContainer.addChildren(linkAction);
 			actualContainer.addChildren(dropdown);
 			actualContainer.addChildren(button);
-			actualContainer.addChildren(new Label(getHandler(), "test").addStyleClasses(LabelStyle.Danger));
+			actualContainer.addChildren(new Label(getHandler(), "Danger").addStyleClasses(LabelStyle.Danger));
 			actualContainer.addChildren(new Badge(getHandler(), "42"));
 
 			return body;

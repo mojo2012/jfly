@@ -3,9 +3,11 @@ package at.spot.jfly.ui.navigation;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 
-public class ListView extends AbstractContainerComponent<ListValueItem> {
+public class TreeView extends AbstractContainerComponent<TreeNode> {
 
-	public ListView(ComponentHandler handler) {
+	public TreeView(ComponentHandler handler) {
 		super(handler);
 	}
+
+
 }

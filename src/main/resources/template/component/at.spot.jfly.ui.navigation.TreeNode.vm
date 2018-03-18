@@ -1,0 +1,47 @@
+<template v-if="componentStates.${component.uuid}.nodeType == 'DEFAULT'">
+	<v-list-group v-if="componentStates.${component.uuid}.hasChildren"
+		uuid="$!{component.uuid}"
+		class="$!{component.cssStyleString}" $!events
+		v-model="componentStates.${component.uuid}.isExpanded"
+		:key="componentStates.${component.uuid}.title"
+		:prepend-icon="componentStates['$!{component.icon.uuid}'].icon"
+		>
+		
+		<v-list-tile slot="activator">
+			<v-list-tile-content>
+				<v-list-tile-title>{{componentStates.$!{component.uuid}.title}}</v-list-tile-title>
+				<v-list-tile-sub-title>{{componentStates.$!{component.uuid}.subTitle}}</v-list-tile-sub-title>
+			</v-list-tile-content>
+		</v-list-tile>
+	
+		#foreach( $!child in $!component.children )
+			$!child.render()
+		#end
+		
+	</v-list-group>
+		
+	<v-list-tile v-if="!componentStates.${component.uuid}.hasChildren" >
+		<v-list-tile-action>
+			$!{component.icon.render()}
+		</v-list-tile-action>
+		<v-list-tile-content>
+			<v-list-tile-title>
+				{{componentStates.${component.uuid}.title}}
+				<v-badge color="blue">
+					{{componentStates.${component.uuid}.badge}}
+				</v-badge>
+			</v-list-tile-title>
+			<v-list-tile-sub-title v-if="componentStates.${component.uuid}.subTitle">
+				{{componentStates.${component.uuid}.subTitle}}
+			</v-list-tile-sub-title>
+		</v-list-tile-content>
+	</v-list-tile>
+</template>
+
+<template v-else-if="componentStates.$!{component.uuid}.nodeType == 'SPLITTER'">
+	<v-divider></v-divider>
+</template>
+
+<template v-else-if="componentStates.$!{component.uuid}.nodeType == 'SUB_HEADER'">
+	<v-subheader>{{componentStates.${component.uuid}.title}}</v-subheader>
+</template>

@@ -26,6 +26,8 @@ import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
 
+	private String type;
+
 	@JsonIgnore
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
 	@JsonIgnore
@@ -56,6 +58,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		// property binding
 		// there are no dashes allowed, and each uuid must start with a letter.
 		uuid = "comp" + Math.abs(UUID.randomUUID().toString().hashCode());
+		type = this.getClass().getSimpleName();
 	}
 
 	protected AbstractComponent(final ComponentHandler handler) {
@@ -258,8 +261,22 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		drawCommands.add(new DrawCommand(DrawCommandType.ObjectManipulation, null, method, params));
 	}
 
-	protected void updateClient(final String object, final String function, final Object... params) {
+	protected void callClientFunction(final String object, final String function, final Object... params) {
 		drawCommands.add(new DrawCommand(DrawCommandType.FunctionCall, object, function, params));
+	}
+
+	protected void updateClient(ClientDrawFunction function, final Object... params) {
+		String functionName = null;
+
+		if (ClientDrawFunction.ADD.equals(function)) {
+			functionName = "addChildComponent";
+		} else if (ClientDrawFunction.REMOVE.equals(function)) {
+			functionName = "removeChildComponent";
+		} else if (ClientDrawFunction.REPLACE.equals(function)) {
+			functionName = "replaceChildComponent";
+		}
+
+		drawCommands.add(new DrawCommand(DrawCommandType.FunctionCall, "jfly", functionName, params));
 	}
 
 	@Override
@@ -315,5 +332,24 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		onEvent(JsEvent.mousewheel, handler);
 
 		return (C) this;
+	}
+
+	public enum ClientDrawFunction {
+		/**
+		 * Adds an element as a new child element to the parent.
+		 */
+		ADD,
+		/**
+		 * Appends an element after the parent element.
+		 */
+		APPEND,
+		/**
+		 * Removes an element.
+		 */
+		REMOVE,
+		/**
+		 * Replaces an element with another one.
+		 */
+		REPLACE
 	}
 }

@@ -1,0 +1,10 @@
+<v-list
+	uuid="$!{component.uuid}"
+	class="$!{component.cssStyleString}" $!events
+	>
+	
+	#foreach( $!child in $!component.children )
+		$!child.render()
+	#end
+	
+</v-list>

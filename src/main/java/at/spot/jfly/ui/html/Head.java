@@ -20,7 +20,10 @@ public class Head extends AbstractComponent {
 	}
 
 	private Head addDefaultStyles() {
-		setStylesheet(new Stylesheet(getHandler(), "https://www.w3schools.com/w3css/4/w3.css"));
+		setStylesheet(new Stylesheet(getHandler(),
+				"/style/jfly.css"));
+		setStylesheet(new Stylesheet(getHandler(),
+				"/style/vuetify-custom.css"));
 		setStylesheet(new Stylesheet(getHandler(),
 				"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"));
 		setStylesheet(new Stylesheet(getHandler(), "https://unpkg.com/vuetify/dist/vuetify.min.css"));

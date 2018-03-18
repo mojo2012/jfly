@@ -1,9 +1,10 @@
 package at.spot.jfly.ui.navigation;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 
-public class SidebarNavContainer extends AbstractContainerComponent<SidebarNavEntry> {
+public class SidebarNavContainer extends AbstractContainerComponent<AbstractComponent> {
 
 	private String title;
 

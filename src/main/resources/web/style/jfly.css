@@ -1,0 +1,44 @@
+.tag, .badge, .label {
+	background-color: #000;
+	border-color: #000;
+	color: #fff;
+	display: inline-block;
+	padding-left: 8px;
+	padding-right: 8px;
+	text-align: center;
+	border-radius: 50%;
+	font-weight: bold;
+}
+
+ .label {
+ 	border-radius: 10%;
+ 	width: initial;
+	height: initial;
+ }
+
+.bordered {
+	background-color: white;
+}
+
+.danger {
+	background-color: red;
+	color: #fff;
+}
+
+.info {
+	background-color: rgb(33, 150, 243);
+	border-color: rgb(33, 150, 243);
+	color: #fff;
+}
+
+.warn {
+	background-color: rgb(255, 152, 0);
+	border-color: rgb(255, 152, 0);
+	color: #fff;
+}
+
+.success {
+	background-color: rgb(76, 175, 80);
+	border-color: rgb(76, 175, 80);
+	color: #fff;
+}

@@ -198,7 +198,7 @@ jfly.initVue = function(states) {
 
 				this.componentStates[childContext.uuid] = childContext;
 				
-				// this can't be referenced within the data function,
+				// "this" can't be referenced within the data function,
 				// so we have to create a wrapper for it
 				var parent = this;
 				var Component = Vue.extend({
