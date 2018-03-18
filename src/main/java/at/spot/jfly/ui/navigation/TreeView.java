@@ -9,5 +9,7 @@ public class TreeView extends AbstractContainerComponent<TreeNode> {
 		super(handler);
 	}
 
-
+	public enum NodeType {
+		SPLITTER, DEFAULT, SUB_HEADER
+	}
 }

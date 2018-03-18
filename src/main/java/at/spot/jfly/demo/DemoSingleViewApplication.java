@@ -31,8 +31,8 @@ import at.spot.jfly.ui.navigation.SidebarNavContainer;
 import at.spot.jfly.ui.navigation.SidebarNavEntry;
 import at.spot.jfly.ui.navigation.ToolBar;
 import at.spot.jfly.ui.navigation.TreeNode;
-import at.spot.jfly.ui.navigation.TreeNode.NodeType;
 import at.spot.jfly.ui.navigation.TreeView;
+import at.spot.jfly.ui.navigation.TreeView.NodeType;
 import at.spot.jfly.ui.selection.DropDownBox;
 
 public class DemoSingleViewApplication extends Application {
@@ -69,6 +69,88 @@ public class DemoSingleViewApplication extends Application {
 		protected Body createBody() {
 			final Body body = new Body(getHandler());
 
+			createNavigation(body);
+			createMainContent(body);
+
+			return body;
+		}
+
+		private void createMainContent(Body body) {
+			GenericContainer mainContainer = new GenericContainer(getHandler(), "v-content");
+			GenericContainer fluidContainer = new GenericContainer(getHandler(), "v-container");
+			fluidContainer.addAttribute("fluid", null);
+			fluidContainer.addAttribute("fill-height", null);
+			GenericContainer actualContainer = new GenericContainer(getHandler(), "v-layout");
+			actualContainer.addAttribute("justify-center", null);
+			actualContainer.addAttribute("align-center", null);
+			actualContainer.setUseWrapper(true);
+			actualContainer.addStyleClasses("container");
+
+			mainContainer.addChildren(fluidContainer);
+			fluidContainer.addChildren(actualContainer);
+			body.addChildren(mainContainer);
+
+			TextField singleLineTextBox = new TextField(getHandler(), null);
+			singleLineTextBox.setPlaceholder("Search ...");
+			// singleLineTextBox.setLabel("Quick search");
+
+			TextField multiLineTextBox = new TextField(getHandler(), null);
+			// multiLineTextBox.setPlaceholder("Enter text here ...");
+			multiLineTextBox.setMultiLine(true);
+			multiLineTextBox.setLabel("Story");
+			multiLineTextBox.setText("This is a test text");
+			multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
+
+			final LinkAction linkAction = new LinkAction(getHandler(), "google.at", "https://google.at",
+					NavigationTarget.Blank);
+
+			final Button button = new Button(getHandler(), "Say hello!");
+			button.onClick(e -> {
+				button.text("clicked");
+
+				Label label = new Label(getHandler(), "Current time: " + new Date().toString());
+				actualContainer.addChildren(label);
+			});
+
+			button.onMouseOut(e -> {
+				button.text("and out");
+			});
+
+			DropDownBox dropdown = new DropDownBox(getHandler(), "dropdown menu");
+			dropdown.setLeftIcon(GlyphIcon.Map);
+
+			// TODO: pushing data asynchronously doesn't work yet
+			dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
+				LOG.debug("Starting timer");
+				// new Thread(() -> {
+				// for (byte b = 0; b < 4; b++) {
+				// GenericComponent comp = new GenericComponent(getHandler(),
+				// TagCreator.h2("Time: " + System.currentTimeMillis()));
+				// actualContainer.addChildren(comp);
+				// try {
+				// Thread.sleep(1000);
+				// } catch (InterruptedException e1) {
+				// e1.printStackTrace();
+				// }
+				// }
+				// }).start();
+			});
+			dropdown.addMenuItem("test2", "test 2", e -> {
+				dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually",
+						null);
+			});
+
+			actualContainer.addChildren(singleLineTextBox);
+			actualContainer.addChildren(multiLineTextBox);
+			actualContainer.addChildren(linkAction);
+			actualContainer.addChildren(dropdown);
+			actualContainer.addChildren(button);
+			actualContainer.addChildren(new Label(getHandler(), "Danger").addStyleClasses(LabelStyle.Danger));
+			actualContainer.addChildren(new Badge(getHandler(), "42"));
+
+		}
+
+		protected void createNavigation(Body body) {
 			VSpacer vSpacer = new VSpacer(getHandler());
 
 			// sidebar
@@ -143,82 +225,6 @@ public class DemoSingleViewApplication extends Application {
 			body.addChildren(sidebar);
 			body.addChildren(rightDrawer);
 			body.addChildren(toolBar);
-
-			// content
-
-			GenericContainer mainContainer = new GenericContainer(getHandler(), "v-content");
-			GenericContainer fluidContainer = new GenericContainer(getHandler(), "v-container");
-			fluidContainer.addAttribute("fluid", null);
-			fluidContainer.addAttribute("fill-height", null);
-			GenericContainer actualContainer = new GenericContainer(getHandler(), "v-layout");
-			actualContainer.addAttribute("justify-center", null);
-			actualContainer.addAttribute("align-center", null);
-			actualContainer.setUseWrapper(true);
-			actualContainer.addStyleClasses("container");
-
-			mainContainer.addChildren(fluidContainer);
-			fluidContainer.addChildren(actualContainer);
-			body.addChildren(mainContainer);
-
-			TextField singleLineTextBox = new TextField(getHandler(), null);
-			singleLineTextBox.setPlaceholder("Search ...");
-			// singleLineTextBox.setLabel("Quick search");
-
-			TextField multiLineTextBox = new TextField(getHandler(), null);
-			// multiLineTextBox.setPlaceholder("Enter text here ...");
-			multiLineTextBox.setMultiLine(true);
-			multiLineTextBox.setLabel("Story");
-			multiLineTextBox.setText("This is a test text");
-			multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
-
-			final LinkAction linkAction = new LinkAction(getHandler(), "google.at", "https://google.at",
-					NavigationTarget.Blank);
-
-			final Button button = new Button(getHandler(), "Say hello!");
-			button.onClick(e -> {
-				button.text("clicked");
-
-				Label label = new Label(getHandler(), "Current time: " + new Date().toString());
-				actualContainer.addChildren(label);
-			});
-
-			button.onMouseOut(e -> {
-				button.text("and out");
-			});
-
-			DropDownBox dropdown = new DropDownBox(getHandler(), "dropdown menu");
-			dropdown.setLeftIcon(GlyphIcon.Map);
-
-			// TODO: pushing data asynchronously doesn't work yet
-			dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
-				LOG.debug("Starting timer");
-				// new Thread(() -> {
-				// for (byte b = 0; b < 4; b++) {
-				// GenericComponent comp = new GenericComponent(getHandler(),
-				// TagCreator.h2("Time: " + System.currentTimeMillis()));
-				// actualContainer.addChildren(comp);
-				// try {
-				// Thread.sleep(1000);
-				// } catch (InterruptedException e1) {
-				// e1.printStackTrace();
-				// }
-				// }
-				// }).start();
-			});
-			dropdown.addMenuItem("test2", "test 2", e -> {
-				dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually",
-						null);
-			});
-
-			actualContainer.addChildren(singleLineTextBox);
-			actualContainer.addChildren(multiLineTextBox);
-			actualContainer.addChildren(linkAction);
-			actualContainer.addChildren(dropdown);
-			actualContainer.addChildren(button);
-			actualContainer.addChildren(new Label(getHandler(), "Danger").addStyleClasses(LabelStyle.Danger));
-			actualContainer.addChildren(new Badge(getHandler(), "42"));
-
-			return body;
 		}
 	}
 
