@@ -1,5 +1,6 @@
 package at.spot.jfly;
 
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.google.gson.JsonObject;
 
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.templating.ComponentContext;
 import at.spot.jfly.templating.TemplateService;
 import at.spot.jfly.templating.impl.VelocityTemplateService;
 import at.spot.jfly.ui.base.AbstractComponent;
@@ -37,9 +39,9 @@ public abstract class Application implements ComponentHandler {
 
 	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();;
 
-	public <A extends Application> A init(final ClientCommunicationHandler handler, final String sessionId) {
-		sessionId(sessionId);
-		clientCommunicationHandler(handler);
+	public void init(final ClientCommunicationHandler handler, final String sessionId) {
+		setSessionId(sessionId);
+		setClientCommunicationHandler(handler);
 
 		if (StringUtils.isBlank(componentTemplatePath)) {
 			this.componentTemplatePath = DEFAULT_COMPONENT_TEMPLATE_PATH;
@@ -53,36 +55,31 @@ public abstract class Application implements ComponentHandler {
 			throw new RuntimeException("No client communication handler set");
 		}
 
-		return (A) this;
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering
-	 * the ui components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering the ui
+	 * components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
-	public <A extends Application> A componentTemplatePath(final String path) {
+	public void setComponentTemplatePath(final String path) {
 		this.componentTemplatePath = path;
-		return (A) this;
 	}
 
-	public <A extends Application> A clientCommunicationHandler(
-			final ClientCommunicationHandler clientCommunicationHandler) {
+	public void setClientCommunicationHandler(final ClientCommunicationHandler clientCommunicationHandler) {
 		this.clientCommunicationHandler = clientCommunicationHandler;
-		return (A) this;
 	}
 
-	public <A extends Application> A sessionId(final String sessionId) {
+	public void setSessionId(final String sessionId) {
 		this.sessionId = sessionId;
-		return (A) this;
 	}
 
-	public String sessionId() {
+	public String getSessionId() {
 		return this.sessionId;
 	}
 
-	public void templateService(final TemplateService templateService) {
+	public void setTemplateService(final TemplateService templateService) {
 		this.templateService = templateService;
 	}
 
@@ -102,7 +99,7 @@ public abstract class Application implements ComponentHandler {
 		Object retVal = null;
 		// if this is an initial request, we return the current component states
 		if (msg.get("messageType") != null
-				&& StringUtils.equalsIgnoreCase(msg.get("messageType").getAsString(), "hello")) {
+				&& StringUtils.equalsIgnoreCase(msg.get("messageType").getAsString(), "init")) {
 
 			retVal = getInitialComponentStates();
 		} else { // this is a regular message, most likely an event
@@ -188,8 +185,7 @@ public abstract class Application implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given
-	 * parameters.
+	 * Calls a javascript function on the given object with the given parameters.
 	 * 
 	 * @param component
 	 * @param method
@@ -240,9 +236,12 @@ public abstract class Application implements ComponentHandler {
 						event.toString(), component.getUuid());
 			}
 
-			final Map<String, Object> context = new HashMap<>();
-			context.put("component", component);
+			ComponentContext context = new ComponentContext();
+			context.setComponent(component);
 			context.put("events", events);
+			context.put("_events", events);
+			context.put("_uuid", component.getUuid());
+			context.put("_state", "componentStates['" + component.getUuid() + "']");
 
 			output = templateService.render(context, component.getClass().getName() + ".vm");
 		}

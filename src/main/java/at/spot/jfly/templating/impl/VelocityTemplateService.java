@@ -2,7 +2,6 @@ package at.spot.jfly.templating.impl;
 
 import java.io.StringWriter;
 import java.nio.file.Paths;
-import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -14,6 +13,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.spot.jfly.templating.ComponentContext;
 import at.spot.jfly.templating.TemplateService;
 
 /**
@@ -24,6 +24,8 @@ public class VelocityTemplateService implements TemplateService {
 
 	private final VelocityEngine ve;
 	private final String templateBasePath;
+
+	private boolean isDebugEnabled = true;
 
 	public VelocityTemplateService(final String templateBasePath) {
 		ve = new VelocityEngine();
@@ -41,14 +43,32 @@ public class VelocityTemplateService implements TemplateService {
 	}
 
 	@Override
-	public String render(final Map<String, Object> context, final String templateFile) {
+	public String render(final ComponentContext context, final String templateFile) {
 		final Template tmpl = ve.getTemplate(Paths.get(templateBasePath, templateFile).toString());
 
 		final StringWriter writer = new StringWriter();
 
-		final VelocityContext ctx = new VelocityContext(context);
+		if (isDebugEnabled()) {
+			writer.write("<!-- START " + context.getComponent().getClass().getName() + " ("
+					+ context.getComponent().getUuid() + ")" + " -->");
+		}
+
+		final VelocityContext ctx = new VelocityContext(context.getValues());
 		tmpl.merge(ctx, writer);
+
+		if (isDebugEnabled()) {
+			writer.write("<!-- END " + context.getComponent().getClass().getName() + " -->");
+		}
 
 		return writer.toString();
 	}
+
+	public boolean isDebugEnabled() {
+		return isDebugEnabled;
+	}
+
+	public void setDebugEnabled(boolean isDebugEnabled) {
+		this.isDebugEnabled = isDebugEnabled;
+	}
+
 }

@@ -1,10 +1,13 @@
-<v-btn uuid="$!{component.uuid}" target="$!{component.navigationTarget}" 
-	#if ($component.location) href="$component.location" #end 
-	class="$!{component.cssStyleString}" $!events
+<v-btn
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses"
+	$!events
+	:target="${_state}.navigationTarget" 
+	:href="${_state}.location"
 	depressed flat color="primary"
 	>
 
 	$!{component.icon.render()}
 	
-	{{componentStates.$!{component.uuid}.text}}
+	{{${_state}.text}}
 </v-btn>

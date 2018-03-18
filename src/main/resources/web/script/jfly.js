@@ -29,7 +29,7 @@ jfly.websockethandler = {
 		console.debug('WebSocket onopen ' + event);
 		
 		jfly.callAsync(function() {
-			jfly.websockethandler.send({ "messageType": 'hello' });
+			jfly.websockethandler.send({ "messageType": 'init' });
 		});
 	},
 	

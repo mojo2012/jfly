@@ -1,5 +1,5 @@
 #macro( attributes )
-	uuid="$!{component.uuid}" class="$!{component.cssStyleString}" $!{component.attributeString}  $!events
+	uuid="${_uuid}" :class="${_state}.styleClasses" $!{component.attributeString}  $!events
 #end
 
 <${component.tagName} #if (!${component.useWrapper}) #attributes #end>

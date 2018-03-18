@@ -1,4 +1,4 @@
-<body uuid="$!{component.uuid}" class="$!{component.cssStyleString} hidden" $!events>
+<body uuid="${_uuid}" class="hidden" :class="${_state}.styleClasses" $!events>
 	<v-app data-app >
 		#foreach( $!child in $!component.children )
 			$!child.render()

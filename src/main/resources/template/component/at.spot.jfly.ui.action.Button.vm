@@ -1,11 +1,12 @@
-<v-btn uuid="$!{component.uuid}" 
-	class="$!{component.cssStyleString}" $!events
-	:flat="componentStates.${component.uuid}.isFlat"
-	:icon="componentStates.${component.uuid}.icon && !componentStates.${component.uuid}.text" 
+<v-btn
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses" $!events
+	:flat="${_state}.isFlat"
+	:icon="${_state}.icon && !${_state}.text" 
 	>
 	
 	$!{component.icon.render()}
 	
-	{{componentStates.$!{component.uuid}.text}}
+	{{${_state}.text}}
 	
 </v-btn>

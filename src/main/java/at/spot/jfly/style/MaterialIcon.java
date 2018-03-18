@@ -947,4 +947,9 @@ public enum MaterialIcon implements Style {
 	public String internalName() {
 		return this.styleClass;
 	}
+
+	@Override
+	public String toString() {
+		return internalName();
+	}
 }

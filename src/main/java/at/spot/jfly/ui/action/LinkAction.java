@@ -8,11 +8,14 @@ import at.spot.jfly.ui.base.AbstractActionComponent;
  * Implements a generic link.
  */
 public class LinkAction extends AbstractActionComponent {
+	private static final String EMPTY_LOCATION = "javascript:void(0)";
+
 	private String location;
 	private NavigationTarget navigationTarget = NavigationTarget.Blank;
 
 	public LinkAction(final ComponentHandler handler, final String text) {
 		super(handler, text);
+		setLocation(EMPTY_LOCATION);
 	}
 
 	public LinkAction(final ComponentHandler handler, final String text, String url,

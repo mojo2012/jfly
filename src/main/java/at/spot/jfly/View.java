@@ -1,5 +1,8 @@
 package at.spot.jfly;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.html.Html;
@@ -8,6 +11,7 @@ public abstract class View {
 
 	private final Application handler;
 	private final Html html;
+	private boolean formatOutput = true;
 
 	public View(final Application handler) {
 		this.handler = handler;
@@ -37,11 +41,17 @@ public abstract class View {
 	}
 
 	public String render() {
-		// Document doc = Jsoup.parseBodyFragment(html.render());
-		//
-		// return doc.outerHtml();
+		String ret = html.render();
 
-		return html.render();
+		if (formatOutput) {
+			ret = format(ret);
+		}
+
+		return ret;
 	}
 
+	public String format(String html) {
+		Document doc = Jsoup.parse(html);
+		return doc.outerHtml();
+	}
 }

@@ -1,5 +1,8 @@
-<v-icon uuid="$!{component.uuid}" class="$!{component.cssStyleString}" $!events
-	#if ( $component.inverse ) dark #end
+<v-icon
+	uuid="${_uuid}"
+	:class="${_state}.styleClasses"
+	$!events
+	:dark="${_state}.inverse"
 	>
 	
 	$!{component.icon}

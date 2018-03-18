@@ -1,7 +1,0 @@
-<li ng-class="{ selected: isActive('/maverix')}" class="$!{selected}" $!events
-	>
-	<a>
-		<span class="$!{cssStyleString}">
-		</span> $!{text}
-	</a>
-</li>

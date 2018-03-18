@@ -16,4 +16,9 @@ public enum HorizontalOrientation implements Style {
 	public String internalName() {
 		return this.styleClass;
 	}
+
+	@Override
+	public String toString() {
+		return internalName();
+	}
 }

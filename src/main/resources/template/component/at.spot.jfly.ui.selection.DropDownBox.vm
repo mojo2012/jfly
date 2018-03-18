@@ -1,12 +1,14 @@
 <!-- Single button -->
-<v-select uuid="$!{component.uuid}" $!events 
-	class="$!{component.cssStyleString}"
+<v-select 
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses"
+	$!events 
 	label="$!{component.text}" dense 
-	:items="componentStates['${component.uuid}'].menuItems"
+	:items="${_state}.menuItems"
 	prepend-icon="$!{component.leftIcon}"
 	append-icon="$!{component.rightIcon}"
-	v-model="componentStates['${component.uuid}'].selectedItem"
-	#if ( $!{component.editable} ) editable #end
+	v-model="${_state}.selectedItem"
+	:editable="${_state}.editable"
 	item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"
 >
 </v-select>

@@ -199,19 +199,18 @@ public class Server implements ClientCommunicationHandler {
 			}
 
 			final Map<String, Object> cookie = new HashMap<>();
-			cookie.put("sessionId", app.sessionId());
+			cookie.put("sessionId", app.getSessionId());
 			response.cookie("jfly", Base64.getEncoder().encodeToString(GsonUtil.toJson(cookie).getBytes()));
 
 			return app.render(request.url());
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
-			throw new Exception("Cannot instantiace application", e);
+			throw new Exception("Cannot instantiate application", e);
 		}
 	}
 
 	@Override
 	public void sendMessage(final Object message) {
-
 		try {
 			String messageString = GsonUtil.toJson(message);
 			LOG.debug("Sending message: " + GsonUtil.toJson(message));

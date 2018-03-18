@@ -26,22 +26,19 @@ import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
 
-	private String type;
-
 	@JsonIgnore
 	private final transient List<DrawCommand> drawCommands = new LinkedList<>();
 	@JsonIgnore
-	private final transient Set<String> styleClasses = new HashSet<>();
-	@JsonIgnore
 	private final transient List<String> eventData = new ArrayList<>();
-
-	private final String uuid;
-	private final KeyValueMapping<String, String> attributes = new KeyValueMapping<>();
-
 	@JsonIgnore
 	private transient ComponentHandler handler;
 	@JsonIgnore
 	private transient ComponentType componentType;
+
+	private String type;
+	private final String uuid;
+	private final Set<String> styleClasses = new HashSet<>();
+	private final KeyValueMapping<String, String> attributes = new KeyValueMapping<>();
 	private boolean visible = true;
 
 	/*
@@ -225,16 +222,16 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return StringUtils.join(registeredEvents(), " ");
 	}
 
-	@ExposeMethodResult("styleClasses")
-	public String getCssStyleString() {
-		String classes = StringUtils.join(styleClasses, " ");
-
-		if (!isVisible()) {
-			classes += " hidden";
-		}
-
-		return classes;
-	}
+	// @ExposeMethodResult("styleClasses")
+	// public String getCssStyleString() {
+	// String classes = StringUtils.join(styleClasses, " ");
+	//
+	// if (!isVisible()) {
+	// classes += " hidden";
+	// }
+	//
+	// return classes;
+	// }
 
 	@ExposeMethodResult("componentType")
 	protected String getComponentTypeName() {

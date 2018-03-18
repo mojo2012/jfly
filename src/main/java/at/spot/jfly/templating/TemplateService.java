@@ -1,14 +1,12 @@
 package at.spot.jfly.templating;
 
-import java.util.Map;
-
 public interface TemplateService {
 	/**
 	 * Renders the given template file with the given.
 	 * 
-	 * @param object
+	 * @param context
 	 * @param templatePath
 	 * @return
 	 */
-	public String render(Map<String, Object> object, String templateFile);
+	public String render(ComponentContext context, String templateFile);
 }

@@ -1,16 +1,16 @@
-<template v-if="componentStates.${component.uuid}.nodeType == 'DEFAULT'">
-	<v-list-group v-if="componentStates.${component.uuid}.hasChildren"
-		uuid="$!{component.uuid}"
-		class="$!{component.cssStyleString}" $!events
-		v-model="componentStates.${component.uuid}.isExpanded"
-		:key="componentStates.${component.uuid}.title"
+<template v-if="${_state}.nodeType == 'DEFAULT'">
+	<v-list-group v-if="${_state}.hasChildren"
+		uuid="${_uuid}"
+		:class="${_state}.styleClasses" $!events
+		v-model="${_state}.isExpanded"
+		:key="${_state}.title"
 		:prepend-icon="componentStates['$!{component.icon.uuid}'].icon"
 		>
 		
 		<v-list-tile slot="activator">
 			<v-list-tile-content>
-				<v-list-tile-title>{{componentStates.$!{component.uuid}.title}}</v-list-tile-title>
-				<v-list-tile-sub-title>{{componentStates.$!{component.uuid}.subTitle}}</v-list-tile-sub-title>
+				<v-list-tile-title>{{${_state}.title}}</v-list-tile-title>
+				<v-list-tile-sub-title>{{${_state}.subTitle}}</v-list-tile-sub-title>
 			</v-list-tile-content>
 		</v-list-tile>
 	
@@ -20,28 +20,28 @@
 		
 	</v-list-group>
 		
-	<v-list-tile v-if="!componentStates.${component.uuid}.hasChildren" >
+	<v-list-tile v-if="!${_state}.hasChildren" >
 		<v-list-tile-action>
 			$!{component.icon.render()}
 		</v-list-tile-action>
 		<v-list-tile-content>
 			<v-list-tile-title>
-				{{componentStates.${component.uuid}.title}}
+				{{${_state}.title}}
 				<v-badge color="blue">
-					{{componentStates.${component.uuid}.badge}}
+					{{${_state}.badge}}
 				</v-badge>
 			</v-list-tile-title>
-			<v-list-tile-sub-title v-if="componentStates.${component.uuid}.subTitle">
-				{{componentStates.${component.uuid}.subTitle}}
+			<v-list-tile-sub-title v-if="${_state}.subTitle">
+				{{${_state}.subTitle}}
 			</v-list-tile-sub-title>
 		</v-list-tile-content>
 	</v-list-tile>
 </template>
 
-<template v-else-if="componentStates.$!{component.uuid}.nodeType == 'SPLITTER'">
+<template v-else-if="${_state}.nodeType == 'SPLITTER'">
 	<v-divider></v-divider>
 </template>
 
-<template v-else-if="componentStates.$!{component.uuid}.nodeType == 'SUB_HEADER'">
-	<v-subheader>{{componentStates.${component.uuid}.title}}</v-subheader>
+<template v-else-if="${_state}.nodeType == 'SUB_HEADER'">
+	<v-subheader>{{${_state}.title}}</v-subheader>
 </template>

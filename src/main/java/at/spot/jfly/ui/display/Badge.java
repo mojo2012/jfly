@@ -1,7 +1,6 @@
 package at.spot.jfly.ui.display;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.BadgeStyle;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 
 /**
@@ -12,6 +11,6 @@ import at.spot.jfly.ui.base.AbstractTextComponent;
 public class Badge extends AbstractTextComponent {
 	public Badge(final ComponentHandler handler, final String text) {
 		super(handler, text);
-		addStyleClasses(BadgeStyle.None);
+		addStyleClasses("badge");
 	}
 }

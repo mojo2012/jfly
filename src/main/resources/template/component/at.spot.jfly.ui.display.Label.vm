@@ -1,3 +1,7 @@
-<span uuid="$!{component.uuid}" class="label danger $!{component.cssStyleString}" $!events>
-	{{componentStates.$!{component.uuid}.text}}
+<span
+	uuid="${_uuid}"
+	:class="${_state}.styleClasses"
+	$!events>
+	
+	{{${_state}.text}}
 </span>

@@ -1,7 +1,6 @@
 package at.spot.jfly.ui.display;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 
 /**
@@ -12,6 +11,6 @@ import at.spot.jfly.ui.base.AbstractTextComponent;
 public class Label extends AbstractTextComponent {
 	public Label(final ComponentHandler handler, final String text) {
 		super(handler, text);
-		addStyleClasses(LabelStyle.None);
+		addStyleClasses("label");
 	}
 }

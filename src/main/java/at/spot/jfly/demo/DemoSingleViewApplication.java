@@ -27,8 +27,6 @@ import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.input.TextField;
 import at.spot.jfly.ui.navigation.Drawer;
 import at.spot.jfly.ui.navigation.SideBar;
-import at.spot.jfly.ui.navigation.SidebarNavContainer;
-import at.spot.jfly.ui.navigation.SidebarNavEntry;
 import at.spot.jfly.ui.navigation.ToolBar;
 import at.spot.jfly.ui.navigation.TreeNode;
 import at.spot.jfly.ui.navigation.TreeView;
@@ -41,10 +39,9 @@ public class DemoSingleViewApplication extends Application {
 	protected View window;
 
 	@Override
-	public <A extends Application> A init(final ClientCommunicationHandler handler, final String sessionId) {
+	public void init(final ClientCommunicationHandler handler, final String sessionId) {
 		super.init(handler, sessionId);
 		window = new SingleView(this);
-		return (A) this;
 	}
 
 	@Override
@@ -154,9 +151,6 @@ public class DemoSingleViewApplication extends Application {
 			VSpacer vSpacer = new VSpacer(getHandler());
 
 			// sidebar
-			SidebarNavContainer navContainer = new SidebarNavContainer(getHandler());
-			navContainer.setTitle("Open files");
-			navContainer.addChildren(new SidebarNavEntry(getHandler(), "Test"));
 
 			SideBar sidebar = new SideBar(getHandler());
 

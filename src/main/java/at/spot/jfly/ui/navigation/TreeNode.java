@@ -3,6 +3,7 @@ package at.spot.jfly.ui.navigation;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 import at.spot.jfly.ui.display.Icon;
+import at.spot.jfly.ui.navigation.TreeView.NodeType;
 
 public class TreeNode extends AbstractContainerComponent<TreeNode> {
 
@@ -83,9 +84,5 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 
 	public boolean isSubHeader() {
 		return NodeType.SUB_HEADER.equals(nodeType);
-	}
-
-	public enum NodeType {
-		SPLITTER, DEFAULT, SUB_HEADER
 	}
 }
