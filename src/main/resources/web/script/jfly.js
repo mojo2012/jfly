@@ -59,6 +59,8 @@ jfly.websockethandler = {
 			func.apply(func, message.params);
 		} else if (message.type == "componentUpdate") {
 			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
+		} else if (message.type == "exception") {
+			jfly.uicontroller.showExceptionDialog(message);
 		}
 	},
 }
@@ -211,13 +213,21 @@ jfly.initVue = function(states) {
 					 
 				var component = new Component().$mount();
 				jfly.findComponent(containerUuid).append(component.$el);
+			},
+			showExceptionDialog: function(message) {
+				this.exception.message = message.description;
+				this.exception.visible = true;
 			}
 		},
 		computed: {
 			
 		},
 		data: {
-			componentStates: states
+			componentStates: states,
+			exception: {
+				visible: false,
+				message: ""
+			}
 		},
 // template: {
 //			
@@ -226,7 +236,7 @@ jfly.initVue = function(states) {
 			console.debug("Vue beforeCreate");
 		},
 		created: function() {
-			console.debug("Vue create");
+			console.debug("Vue created");
 			$("body").removeClass("hidden");
 		}
 	});

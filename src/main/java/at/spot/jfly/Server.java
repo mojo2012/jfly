@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -21,7 +20,11 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import at.spot.jfly.http.HttpMethod;
+import at.spot.jfly.http.HttpSession;
 import at.spot.jfly.util.GsonUtil;
+import at.spot.jfly.util.KeyValueMapping;
+import at.spot.jfly.viewhandlers.ExceptionViewHandler;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
@@ -35,46 +38,60 @@ public class Server implements ClientCommunicationHandler {
 	public static final String DEFAULT_STATIC_FILE_PATH = "/web";
 	public static final String DEFAULT_WEBSOCKET_PATH = "/com";
 
-	protected final Map<String, Application> sessionApplications = new ConcurrentHashMap<>();
+	protected final Map<String, ViewHandler> sessionViewHandlers = new ConcurrentHashMap<>();
 
 	protected final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 	protected final ThreadLocal<Session> context = new ThreadLocal<>();
 
-	protected Class<? extends Application> appClass;
+	protected final KeyValueMapping<String, Class<? extends ViewHandler>> urlViewHandlerMapping = new KeyValueMapping<>();
 
 	/**
-	 * Creates a new jfly application using the default port
-	 * {@link Server#DEFAULT_PORT}.
+	 * Creates a new jfly ViewHandler.
 	 * 
 	 * @param port
 	 * @param staticFileLocation
 	 * @param componentTemplatePath
 	 */
-	public Server(final Class<? extends Application> appClass) {
-		this(appClass, DEFAULT_PORT);
-	}
-
-	/**
-	 * Creates a new jfly application.
-	 * 
-	 * @param port
-	 * @param staticFileLocation
-	 * @param componentTemplatePath
-	 */
-	public Server(final Class<? extends Application> appClass, final int port) {
-		this.appClass = appClass;
+	public Server(final int port) {
 		Spark.port(port);
 		Spark.webSocket(DEFAULT_WEBSOCKET_PATH, this);
 		Spark.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
 
-		Spark.exception(Exception.class, (ex, req, res) -> {
-			res.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-			res.body("Fatal server error.");
+		// redirect to the error page in case there is a 404 error
+		Spark.notFound((req, res) -> {
+			res.redirect("/error");
+			return null;
 		});
 
-		Spark.get("/", (req, res) -> {
-			return render(req, res, null);
+		// redirect to the error page in case there is an internal server error
+		Spark.internalServerError((req, res) -> {
+			res.redirect("/error");
+			return null;
 		});
+
+		// redirect to the error page in case there is an exception during initial
+		// rendering of the view
+		Spark.exception(Exception.class, (ex, req, res) -> {
+			res.redirect("/error");
+		});
+
+		registerViewHandler("/error", ExceptionViewHandler.class);
+	}
+
+	protected ExceptionViewHandler getErrorHandler(Request request) {
+		ExceptionViewHandler handler = new ExceptionViewHandler();
+		handler.init(createRequest(request), this);
+		return handler;
+	}
+
+	public Server registerViewHandler(String url, Class<? extends ViewHandler> handler) {
+		urlViewHandlerMapping.put(url, handler);
+
+		Spark.get(url, (req, res) -> {
+			return render(req, res);
+		});
+
+		return this;
 	}
 
 	/**
@@ -100,7 +117,7 @@ public class Server implements ClientCommunicationHandler {
 		return this;
 	}
 
-	public void init() {
+	public void start() {
 		Spark.init();
 	}
 
@@ -132,19 +149,34 @@ public class Server implements ClientCommunicationHandler {
 			final JsonElement urlPath = msg.get("urlPath");
 
 			if (sessionId != null && urlPath != null) {
-				final Application app = sessionApplications.get(sessionId.getAsString());
+				final ViewHandler app = sessionViewHandlers.get(sessionId.getAsString());
 
 				if (app != null) {
-					final Object retVal = app.handleMessage(msg, urlPath.getAsString());
+					try {
+						final Object retVal = app.handleMessage(msg, urlPath.getAsString());
 
-					if (retVal != null) {
-						sendMessage(retVal);
+						if (retVal != null) {
+							sendMessage(retVal);
+						}
+					} catch (Exception e) {
+						// send back an error message to allow the UI to react properly
+						sendMessage(generateErrorMessage(e));
 					}
 				} else {
-					throw new IOException("No application for the given session is found.");
+					throw new IOException("No ViewHandler for the given session is found.");
 				}
 			}
 		}
+	}
+
+	protected Map<String, Object> generateErrorMessage(Exception exception) {
+		Map<String, Object> ret = new HashMap<>();
+
+		ret.put("type", "exception");
+		ret.put("description", exception.getMessage());
+		// ret.put("stackTrace", ExceptionUtils.getStackTrace(exception));
+
+		return ret;
 	}
 
 	protected void addSession(final Session session) {
@@ -181,32 +213,46 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	/*
-	 * application functionality
+	 * ViewHandler functionality
 	 */
 
-	protected String render(final Request request, final Response response, final Exception ex) throws Exception {
-		Application app = sessionApplications.get(request.session().id());
+	protected String render(final Request request, final Response response) throws Exception {
+		ViewHandler app = null;
+		HttpRequest httpRequest = createRequest(request);
+		sessionViewHandlers.get(request.session().id());
 
 		try {
 			if (app == null) {
-				app = appClass.newInstance();
-				app.init(this, request.session().id());
+				app = urlViewHandlerMapping.get(request.uri()).newInstance();
+				app.init(httpRequest, this);
 				app.onDestroy(() -> {
-					sessionApplications.remove(request.session().id());
+					sessionViewHandlers.remove(request.session().id());
 				});
 
-				sessionApplications.put(request.session().id(), app);
+				sessionViewHandlers.put(request.session().id(), app);
 			}
 
 			final Map<String, Object> cookie = new HashMap<>();
 			cookie.put("sessionId", app.getSessionId());
 			response.cookie("jfly", Base64.getEncoder().encodeToString(GsonUtil.toJson(cookie).getBytes()));
-
-			return app.render(request.url());
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
-			throw new Exception("Cannot instantiate application", e);
+			throw new Exception("Cannot instantiate ViewHandler", e);
 		}
+
+		return app.render();
+	}
+
+	protected HttpRequest createRequest(Request request) {
+		String sessionId = request.session().id();
+		KeyValueMapping<String, Object> sessionAttributes = new KeyValueMapping<>();
+		request.session().attributes().forEach(k -> sessionAttributes.put(k, request.session().attribute(k)));
+		HttpSession session = new HttpSession(sessionId, sessionAttributes);
+
+		HttpRequest req = new HttpRequest(HttpMethod.valueOf(request.requestMethod()), request.params(),
+				request.cookies(), session);
+
+		return req;
 	}
 
 	@Override

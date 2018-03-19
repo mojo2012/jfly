@@ -1,6 +1,5 @@
 package at.spot.jfly;
 
-import java.awt.Window;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +24,13 @@ import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.Component;
 import at.spot.jfly.ui.base.DrawCommand;
 import at.spot.jfly.ui.base.EventTarget;
+import at.spot.jfly.ui.html.Body;
+import at.spot.jfly.ui.html.Head;
+import at.spot.jfly.ui.html.Html;
 import at.spot.jfly.util.GsonUtil;
 
-public abstract class Application implements ComponentHandler {
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+public abstract class ViewHandler implements ComponentHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(ViewHandler.class);
 
 	public static final String DEFAULT_COMPONENT_TEMPLATE_PATH = "/template/component";
 
@@ -37,10 +41,13 @@ public abstract class Application implements ComponentHandler {
 	protected String componentTemplatePath;
 	protected String sessionId;
 
-	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();;
+	private Html html;
+	private boolean formatOutput = true;
 
-	public void init(final ClientCommunicationHandler handler, final String sessionId) {
-		setSessionId(sessionId);
+	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();
+
+	public void init(HttpRequest request, final ClientCommunicationHandler handler) {
+		setSessionId(request.getSession().getId());
 		setClientCommunicationHandler(handler);
 
 		if (StringUtils.isBlank(componentTemplatePath)) {
@@ -55,10 +62,13 @@ public abstract class Application implements ComponentHandler {
 			throw new RuntimeException("No client communication handler set");
 		}
 
+		html = new Html(this);
+		html.setHead(createHeader());
+		html.setBody(createBody());
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering the ui
+	 * Defines the path under which the velocity template files for rendering the UI
 	 * components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
@@ -86,14 +96,6 @@ public abstract class Application implements ComponentHandler {
 	/*
 	 * Event handling and other functionality.
 	 */
-
-	/**
-	 * Renders the corresponding {@link Window} for the given url path.
-	 * 
-	 * @param urlPath
-	 * @return
-	 */
-	public abstract String render(final String urlPath);
 
 	public Object handleMessage(final JsonObject msg, final String urlPath) {
 		Object retVal = null;
@@ -138,8 +140,8 @@ public abstract class Application implements ComponentHandler {
 		try {
 			((EventTarget) component).handleEvent(new Event(e, component, payload));
 		} catch (Exception ex) {
-			LOG.debug(String.format("Exception during handleEvent for component %s", component.getUuid()));
-			ex.printStackTrace();
+			LOG.error(String.format("Exception during handleEvent for component %s", component.getUuid()), ex);
+			throw ex;
 		}
 
 		for (final Component c : getRegisteredComponents().values()) {
@@ -265,5 +267,40 @@ public abstract class Application implements ComponentHandler {
 
 	public void onDestroy(Runnable eventListener) {
 		onDestroyEventListener.add(eventListener);
+	}
+
+	/*
+	 * HTML Rendering
+	 */
+
+	public ViewHandler getHandler() {
+		return this;
+	}
+
+	protected abstract Head createHeader();
+
+	protected abstract Body createBody();
+
+	public Head head() {
+		return html.getHead();
+	}
+
+	public Body body() {
+		return html.getBody();
+	}
+
+	public String render() {
+		String ret = html.render();
+
+		if (formatOutput) {
+			ret = format(ret);
+		}
+
+		return ret;
+	}
+
+	public String format(String html) {
+		Document doc = Jsoup.parse(html);
+		return doc.outerHtml();
 	}
 }

@@ -1,10 +1,14 @@
 package at.spot.jfly.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class KeyValueMapping<K, V> extends HashMap<K, V> {
 	private static final long serialVersionUID = 1L;
@@ -45,5 +49,25 @@ public class KeyValueMapping<K, V> extends HashMap<K, V> {
 		}
 
 		return removedValues;
+	}
+
+	@Override
+	public void putAll(Map<? extends K, ? extends V> map) {
+		if (map != null) {
+			super.putAll(map);
+		}
+	}
+
+	public void putAll(Collection<V> collection, Function<V, K> keyMapper) {
+		if (collection != null) {
+			super.putAll(collection.stream().collect(Collectors.toMap(keyMapper, Function.identity())));
+		}
+	}
+
+	public <T> void putAll(Collection<T> collection, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		if (collection != null) {
+			super.putAll(collection.stream().collect(Collectors.toMap(keyMapper, valueMapper)));
+		}
+
 	}
 }
