@@ -57,6 +57,8 @@ public class Server implements ClientCommunicationHandler {
 		Spark.webSocket(DEFAULT_WEBSOCKET_PATH, this);
 		Spark.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
 
+		// NOT YET WORKING: Service.hasMultipleHandlers() returns wrong value in case a
+		// websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
 		Spark.notFound((req, res) -> {
 			res.redirect("/error");
