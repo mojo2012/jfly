@@ -1,0 +1,33 @@
+{
+  "name": "jfly",
+  "version": "1.0.0",
+  "description": "jfly vue-based java web UI toolkit",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "material-icons": "^0.1.0",
+    "vue": "^2.5.16",
+    "vuetify": "^1.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mojo2012/jfly.git"
+  },
+  "keywords": [
+    "vue",
+    "vuetify",
+    "java",
+    "web",
+    "ui-toolkit"
+  ],
+  "author": "Matthias Fuchs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mojo2012/jfly/issues"
+  },
+  "homepage": "https://github.com/mojo2012/jfly#readme"
+}

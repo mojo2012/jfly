@@ -61,12 +61,14 @@ public class Server implements ClientCommunicationHandler {
 		// websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
 		Spark.notFound((req, res) -> {
+			res.status(404);
 			res.redirect("/error");
 			return null;
 		});
 
 		// redirect to the error page in case there is an internal server error
 		Spark.internalServerError((req, res) -> {
+			res.status(500);
 			res.redirect("/error");
 			return null;
 		});
@@ -74,6 +76,7 @@ public class Server implements ClientCommunicationHandler {
 		// redirect to the error page in case there is an exception during initial
 		// rendering of the view
 		Spark.exception(Exception.class, (ex, req, res) -> {
+			res.status(500);
 			res.redirect("/error");
 		});
 

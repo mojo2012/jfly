@@ -11,7 +11,7 @@ public class ExceptionViewHandler extends ViewHandler {
 
 	@Override
 	protected Head createHeader() {
-		final Head head = new Head(getHandler()).setTitle("An error occurred");
+		final Head head = new Head(getHandler()).setTitle("Error");
 
 		return head;
 	}
@@ -20,9 +20,8 @@ public class ExceptionViewHandler extends ViewHandler {
 	protected Body createBody() {
 		Body body = new Body(this);
 
-		GenericContainer errorHeader = new GenericContainer(this, "v-alert");
-		errorHeader.addAttribute("type", "error");
-		errorHeader.addAttribute("value", "true");
+		GenericContainer errorHeader = new GenericContainer(this, "div");
+		errorHeader.addStyleClasses("cover");
 		errorHeader.addChildren(new HtmlTag(this, TagCreator.h1("Sorry, an error occurred")));
 
 		GenericContainer container = new GenericContainer(this, "div");

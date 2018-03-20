@@ -20,24 +20,22 @@ public class Head extends AbstractComponent {
 	}
 
 	private Head addDefaultStyles() {
-		setStylesheet(new Stylesheet(getHandler(),
-				"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"));
-		setStylesheet(new Stylesheet(getHandler(), "https://unpkg.com/vuetify/dist/vuetify.min.css"));
+		setStylesheet(new Stylesheet(getHandler(), "https://fonts.googleapis.com/icon?family=Material+Icons"));
+		setStylesheet(new Stylesheet(getHandler(), "/style/material-icons.min.css"));
+		setStylesheet(new Stylesheet(getHandler(), "/style/vuetify.min.css"));
 
-		setStylesheet(new Stylesheet(getHandler(),
-				"/style/jfly.css"));
-		setStylesheet(new Stylesheet(getHandler(),
-				"/style/vuetify-custom.css"));
+		setStylesheet(new Stylesheet(getHandler(), "/style/jfly.css"));
+		setStylesheet(new Stylesheet(getHandler(), "/style/vuetify-custom.css"));
 
 		return this;
 	}
 
 	protected Head addDefaultScripts() {
 		// vue.js draws the client components
-		setScript(new Script(getHandler(), "https://unpkg.com/vue/dist/vue.js"));
+		setScript(new Script(getHandler(), "/script/vue.min.js"));
 
-		setScript(new Script(getHandler(), "https://code.jquery.com/jquery-3.1.1.min.js"));
-		setScript(new Script(getHandler(), "https://unpkg.com/vuetify/dist/vuetify.js"));
+		setScript(new Script(getHandler(), "/script/jquery.min.js"));
+		setScript(new Script(getHandler(), "/script/vuetify.min.js"));
 
 		// jfly custom javascript
 		setScript(new Script(getHandler(), "/script/jfly.js"));
