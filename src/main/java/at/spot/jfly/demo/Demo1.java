@@ -115,7 +115,6 @@ public class Demo1 extends ViewHandler {
 			dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually", null);
 		});
 
-
 		Button causeExceptionButton = new Button(getHandler(), "Cause exception");
 		causeExceptionButton.setFlat(true);
 		causeExceptionButton.onClick(e -> {
@@ -169,8 +168,9 @@ public class Demo1 extends ViewHandler {
 		selectionComponentNode.setSubTitle("Radio buttons, checkboxes ...");
 		selectionComponentNode.setIcon(new Icon(getHandler(), MaterialIcon.select_all));
 
-		// TreeNode demoComponentNode = new TreeNode(getHandler(), "Demo");
-		// selectionComponentNode.addChildren(demoComponentNode);
+		TreeNode demoComponentNode = new TreeNode(getHandler(), "Demo");
+		demoComponentNode.setIcon(new Icon(getHandler(), MaterialIcon.ac_unit));
+		selectionComponentNode.addChildren(demoComponentNode);
 
 		componentNode.addChildren(selectionComponentNode);
 		treeView.addChildren(infoNode, splitter, apiDocumentation, componentNode);

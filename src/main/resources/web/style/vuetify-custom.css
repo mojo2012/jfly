@@ -1,3 +1,21 @@
-div.list__group__items div.list__tile {
-	margin-left: 15px;
+/* TREE VIEW FIXES */
+
+div.list__group__items > div.list__tile,
+div.list__group__items div.list {
+	margin-left: 7px;
 }
+
+.list__group--active::before {
+	background: initial !important;
+}
+
+.list__group::after {
+	height: 0px !important;
+}
+
+.list-hotfix {
+    flex: 1 1 auto !important;
+    overflow: hidden;
+}
+
+/* END TREE VIEW FIXES */

@@ -3,14 +3,14 @@ package at.spot.jfly.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class KeyValueMapping<K, V> extends HashMap<K, V> {
+public class KeyValueMapping<K, V> extends ConcurrentHashMap<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -49,6 +49,24 @@ public class KeyValueMapping<K, V> extends HashMap<K, V> {
 		}
 
 		return removedValues;
+	}
+
+	@Override
+	public V remove(Object key) {
+		if (key != null) {
+			return super.remove(key);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public V put(K key, V value) {
+		if (value != null) {
+			return super.put(key, value);
+		} else {
+			return super.remove(key);
+		}
 	}
 
 	@Override

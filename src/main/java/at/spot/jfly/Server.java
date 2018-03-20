@@ -5,7 +5,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,11 +37,10 @@ public class Server implements ClientCommunicationHandler {
 	public static final String DEFAULT_STATIC_FILE_PATH = "/web";
 	public static final String DEFAULT_WEBSOCKET_PATH = "/com";
 
-	protected final Map<String, ViewHandler> sessionViewHandlers = new ConcurrentHashMap<>();
-
 	protected final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 	protected final ThreadLocal<Session> context = new ThreadLocal<>();
 
+	protected final KeyValueMapping<String, KeyValueMapping<String, ViewHandler>> sessionViewHandlers = new KeyValueMapping<>();
 	protected final KeyValueMapping<String, Class<? extends ViewHandler>> urlViewHandlerMapping = new KeyValueMapping<>();
 
 	/**
@@ -154,7 +152,7 @@ public class Server implements ClientCommunicationHandler {
 			final JsonElement urlPath = msg.get("urlPath");
 
 			if (sessionId != null && urlPath != null) {
-				final ViewHandler app = sessionViewHandlers.get(sessionId.getAsString());
+				final ViewHandler app = getViewHandler(sessionId.getAsString(), urlPath.getAsString());
 
 				if (app != null) {
 					try {
@@ -226,11 +224,6 @@ public class Server implements ClientCommunicationHandler {
 
 		try {
 			view = getOrCreateViewHandler(request);
-			view.onDestroy(() -> {
-				sessionViewHandlers.remove(request.session().id());
-			});
-
-			sessionViewHandlers.put(request.session().id(), view);
 
 			final Map<String, Object> cookie = new HashMap<>();
 			cookie.put("sessionId", view.getSessionId());
@@ -246,20 +239,41 @@ public class Server implements ClientCommunicationHandler {
 		return view.render();
 	}
 
-	protected ViewHandler getOrCreateViewHandler(Request request)
-			throws InstantiationException, IllegalAccessException {
-		KeyValueMapping<String, ViewHandler> mapping = request.session().attribute("urlViewHandlerMapping");
+	protected KeyValueMapping<String, ViewHandler> getViewHandlerMapping(String sessionId) {
+		KeyValueMapping<String, ViewHandler> mapping = sessionViewHandlers.get(sessionId);
 
 		if (mapping == null) {
 			mapping = new KeyValueMapping<>();
-			request.session().attribute("urlViewHandlerMapping", mapping);
+			sessionViewHandlers.put(sessionId, mapping);
 		}
 
+		return mapping;
+	}
+
+	protected ViewHandler getViewHandler(String sessionId, String url) {
+		return getViewHandlerMapping(sessionId).get(url);
+	}
+
+	protected ViewHandler getOrCreateViewHandler(Request request)
+			throws InstantiationException, IllegalAccessException {
+
+		final KeyValueMapping<String, ViewHandler> mapping = getViewHandlerMapping(request.session().id());
 		ViewHandler view = mapping.get(request.uri());
 
 		if (view == null) {
+			// get view handler class from registered view handlers mappings and put it into
+			// the session mapping object
 			view = urlViewHandlerMapping.get(request.uri()).newInstance();
 			view.init(createRequest(request), this);
+
+			final String url = request.uri();
+
+			view.onDestroy(() -> {
+				mapping.remove(url);
+
+				LOG.debug(String.format("Destroyed view %s", request.uri()));
+			});
+
 			mapping.put(request.uri(), view);
 		}
 

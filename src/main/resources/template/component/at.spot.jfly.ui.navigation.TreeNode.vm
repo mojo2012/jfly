@@ -7,16 +7,21 @@
 		:prepend-icon="componentStates['$!{component.icon.uuid}'].icon"
 		>
 		
-		<v-list-tile slot="activator">
+		<v-list-tile slot="activator" class="list-hotfix">
 			<v-list-tile-content>
-				<v-list-tile-title>{{${_state}.title}}</v-list-tile-title>
-				<v-list-tile-sub-title>{{${_state}.subTitle}}</v-list-tile-sub-title>
+				<v-list-tile-title :title="${_state}.title">{{${_state}.title}}</v-list-tile-title>
+				<v-list-tile-sub-title :title="${_state}.subTitle">{{${_state}.subTitle}}</v-list-tile-sub-title>
 			</v-list-tile-content>
 		</v-list-tile>
 	
-		#foreach( $!child in $!component.children )
-			$!child.render()
-		#end
+		<v-list
+			uuid="${_uuid}" 
+			:class="${_state}.styleClasses" 
+			>
+			#foreach( $!child in $!component.children )
+				$!child.render()
+			#end
+		</v-list>
 		
 	</v-list-group>
 		
@@ -25,13 +30,13 @@
 			$!{component.icon.render()}
 		</v-list-tile-action>
 		<v-list-tile-content>
-			<v-list-tile-title>
+			<v-list-tile-title :title="${_state}.title">
 				{{${_state}.title}}
 				<v-badge color="blue">
 					{{${_state}.badge}}
 				</v-badge>
 			</v-list-tile-title>
-			<v-list-tile-sub-title v-if="${_state}.subTitle">
+			<v-list-tile-sub-title :title="${_state}.subTitle" v-if="${_state}.subTitle">
 				{{${_state}.subTitle}}
 			</v-list-tile-sub-title>
 		</v-list-tile-content>
@@ -43,5 +48,5 @@
 </template>
 
 <template v-else-if="${_state}.nodeType == 'SUB_HEADER'">
-	<v-subheader>{{${_state}.title}}</v-subheader>
+	<v-subheader :title="${_state}.title" >{{${_state}.title}}</v-subheader>
 </template>

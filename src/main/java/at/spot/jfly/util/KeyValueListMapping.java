@@ -48,4 +48,5 @@ public class KeyValueListMapping<K, V> extends KeyValueMapping<K, List<V>> {
 
 		return values != null ? values : Collections.emptyList();
 	}
+
 }
