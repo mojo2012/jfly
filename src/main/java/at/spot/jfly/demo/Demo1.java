@@ -56,7 +56,7 @@ public class Demo1 extends ViewHandler {
 		GenericContainer fluidContainer = new GenericContainer(getHandler(), "v-container");
 		fluidContainer.addAttribute("fluid", null);
 		fluidContainer.addAttribute("fill-height", null);
-		GenericContainer actualContainer = new GenericContainer(getHandler(), "v-layout");
+		final GenericContainer actualContainer = new GenericContainer(getHandler(), "v-layout");
 		actualContainer.addAttribute("justify-center", null);
 		actualContainer.addAttribute("align-center", null);
 		actualContainer.setUseWrapper(true);

@@ -13,7 +13,9 @@
 				</v-layout>
 			</v-container>
 			
-			<v-btn flat @click.native="exception.visible = false">OK</v-btn>
+			<v-btn flat @click.native="exception.visible = false">
+              <v-icon>close</v-icon>
+			</v-btn>
 		</v-snackbar>
 	
 		<!-- COMPONENTS -->

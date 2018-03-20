@@ -222,30 +222,48 @@ public class Server implements ClientCommunicationHandler {
 	 */
 
 	protected String render(final Request request, final Response response) throws Exception {
-		ViewHandler app = null;
-		HttpRequest httpRequest = createRequest(request);
-		sessionViewHandlers.get(request.session().id());
+		ViewHandler view = null;
 
 		try {
-			if (app == null) {
-				app = urlViewHandlerMapping.get(request.uri()).newInstance();
-				app.init(httpRequest, this);
-				app.onDestroy(() -> {
-					sessionViewHandlers.remove(request.session().id());
-				});
+			view = getOrCreateViewHandler(request);
+			view.onDestroy(() -> {
+				sessionViewHandlers.remove(request.session().id());
+			});
 
-				sessionViewHandlers.put(request.session().id(), app);
-			}
+			sessionViewHandlers.put(request.session().id(), view);
 
 			final Map<String, Object> cookie = new HashMap<>();
-			cookie.put("sessionId", app.getSessionId());
+			cookie.put("sessionId", view.getSessionId());
 			response.cookie("jfly", Base64.getEncoder().encodeToString(GsonUtil.toJson(cookie).getBytes()));
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
-			throw new Exception("Cannot instantiate ViewHandler", e);
 		}
 
-		return app.render();
+		if (view == null) {
+			throw new IllegalStateException("No view handler found.");
+		}
+
+		return view.render();
+	}
+
+	protected ViewHandler getOrCreateViewHandler(Request request)
+			throws InstantiationException, IllegalAccessException {
+		KeyValueMapping<String, ViewHandler> mapping = request.session().attribute("urlViewHandlerMapping");
+
+		if (mapping == null) {
+			mapping = new KeyValueMapping<>();
+			request.session().attribute("urlViewHandlerMapping", mapping);
+		}
+
+		ViewHandler view = mapping.get(request.uri());
+
+		if (view == null) {
+			view = urlViewHandlerMapping.get(request.uri()).newInstance();
+			view.init(createRequest(request), this);
+			mapping.put(request.uri(), view);
+		}
+
+		return view;
 	}
 
 	protected HttpRequest createRequest(Request request) {

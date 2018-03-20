@@ -21,6 +21,12 @@ jfly.websockethandler = {
 		message.urlPath = window.location.pathname;
 		
 		var msg = jfly.toString(message);
+		
+		// check the connection status and re-initialize connection in case it's disconnected
+		if (jfly.websockethandler.connection.readyState == 3) {
+			jfly.websockethandler.init();
+		}
+		
 		jfly.websockethandler.connection.send(msg);
 	},
 	
@@ -28,9 +34,12 @@ jfly.websockethandler = {
 	onopen: function (event) {
 		console.debug('WebSocket onopen ' + event);
 		
-		jfly.callAsync(function() {
-			jfly.websockethandler.send({ "messageType": 'init' });
-		});
+		// only request initial component states if vue has not yet been initialized
+		if (!jfly.uicontroller) {
+			jfly.callAsync(function() {
+				jfly.websockethandler.send({ "messageType": 'init' });
+			});
+		}
 	},
 	
 	onclose: function (event) {
