@@ -17,5 +17,13 @@ div.list__group__items div.list {
     flex: 1 1 auto !important;
     overflow: hidden;
 }
+.list-hotfix > .list__tile {
+	padding-left: 0px;
+}
+
+.list__tile__action {
+/* 	max-width: 24px !important; */
+	min-width: 40px !important;
+}
 
 /* END TREE VIEW FIXES */
