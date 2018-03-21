@@ -9,12 +9,8 @@ public enum NavigationTarget {
 		this.internName = internName;
 	}
 
-	public String internalName() {
+	public String getName() {
 		return this.internName;
 	}
 
-	@Override
-	public String toString() {
-		return internalName();
-	}
 }

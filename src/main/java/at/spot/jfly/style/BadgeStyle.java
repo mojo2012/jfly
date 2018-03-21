@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All possible predefined styles for labels.
  */
-public enum BadgeStyle implements Style {
+public enum BadgeStyle implements Modifier {
 	None("w3-black"),
 	White("w3-white"),
 	Green("w3-green"),
@@ -19,7 +19,8 @@ public enum BadgeStyle implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
 	}
+
 }

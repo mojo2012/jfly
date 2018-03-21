@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All possible predefined styles for buttons.
  */
-public enum ButtonStyle implements Style {
+public enum ButtonStyle implements Modifier {
 	None(""),
 	Default("w3-black"),
 	Primary("w3-teal"),
@@ -20,7 +20,7 @@ public enum ButtonStyle implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
 	}
 }

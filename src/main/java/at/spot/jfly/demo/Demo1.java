@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.Server;
 import at.spot.jfly.ViewHandler;
-import at.spot.jfly.style.GlyphIcon;
 import at.spot.jfly.style.HorizontalOrientation;
 import at.spot.jfly.style.LabelStyle;
 import at.spot.jfly.style.MaterialIcon;
@@ -30,6 +29,7 @@ import at.spot.jfly.ui.navigation.TreeNode;
 import at.spot.jfly.ui.navigation.TreeView;
 import at.spot.jfly.ui.navigation.TreeView.NodeType;
 import at.spot.jfly.ui.selection.DropDownBox;
+import at.spot.jfly.util.Localizable;
 
 public class Demo1 extends ViewHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
@@ -67,33 +67,33 @@ public class Demo1 extends ViewHandler {
 		body.addChildren(mainContainer);
 
 		TextField singleLineTextBox = new TextField(getHandler(), null);
-		singleLineTextBox.setPlaceholder("Search ...");
+		singleLineTextBox.setPlaceholder(Localizable.of("Search ..."));
 		// singleLineTextBox.setLabel("Quick search");
 
 		TextField multiLineTextBox = new TextField(getHandler(), null);
 		// multiLineTextBox.setPlaceholder("Enter text here ...");
 		multiLineTextBox.setMultiLine(true);
-		multiLineTextBox.setLabel("Story");
-		multiLineTextBox.setText("This is a test text");
+		multiLineTextBox.setLabel(Localizable.of("Story"));
+		multiLineTextBox.setText(Localizable.of("This is a test text"));
 		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
 
-		final LinkAction linkAction = new LinkAction(getHandler(), "google.at", "https://google.at",
+		final LinkAction linkAction = new LinkAction(getHandler(), Localizable.of("google.at"), "https://google.at",
 				NavigationTarget.Blank);
 
-		final Button button = new Button(getHandler(), "Say hello!");
+		final Button button = new Button(getHandler(), Localizable.of("Say hello!"));
 		button.onClick(e -> {
-			button.text("clicked");
+			button.text(Localizable.of("clicked"));
 
-			Label label = new Label(getHandler(), "Current time: " + new Date().toString());
+			Label label = new Label(getHandler(), Localizable.of("Current time: " + new Date().toString()));
 			actualContainer.addChildren(label);
 		});
 
 		button.onMouseOut(e -> {
-			button.text("and out");
+			button.text(Localizable.of("and out"));
 		});
 
-		DropDownBox dropdown = new DropDownBox(getHandler(), "dropdown menu");
-		dropdown.setLeftIcon(GlyphIcon.Map);
+		DropDownBox dropdown = new DropDownBox(getHandler(), Localizable.of("Please choose ..."));
+		dropdown.setLeftIcon(MaterialIcon.map);
 
 		// TODO: pushing data asynchronously doesn't work yet
 		dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
@@ -115,7 +115,7 @@ public class Demo1 extends ViewHandler {
 			dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually", null);
 		});
 
-		Button causeExceptionButton = new Button(getHandler(), "Cause exception");
+		Button causeExceptionButton = new Button(getHandler(), Localizable.of("Cause exception"));
 		causeExceptionButton.setFlat(true);
 		causeExceptionButton.onClick(e -> {
 			throw new RuntimeException("Custom exception.");
@@ -123,8 +123,9 @@ public class Demo1 extends ViewHandler {
 
 		actualContainer.addChildren(singleLineTextBox, multiLineTextBox, linkAction, dropdown, causeExceptionButton,
 				button);
-		actualContainer.addChildren(new Label(getHandler(), "Danger").addStyleClasses(LabelStyle.Danger));
-		actualContainer.addChildren(new Badge(getHandler(), "42"));
+		actualContainer
+				.addChildren(new Label(getHandler(), Localizable.of("Danger")).addStyleClasses(LabelStyle.Danger));
+		actualContainer.addChildren(new Badge(getHandler(), Localizable.of("42")));
 
 	}
 
@@ -137,7 +138,7 @@ public class Demo1 extends ViewHandler {
 
 		Drawer rightDrawer = new Drawer(getHandler(), HorizontalOrientation.Right);
 		rightDrawer.setToolBar(new ToolBar(getHandler(), NavbarStyle.Default));
-		rightDrawer.getToolBar().setHeader(new Label(getHandler(), "Settings"));
+		rightDrawer.getToolBar().setHeader(new Label(getHandler(), Localizable.of("Settings")));
 		rightDrawer.setVisibe(false);
 
 		Button drawerCloseButton = new Button(getHandler());
@@ -151,24 +152,24 @@ public class Demo1 extends ViewHandler {
 		TreeView treeView = new TreeView(getHandler());
 		sidebar.addChildren(treeView);
 
-		TreeNode infoNode = new TreeNode(getHandler(), "Info");
+		TreeNode infoNode = new TreeNode(getHandler(), Localizable.of("Info"));
 		infoNode.setIcon(new Icon(getHandler(), MaterialIcon.info));
 
 		TreeNode splitter = new TreeNode(getHandler(), null);
 		splitter.setNodeType(NodeType.SPLITTER);
 
-		TreeNode apiDocumentation = new TreeNode(getHandler(), "API documentation");
+		TreeNode apiDocumentation = new TreeNode(getHandler(), Localizable.of("API documentation"));
 		apiDocumentation.setNodeType(NodeType.SUB_HEADER);
 
-		TreeNode componentNode = new TreeNode(getHandler(), "Components");
+		TreeNode componentNode = new TreeNode(getHandler(), Localizable.of("Components"));
 		componentNode.setIcon(new Icon(getHandler(), MaterialIcon.widgets));
 		componentNode.setExpanded(true);
-		componentNode.setBadge("new");
-		TreeNode selectionComponentNode = new TreeNode(getHandler(), "Status");
-		selectionComponentNode.setSubTitle("Radio buttons, checkboxes ...");
+		componentNode.setBadge(Localizable.of("new"));
+		TreeNode selectionComponentNode = new TreeNode(getHandler(), Localizable.of("Status"));
+		selectionComponentNode.setSubTitle(Localizable.of("Radio buttons, checkboxes ..."));
 		selectionComponentNode.setIcon(new Icon(getHandler(), MaterialIcon.select_all));
 
-		TreeNode demoComponentNode = new TreeNode(getHandler(), "Demo");
+		TreeNode demoComponentNode = new TreeNode(getHandler(), Localizable.of("Demo"));
 		demoComponentNode.setIcon(new Icon(getHandler(), MaterialIcon.ac_unit));
 		selectionComponentNode.addChildren(demoComponentNode);
 
@@ -177,13 +178,14 @@ public class Demo1 extends ViewHandler {
 
 		// top nav bar
 		final ToolBar toolBar = new ToolBar(getHandler(), NavbarStyle.Inverse);
-		toolBar.setHeader(new Label(getHandler(), "spOt"));
+		toolBar.setHeader(new Label(getHandler(), Localizable.of("spOt")));
 
 		toolBar.setLeftActionItem(e -> sidebar.setVisibe(!sidebar.isVisible()));
 		toolBar.addChildren(vSpacer);
 
-		Button reloadButton = new Button(getHandler(), "Reload");
+		Button reloadButton = new Button(getHandler(), Localizable.of("Reload"));
 		reloadButton.setFlat(true);
+		reloadButton.setIcon(new Icon(getHandler(), MaterialIcon.refresh));
 		reloadButton.onClick(e -> {
 			getHandler().destroy();
 		});

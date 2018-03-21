@@ -1,14 +1,22 @@
 package at.spot.jfly.util;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 
 import io.gsonfire.GsonFireBuilder;
 
 public class GsonUtil {
-	private static final Gson gson = new GsonFireBuilder().enableExposeMethodResult().createGsonBuilder().create();
-	// .registerTypeAdapterFactory(new StyleEnumAdapterFactory()).create();
+	private static final Gson gson;
+
+	static {
+		GsonBuilder builder = new GsonFireBuilder().enableExposeMethodResult().createGsonBuilder();
+		// builder.registerTypeAdapterFactory(new ModifierEnumAdapterFactory());
+		// builder.registerTypeAdapterFactory(new LocalizableAdapterFactory());
+
+		gson = builder.create();
+	}
 
 	public static String toJson(final Object object) {
 		return gson.toJson(object);

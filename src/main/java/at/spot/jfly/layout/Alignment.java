@@ -1,8 +1,8 @@
 package at.spot.jfly.layout;
 
-import at.spot.jfly.style.Style;
+import at.spot.jfly.style.Modifier;
 
-public enum Alignment implements Style {
+public enum Alignment implements Modifier {
 	Top("top"), Bottom("bottom"), Right("right"), Left("left"), Center("center");
 
 	private String internal;
@@ -12,7 +12,7 @@ public enum Alignment implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.internal;
 	}
 }

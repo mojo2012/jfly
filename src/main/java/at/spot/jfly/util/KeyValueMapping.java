@@ -8,15 +8,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class KeyValueMapping<K, V> extends ConcurrentHashMap<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Executes the given consumer if there is a value for the given key.
+	 * Executes the given consumer if there is a value for the given key. If there
+	 * is no value, the call will be ignored.
+	 * 
+	 * @param consumer
+	 *            executed with the found value
 	 */
-	public void applyIfContainsKey(K key, Consumer<V> consumer) {
+	public void apply(K key, Consumer<V> consumer) {
 		V value = super.get(key);
 
 		if (value != null && consumer != null) {
@@ -25,14 +30,51 @@ public class KeyValueMapping<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	/**
-	 * Executes the given consumer if there is no value for the given key.
+	 * Executes the given consumer if there is a value for the given key.
+	 * 
+	 * @param consumer
+	 *            executed with the found value
+	 * @param nullConsumer
+	 *            will be called when there is no value found for the given key.
 	 */
-	public void applyIfNotContainsKey(K key, Consumer<V> consumer) {
+	public void apply(K key, Consumer<V> consumer, Consumer<Void> nullConsumer) {
 		V value = super.get(key);
 
-		if (value == null && consumer != null) {
+		if (value != null && consumer != null) {
 			consumer.accept(value);
+		} else if (nullConsumer != null) {
+			nullConsumer.accept(null);
 		}
+	}
+
+	/**
+	 * Returns the transformed value for the given key.
+	 * 
+	 * @param key
+	 * @param transformer
+	 * @param nullSupplier
+	 *            called when there is no value found for the given key
+	 * @return null if no value is found and the nullSupplier is null
+	 */
+	public <R> R transformValue(K key, Function<V, R> transformer, Supplier<R> nullSupplier) {
+		V value = super.get(key);
+
+		if (value != null && transformer != null) {
+			return transformer.apply(value);
+		} else if (nullSupplier != null) {
+			return nullSupplier.get();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the transformed value for the given key.
+	 * 
+	 * @return null if no value is found.
+	 */
+	public <R> R transformValue(K key, Function<V, R> transformer) {
+		return transformValue(key, transformer, null);
 	}
 
 	public List<V> removeAll(K... keys) {

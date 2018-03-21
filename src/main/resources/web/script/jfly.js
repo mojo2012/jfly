@@ -58,7 +58,7 @@ jfly.websockethandler = {
 		
 		if (message.type == "componentInitialization") {
 			jfly.callAsync(function() {
-				jfly.initVue(message.componentStates);
+				jfly.initVue(message);
 			});
 		} else if (message.type == "objectManipulation") {
 			var component = jfly.findComponent(message.componentUuid);
@@ -170,7 +170,7 @@ jfly.init = function() {
 	jfly.websockethandler.init();
 };
 
-jfly.initVue = function(states) {
+jfly.initVue = function(initMessage) {
 	jfly.uicontroller = new Vue({
 		el: 'v-app',
 		components: {
@@ -223,20 +223,44 @@ jfly.initVue = function(states) {
 				var component = new Component().$mount();
 				jfly.findComponent(containerUuid).append(component.$el);
 			},
+			
 			showExceptionDialog: function(message) {
 				this.exception.message = message.description;
 				this.exception.visible = true;
+			},
+			
+			localize: function(value) {
+				var ret = value;
+				
+				if (value && value.values) {
+					var globalState = this.globalState;
+					
+					ret = value.values[globalState.currentLocale.code];
+					
+					if (!ret) {
+						ret = "<no localization found>";
+					}
+				}
+				
+				return ret;
 			}
 		},
 		computed: {
-			
 		},
 		data: {
-			componentStates: states,
+			componentStates: initMessage.componentStates,
+			globalState: initMessage.globalState,
 			exception: {
 				visible: false,
 				message: ""
 			}
+		},
+		filters: {
+			capitalize: function (value) {
+				if (!value) return '';
+				value = value.toString();
+				return value.charAt(0).toUpperCase() + value.slice(1)
+			},
 		},
 // template: {
 //			

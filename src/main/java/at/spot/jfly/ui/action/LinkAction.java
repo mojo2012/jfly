@@ -3,6 +3,7 @@ package at.spot.jfly.ui.action;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.style.NavigationTarget;
 import at.spot.jfly.ui.base.AbstractActionComponent;
+import at.spot.jfly.util.Localizable;
 
 /**
  * Implements a generic link.
@@ -13,12 +14,12 @@ public class LinkAction extends AbstractActionComponent {
 	private String location;
 	private NavigationTarget navigationTarget = NavigationTarget.Blank;
 
-	public LinkAction(final ComponentHandler handler, final String text) {
+	public LinkAction(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
 		setLocation(EMPTY_LOCATION);
 	}
 
-	public LinkAction(final ComponentHandler handler, final String text, String url,
+	public LinkAction(final ComponentHandler handler, final Localizable<String> text, String url,
 			NavigationTarget navigationTarget) {
 
 		this(handler, text);

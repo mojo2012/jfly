@@ -4,12 +4,13 @@ import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 import at.spot.jfly.ui.display.Icon;
 import at.spot.jfly.ui.navigation.TreeView.NodeType;
+import at.spot.jfly.util.Localizable;
 
 public class TreeNode extends AbstractContainerComponent<TreeNode> {
 
-	private String title;
-	private String subTitle;
-	private String badge;
+	private Localizable<String> title;
+	private Localizable<String> subTitle;
+	private Localizable<String> badge;
 	private Icon icon;
 	private boolean isExpanded = false;
 	private NodeType nodeType = NodeType.DEFAULT;
@@ -23,7 +24,7 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 		updateClientComponent();
 	}
 
-	public TreeNode(ComponentHandler handler, String title) {
+	public TreeNode(ComponentHandler handler, Localizable<String> title) {
 		super(handler);
 		this.title = title;
 	}
@@ -51,29 +52,29 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 		this.icon = icon;
 	}
 
-	public String getTitle() {
+	public Localizable<String> getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(Localizable<String> title) {
 		this.title = title;
 		updateClientComponent();
 	}
 
-	public String getSubTitle() {
+	public Localizable<String> getSubTitle() {
 		return subTitle;
 	}
 
-	public void setSubTitle(String subTitle) {
+	public void setSubTitle(Localizable<String> subTitle) {
 		this.subTitle = subTitle;
 		updateClientComponent();
 	}
 
-	public String getBadge() {
+	public Localizable<String> getBadge() {
 		return badge;
 	}
 
-	public void setBadge(String badge) {
+	public void setBadge(Localizable<String> badge) {
 		this.badge = badge;
 		updateClientComponent();
 	}

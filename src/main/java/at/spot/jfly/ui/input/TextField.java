@@ -4,18 +4,19 @@ import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
+import at.spot.jfly.util.Localizable;
 
 public class TextField extends AbstractTextComponent {
 
-	private String placeholder;
-	private String label;
+	private Localizable<String> placeholder;
+	private Localizable<String> label;
 	private boolean multiLine = false;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
 	}
 
-	public TextField(ComponentHandler handler, String text) {
+	public TextField(ComponentHandler handler, Localizable<String> text) {
 		super(handler, text);
 	}
 
@@ -27,19 +28,19 @@ public class TextField extends AbstractTextComponent {
 		this.multiLine = isMultiLine;
 	}
 
-	public String getPlaceholder() {
+	public Localizable<String> getPlaceholder() {
 		return placeholder;
 	}
 
-	public void setPlaceholder(String placeholder) {
+	public void setPlaceholder(Localizable<String> placeholder) {
 		this.placeholder = placeholder;
 	}
 
-	public String getLabel() {
+	public Localizable<String> getLabel() {
 		return label;
 	}
 
-	public void setLabel(String label) {
+	public void setLabel(Localizable<String> label) {
 		this.label = label;
 	}
 

@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * ToolBar related styles.
  */
-public enum NavbarStyle implements Style {
+public enum NavbarStyle implements Modifier {
 	Default("navbar-default"), Inverse("navbar-inverse"), NavBarHeader("navbar-header"), NavBarContent(
 			"nav navbar-nav"), NavBarHeaderBrand("navbar-brand");
 
@@ -14,7 +14,7 @@ public enum NavbarStyle implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
 	}
 }

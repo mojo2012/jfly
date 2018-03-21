@@ -2,10 +2,10 @@
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses" $!events
 	name="input-$!{component.uuid}"
-	:label="${_state}.label"
-	:placeholder="${_state}.placeholder"
+	:label="localize(${_state}.label)"
+	:placeholder="localize(${_state}.placeholder)"
 	:multi-line="${_state}.multiLine"
-	:value="${_state}.text"
+	:value="localize(${_state}.text)"
 	>
           
 </v-text-field>

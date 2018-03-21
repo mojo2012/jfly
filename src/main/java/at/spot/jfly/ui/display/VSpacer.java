@@ -7,7 +7,7 @@ import io.gsonfire.annotations.ExposeMethodResult;
 public class VSpacer extends AbstractTextComponent {
 
 	public VSpacer(ComponentHandler handler) {
-		super(handler, "");
+		super(handler, null);
 	}
 
 	@ExposeMethodResult("isSpacer")

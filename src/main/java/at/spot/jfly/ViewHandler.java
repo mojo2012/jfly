@@ -3,6 +3,7 @@ package at.spot.jfly;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,6 +44,7 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	private Html html;
 	private boolean formatOutput = true;
+	private Locale currentLocale = Locale.getDefault();
 
 	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();
 
@@ -103,7 +105,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		if (msg.get("messageType") != null
 				&& StringUtils.equalsIgnoreCase(msg.get("messageType").getAsString(), "init")) {
 
-			retVal = getInitialComponentStates();
+			retVal = getViewState();
 		} else { // this is a regular message, most likely an event
 			JsonElement uuidElem = msg.get("componentUuid");
 
@@ -251,13 +253,31 @@ public abstract class ViewHandler implements ComponentHandler {
 		return output;
 	}
 
-	public Map<String, Object> getInitialComponentStates() {
+	public Map<String, Object> getViewState() {
 		final Map<String, Object> compState = new HashMap<>();
 
 		compState.put("type", "componentInitialization");
 		compState.put("componentStates", getRegisteredComponents());
 
+		Map<String, Object> globalState = new HashMap<>();
+		compState.put("globalState", globalState);
+
+		Map<String, Object> currentLocale = new HashMap<>();
+		globalState.put("currentLocale", currentLocale);
+
+		currentLocale.put("language", getCurrentLocale().getLanguage());
+		currentLocale.put("country", getCurrentLocale().getCountry());
+		currentLocale.put("code", getCurrentLocale());
+
 		return compState;
+	}
+
+	public Locale getCurrentLocale() {
+		return currentLocale;
+	}
+
+	public void setCurrentLocale(Locale currentLocale) {
+		this.currentLocale = currentLocale;
 	}
 
 	public void destroy() {

@@ -5,13 +5,14 @@ import at.spot.jfly.style.ButtonStyle;
 import at.spot.jfly.style.ComponentType;
 import at.spot.jfly.ui.base.AbstractActionComponent;
 import at.spot.jfly.ui.display.Icon;
+import at.spot.jfly.util.Localizable;
 
 public class Button extends AbstractActionComponent {
 
 	private Icon icon;
 	private boolean isFlat;
 
-	public Button(final ComponentHandler handler, final String text) {
+	public Button(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
 		componentType(ComponentType.Button);
 		addStyleClasses(ButtonStyle.None);

@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All general predefined styles.
  */
-public enum ComponentType implements Style {
+public enum ComponentType implements Modifier {
 	Button("button"), Label("label"), Badge("badge"), NavBar("navbar");
 
 	private String styleClass;
@@ -13,7 +13,7 @@ public enum ComponentType implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
 	}
 }

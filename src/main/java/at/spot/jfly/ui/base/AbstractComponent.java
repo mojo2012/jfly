@@ -19,7 +19,7 @@ import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.style.ComponentType;
-import at.spot.jfly.style.Style;
+import at.spot.jfly.style.Modifier;
 import at.spot.jfly.util.KeyValueListMapping;
 import at.spot.jfly.util.KeyValueMapping;
 import io.gsonfire.annotations.ExposeMethodResult;
@@ -115,15 +115,15 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return (C) this;
 	}
 
-	public <C extends AbstractComponent> C addStyleClasses(final Style... styles) {
-		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.internalName())
+	public <C extends AbstractComponent> C addStyleClasses(final Modifier... styles) {
+		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.getName())
 				.collect(Collectors.toList());
 		addStyleClasses(stylesClasses.toArray(new String[0]));
 		return (C) this;
 	}
 
-	public <C extends AbstractComponent> C removeStyleClasses(final Style... styles) {
-		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.internalName())
+	public <C extends AbstractComponent> C removeStyleClasses(final Modifier... styles) {
+		final List<String> stylesClasses = Arrays.stream(styles).filter((s) -> s != null).map(s -> s.getName())
 				.collect(Collectors.toList());
 
 		removeStyleClasses(stylesClasses.toArray(new String[0]));
@@ -235,7 +235,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	@ExposeMethodResult("componentType")
 	protected String getComponentTypeName() {
-		return componentType != null ? componentType.internalName() : null;
+		return componentType != null ? componentType.getName() : null;
 	}
 
 	@Override

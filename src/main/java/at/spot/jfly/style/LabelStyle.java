@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All possible predefined styles for labels.
  */
-public enum LabelStyle implements Style {
+public enum LabelStyle implements Modifier {
 	None(""),
 	Default("w3-black"),
 	Primary("w3-teal"),
@@ -19,7 +19,7 @@ public enum LabelStyle implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
 	}
 }

@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All possible predefined styles for horizontal orientation.
  */
-public enum HorizontalOrientation implements Style {
+public enum HorizontalOrientation implements Modifier {
 	Left("left"), Right("right");
 
 	private String styleClass;
@@ -13,12 +13,7 @@ public enum HorizontalOrientation implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
-	}
-
-	@Override
-	public String toString() {
-		return internalName();
 	}
 }

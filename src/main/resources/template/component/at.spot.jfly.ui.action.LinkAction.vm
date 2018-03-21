@@ -9,5 +9,5 @@
 
 	$!{component.icon.render()}
 	
-	{{${_state}.text}}
+	{{localize(${_state}.text)}}
 </v-btn>

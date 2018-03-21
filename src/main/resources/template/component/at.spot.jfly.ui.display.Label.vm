@@ -3,5 +3,5 @@
 	:class="${_state}.styleClasses"
 	$!events>
 	
-	{{${_state}.text}}
+	{{localize(${_state}.text)}}
 </span>

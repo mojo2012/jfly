@@ -5,8 +5,8 @@
 	$!events 
 	label="$!{component.text}" dense 
 	:items="${_state}.menuItems"
-	prepend-icon="$!{component.leftIcon}"
-	append-icon="$!{component.rightIcon}"
+	:prepend-icon="${_state}.leftIcon"
+	:append-icon="${_state}.rightIcon"
 	v-model="${_state}.selectedItem"
 	:editable="${_state}.editable"
 	item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"

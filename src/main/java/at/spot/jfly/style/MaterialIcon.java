@@ -3,7 +3,7 @@ package at.spot.jfly.style;
 /**
  * All possible predefined styles for labels.
  */
-public enum MaterialIcon implements Style {
+public enum MaterialIcon implements Modifier {
 	_3d_rotation("3d_rotation"),
 	ac_unit("ac_unit"),
 	access_alarm("access_alarm"),
@@ -944,12 +944,7 @@ public enum MaterialIcon implements Style {
 	}
 
 	@Override
-	public String internalName() {
+	public String getName() {
 		return this.styleClass;
-	}
-
-	@Override
-	public String toString() {
-		return internalName();
 	}
 }

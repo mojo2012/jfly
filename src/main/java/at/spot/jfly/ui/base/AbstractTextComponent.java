@@ -3,26 +3,27 @@ package at.spot.jfly.ui.base;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.util.Localizable;
 
 public abstract class AbstractTextComponent extends AbstractComponent {
-	private String text;
+	private Localizable<String> text;
 
-	public AbstractTextComponent(final ComponentHandler handler, final String text) {
+	public AbstractTextComponent(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler);
 		text(text);
 	}
 
-	public <C extends AbstractTextComponent> C text(final String text) {
+	public <C extends AbstractTextComponent> C text(final Localizable<String> text) {
 		this.text = text;
 		updateClientComponent();
 		return (C) this;
 	}
 
-	public String getText() {
+	public Localizable<String> getText() {
 		return this.text;
 	}
 
-	public void setText(String text) {
+	public void setText(Localizable<String> text) {
 		this.text = text;
 	}
 

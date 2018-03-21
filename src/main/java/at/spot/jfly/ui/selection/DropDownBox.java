@@ -10,19 +10,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
-import at.spot.jfly.style.GlyphIcon;
+import at.spot.jfly.style.MaterialIcon;
 import at.spot.jfly.ui.base.AbstractTextComponent;
+import at.spot.jfly.util.Localizable;
 import io.gsonfire.annotations.ExposeMethodResult;
 
 public class DropDownBox extends AbstractTextComponent {
 	final private transient Map<String, SelectMenuItem> menuItems = new TreeMap<>();
 
-	private GlyphIcon leftIcon;
-	private GlyphIcon rightIcon;
+	private MaterialIcon leftIcon;
+	private MaterialIcon rightIcon;
 	private boolean editable = false;
 	private SelectMenuItem selectedItem;
 
-	public DropDownBox(final ComponentHandler handler, final String text) {
+	public DropDownBox(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
 
 		// set up event handling
@@ -79,20 +80,20 @@ public class DropDownBox extends AbstractTextComponent {
 		return this;
 	}
 
-	public GlyphIcon getLeftIcon() {
+	public MaterialIcon getLeftIcon() {
 		return leftIcon;
 	}
 
-	public DropDownBox setLeftIcon(GlyphIcon leftIcon) {
+	public DropDownBox setLeftIcon(MaterialIcon leftIcon) {
 		this.leftIcon = leftIcon;
 		return this;
 	}
 
-	public GlyphIcon getRightIcon() {
+	public MaterialIcon getRightIcon() {
 		return rightIcon;
 	}
 
-	public void setRightIcon(GlyphIcon rightIcon) {
+	public void setRightIcon(MaterialIcon rightIcon) {
 		this.rightIcon = rightIcon;
 	}
 
