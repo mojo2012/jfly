@@ -1,8 +1,11 @@
 <v-btn
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses" $!events
-	:flat="${_state}.isFlat"
+	:flat="${_state}.flat"
+	:block="${_state}.expandFullWidth"
+	:color="${_state}.color"
 	:icon="${_state}.icon && !${_state}.text" 
+	v-bind="${_state}.attributes"
 	>
 	
 	$!{component.icon.render()}

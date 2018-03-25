@@ -7,6 +7,15 @@ import at.spot.jfly.util.Localizable;
 
 public abstract class AbstractTextComponent extends AbstractComponent {
 	private Localizable<String> text;
+	private boolean isFlat = false;
+
+	public boolean isFlat() {
+		return isFlat;
+	}
+
+	public void setFlat(boolean isFlat) {
+		this.isFlat = isFlat;
+	}
 
 	public AbstractTextComponent(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler);

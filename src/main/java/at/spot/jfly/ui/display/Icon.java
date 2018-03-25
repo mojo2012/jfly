@@ -1,7 +1,7 @@
 package at.spot.jfly.ui.display;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.MaterialIcon;
+import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.ui.base.AbstractComponent;
 
 public class Icon extends AbstractComponent {

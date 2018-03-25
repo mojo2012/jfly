@@ -8,15 +8,14 @@ import java.util.TreeMap;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.JsEvent;
-import at.spot.jfly.style.MaterialIcon;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 import at.spot.jfly.util.Localizable;
-import io.gsonfire.annotations.ExposeMethodResult;
 
 public class DropDownBox extends AbstractTextComponent {
-	final private transient Map<String, SelectMenuItem> menuItems = new TreeMap<>();
+	final private Map<String, SelectMenuItem> menuItems = new TreeMap<>();
 
 	private MaterialIcon leftIcon;
 	private MaterialIcon rightIcon;
@@ -36,8 +35,9 @@ public class DropDownBox extends AbstractTextComponent {
 			Object itemId = e.getPayload().get("value");
 			selectedItem = menuItems.get(itemId);
 
-			if (selectedItem != null && selectedItem.handler != null)
+			if (selectedItem != null && selectedItem.handler != null) {
 				selectedItem.handler.handle(e);
+			}
 		});
 	}
 
@@ -57,6 +57,10 @@ public class DropDownBox extends AbstractTextComponent {
 
 	public String getSelectedItemId() {
 		return selectedItem != null ? selectedItem.id : null;
+	}
+
+	public SelectMenuItem getSelectedItem() {
+		return selectedItem;
 	}
 
 	public DropDownBox selectedItem(String itemId) {
@@ -97,7 +101,6 @@ public class DropDownBox extends AbstractTextComponent {
 		this.rightIcon = rightIcon;
 	}
 
-	@ExposeMethodResult("menuItems")
 	public Collection<SelectMenuItem> getMenuItems() {
 		return menuItems.values();
 	}

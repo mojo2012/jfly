@@ -1,9 +1,13 @@
-package at.spot.jfly.style;
+package at.spot.jfly.attributes;
 
-/**
- * All possible predefined styles for labels.
- */
-public enum MaterialIcon implements Modifier {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import at.spot.jfly.attributes.Attributes.Attribute;
+import at.spot.jfly.util.Enum;
+
+public enum MaterialIcon implements Attribute {
 	_3d_rotation("3d_rotation"),
 	ac_unit("ac_unit"),
 	access_alarm("access_alarm"),
@@ -944,7 +948,12 @@ public enum MaterialIcon implements Modifier {
 	}
 
 	@Override
-	public String getName() {
-		return this.styleClass;
+	public String getInternalName() {
+		return styleClass;
+	}
+
+	@Override
+	public List<Enum> getValues() {
+		return Stream.of(values()).collect(Collectors.toList());
 	}
 }

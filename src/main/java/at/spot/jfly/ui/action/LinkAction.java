@@ -1,7 +1,7 @@
 package at.spot.jfly.ui.action;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.NavigationTarget;
+import at.spot.jfly.attributes.NavigationTarget;
 import at.spot.jfly.ui.base.AbstractActionComponent;
 import at.spot.jfly.util.Localizable;
 

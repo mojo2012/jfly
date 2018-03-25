@@ -3,13 +3,13 @@ package at.spot.jfly.ui.base;
 /**
  * Represents a draw command for the client to update the view.
  */
-public class DrawCommand {
+public class ClientUpdateCommand {
 	DrawCommandType type;
 	String targetObject;
 	String function;
 	Object[] paramters;
 
-	public DrawCommand(final DrawCommandType type, final String targetObject, final String function,
+	public ClientUpdateCommand(final DrawCommandType type, final String targetObject, final String function,
 			final Object[] paramters) {
 
 		super();

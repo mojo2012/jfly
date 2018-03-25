@@ -1,6 +1,7 @@
 <v-list
-	uuid="${_uuid}" 
-	:class="${_state}.styleClasses" $!events
+	uuid="${_uuid}" $!events
+	:class="${_state}.styleClasses" 
+	v-bind="${_state}.attributes"
 	>
 	
 	#foreach( $!child in $!component.children )

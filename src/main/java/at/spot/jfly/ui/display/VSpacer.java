@@ -2,7 +2,6 @@ package at.spot.jfly.ui.display;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.ui.base.AbstractTextComponent;
-import io.gsonfire.annotations.ExposeMethodResult;
 
 public class VSpacer extends AbstractTextComponent {
 
@@ -10,7 +9,7 @@ public class VSpacer extends AbstractTextComponent {
 		super(handler, null);
 	}
 
-	@ExposeMethodResult("isSpacer")
+	// @ExposeMethodResult("isSpacer")
 	public boolean isSpacer() {
 		return true;
 	}

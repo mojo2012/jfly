@@ -2,9 +2,9 @@
 	<v-list-group v-if="${_state}.hasChildren"
 		uuid="${_uuid}"
 		:class="${_state}.styleClasses" $!events
-		v-model="${_state}.isExpanded"
+		v-model="${_state}.expanded"
 		:key="${_state}.title"
-		:prepend-icon="${_state}.icon"
+		:prepend-icon="${_state}.icon.icon"
 		>
 		
 		<v-list-tile slot="activator" class="list-hotfix">

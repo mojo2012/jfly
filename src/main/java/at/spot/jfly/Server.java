@@ -16,12 +16,13 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import at.spot.jfly.http.HttpMethod;
 import at.spot.jfly.http.HttpSession;
-import at.spot.jfly.util.GsonUtil;
+import at.spot.jfly.http.websocket.ExceptionMessage;
+import at.spot.jfly.http.websocket.KeepAliveMessage;
+import at.spot.jfly.http.websocket.Message;
+import at.spot.jfly.http.websocket.Message.MessageType;
+import at.spot.jfly.util.JsonUtil;
 import at.spot.jfly.util.KeyValueMapping;
 import at.spot.jfly.viewhandlers.ExceptionViewHandler;
 import spark.Filter;
@@ -140,27 +141,28 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	@OnWebSocketMessage
-	public void message(final Session session, final String message) throws IOException {
+	public <M extends Message> void message(final Session session, final String message) throws IOException {
 		LOG.debug("Received message: " + message);
 
+		try {
 		setCurrentSession(session);
 
 		if (StringUtils.isNotBlank(message)) {
-			final JsonObject msg = GsonUtil.fromJson(message, JsonObject.class);
+			final Message msg = JsonUtil.fromJson(message, Message.class);
 
-			final JsonElement sessionId = msg.get("sessionId");
-			final JsonElement urlPath = msg.get("urlPath");
-
-			if (sessionId != null && urlPath != null) {
-				final ViewHandler app = getViewHandler(sessionId.getAsString(), urlPath.getAsString());
+			if (MessageType.keepAlive.equals(msg.getType())) {
+				sendMessage(new KeepAliveMessage());
+			} else {
+				final ViewHandler app = getViewHandler(msg.getSessionId(), msg.getUrl());
 
 				if (app != null) {
 					try {
-						final Object retVal = app.handleMessage(msg, urlPath.getAsString());
-
-						if (retVal != null) {
-							sendMessage(retVal);
-						}
+						app.handleMessage(msg);
+						// final Message retVal = app.handleMessage(msg);
+						//
+						// if (retVal != null) {
+						// sendMessage(retVal);
+						// }
 					} catch (Exception e) {
 						// send back an error message to allow the UI to react properly
 						sendMessage(generateErrorMessage(e));
@@ -170,16 +172,24 @@ public class Server implements ClientCommunicationHandler {
 				}
 			}
 		}
+		} catch (Throwable e) {
+			sendMessage(generateErrorMessage(e));
+		}
 	}
 
-	protected Map<String, Object> generateErrorMessage(Exception exception) {
-		Map<String, Object> ret = new HashMap<>();
+	protected KeepAliveMessage generateKeepaliveAnswerMessage() {
+		KeepAliveMessage message = new KeepAliveMessage();
 
-		ret.put("type", "exception");
-		ret.put("description", exception.getMessage());
-		// ret.put("stackTrace", ExceptionUtils.getStackTrace(exception));
+		return message;
+	}
 
-		return ret;
+	protected ExceptionMessage generateErrorMessage(Throwable exception) {
+		ExceptionMessage msg = new ExceptionMessage();
+
+		msg.setName(exception.getClass().getName());
+		msg.setDescription(exception.getMessage());
+
+		return msg;
 	}
 
 	protected void addSession(final Session session) {
@@ -227,7 +237,7 @@ public class Server implements ClientCommunicationHandler {
 
 			final Map<String, Object> cookie = new HashMap<>();
 			cookie.put("sessionId", view.getSessionId());
-			response.cookie("jfly", Base64.getEncoder().encodeToString(GsonUtil.toJson(cookie).getBytes()));
+			response.cookie("jfly", Base64.getEncoder().encodeToString(JsonUtil.toJson(cookie).getBytes()));
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
 		}
@@ -293,10 +303,10 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	@Override
-	public void sendMessage(final Object message) {
+	public <M extends Message> void sendMessage(final M message) {
 		try {
-			String messageString = GsonUtil.toJson(message);
-			LOG.debug("Sending message: " + GsonUtil.toJson(message));
+			String messageString = JsonUtil.toJson(message);
+			LOG.debug("Sending message: " + JsonUtil.toJson(message));
 			getCurrentSession().getRemote().sendString(messageString);
 		} catch (final Exception e) {
 			LOG.error("Cannot send message to client.");
@@ -304,7 +314,7 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	@Override
-	public void sendMessage(final String clientSessionId, final Object message) {
+	public <M extends Message> void sendMessage(final String clientSessionId, final M message) {
 
 	}
 }

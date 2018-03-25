@@ -1,17 +1,22 @@
 package at.spot.jfly.demo;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.Server;
 import at.spot.jfly.ViewHandler;
-import at.spot.jfly.style.HorizontalOrientation;
-import at.spot.jfly.style.LabelStyle;
-import at.spot.jfly.style.MaterialIcon;
-import at.spot.jfly.style.NavbarStyle;
-import at.spot.jfly.style.NavigationTarget;
+import at.spot.jfly.attributes.Attributes.GridAlignment;
+import at.spot.jfly.attributes.Attributes.GridBehavior;
+import at.spot.jfly.attributes.Attributes.HorizontalOrientation;
+import at.spot.jfly.attributes.Attributes.TextFieldType;
+import at.spot.jfly.attributes.MaterialIcon;
+import at.spot.jfly.attributes.NavigationTarget;
+import at.spot.jfly.attributes.Styles.Color;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.action.LinkAction;
 import at.spot.jfly.ui.display.Badge;
@@ -30,9 +35,12 @@ import at.spot.jfly.ui.navigation.TreeView;
 import at.spot.jfly.ui.navigation.TreeView.NodeType;
 import at.spot.jfly.ui.selection.DropDownBox;
 import at.spot.jfly.util.Localizable;
+import at.spot.jfly.util.LocalizationBundle;
 
 public class Demo1 extends ViewHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
+
+	private final static LocalizationBundle localizations = new LocalizationBundle("messages/demo_messages");
 
 	@Override
 	protected Head createHeader() {
@@ -54,26 +62,26 @@ public class Demo1 extends ViewHandler {
 	private void createMainContent(Body body) {
 		GenericContainer mainContainer = new GenericContainer(getHandler(), "v-content");
 		GenericContainer fluidContainer = new GenericContainer(getHandler(), "v-container");
-		fluidContainer.addAttribute("fluid", null);
-		fluidContainer.addAttribute("fill-height", null);
+		fluidContainer.addAttribute(GridBehavior.Fluid);
+		fluidContainer.addAttribute(GridBehavior.FillHeight);
 		final GenericContainer actualContainer = new GenericContainer(getHandler(), "v-layout");
-		actualContainer.addAttribute("justify-center", null);
-		actualContainer.addAttribute("align-center", null);
+		actualContainer.addAttribute(GridBehavior.JustifyCenter);
+		actualContainer.addAttribute(GridAlignment.Center);
 		actualContainer.setUseWrapper(true);
-		actualContainer.addStyleClasses("container");
+		actualContainer.addStyleClass("container");
 
 		mainContainer.addChildren(fluidContainer);
 		fluidContainer.addChildren(actualContainer);
 		body.addChildren(mainContainer);
 
 		TextField singleLineTextBox = new TextField(getHandler(), null);
-		singleLineTextBox.setPlaceholder(Localizable.of("Search ..."));
+		singleLineTextBox.setPlaceholder(localizations.forKey("placeholders.search"));
 		// singleLineTextBox.setLabel("Quick search");
 
 		TextField multiLineTextBox = new TextField(getHandler(), null);
 		// multiLineTextBox.setPlaceholder("Enter text here ...");
 		multiLineTextBox.setMultiLine(true);
-		multiLineTextBox.setLabel(Localizable.of("Story"));
+		multiLineTextBox.setLabel(localizations.forKey("placeholders.story"));
 		multiLineTextBox.setText(Localizable.of("This is a test text"));
 		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
 
@@ -123,8 +131,10 @@ public class Demo1 extends ViewHandler {
 
 		actualContainer.addChildren(singleLineTextBox, multiLineTextBox, linkAction, dropdown, causeExceptionButton,
 				button);
-		actualContainer
-				.addChildren(new Label(getHandler(), Localizable.of("Danger")).addStyleClasses(LabelStyle.Danger));
+
+		Label label = new Label(getHandler(), Localizable.of("Danger"));
+		label.addStyleClass(Color.RED);
+		actualContainer.addChildren(label);
 		actualContainer.addChildren(new Badge(getHandler(), Localizable.of("42")));
 
 	}
@@ -137,7 +147,7 @@ public class Demo1 extends ViewHandler {
 		SideBar sidebar = new SideBar(getHandler());
 
 		Drawer rightDrawer = new Drawer(getHandler(), HorizontalOrientation.Right);
-		rightDrawer.setToolBar(new ToolBar(getHandler(), NavbarStyle.Default));
+		rightDrawer.setToolBar(new ToolBar(getHandler()));
 		rightDrawer.getToolBar().setHeader(new Label(getHandler(), Localizable.of("Settings")));
 		rightDrawer.setVisibe(false);
 
@@ -152,7 +162,7 @@ public class Demo1 extends ViewHandler {
 		TreeView treeView = new TreeView(getHandler());
 		sidebar.addChildren(treeView);
 
-		TreeNode infoNode = new TreeNode(getHandler(), Localizable.of("Info"));
+		TreeNode infoNode = new TreeNode(getHandler(), localizations.forKey("action.info"));
 		infoNode.setIcon(new Icon(getHandler(), MaterialIcon.info));
 
 		TreeNode splitter = new TreeNode(getHandler(), null);
@@ -177,11 +187,17 @@ public class Demo1 extends ViewHandler {
 		treeView.addChildren(infoNode, splitter, apiDocumentation, componentNode);
 
 		// top nav bar
-		final ToolBar toolBar = new ToolBar(getHandler(), NavbarStyle.Inverse);
+		final ToolBar toolBar = new ToolBar(getHandler());
 		toolBar.setHeader(new Label(getHandler(), Localizable.of("spOt")));
 
 		toolBar.setLeftActionItem(e -> sidebar.setVisibe(!sidebar.isVisible()));
 		toolBar.addChildren(vSpacer);
+
+		TextField searchBox = new TextField(getHandler());
+		searchBox.setPlaceholder(localizations.forKey("placeholders.search"));
+		searchBox.setFlat(true);
+		searchBox.addAttribute(TextFieldType.Solo);
+		toolBar.addChildren(searchBox);
 
 		Button reloadButton = new Button(getHandler(), Localizable.of("Reload"));
 		reloadButton.setFlat(true);
@@ -203,6 +219,11 @@ public class Demo1 extends ViewHandler {
 		body.addChildren(sidebar);
 		body.addChildren(rightDrawer);
 		body.addChildren(toolBar);
+	}
+
+	@Override
+	protected List<Locale> getSupportedLocales() {
+		return Arrays.asList(Locale.GERMAN, Locale.ENGLISH);
 	}
 
 	/**

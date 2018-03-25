@@ -1,5 +1,9 @@
 package at.spot.jfly.viewhandlers;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 import at.spot.jfly.ViewHandler;
 import at.spot.jfly.ui.generic.GenericContainer;
 import at.spot.jfly.ui.generic.HtmlTag;
@@ -21,7 +25,7 @@ public class ExceptionViewHandler extends ViewHandler {
 		Body body = new Body(this);
 
 		GenericContainer errorHeader = new GenericContainer(this, "div");
-		errorHeader.addStyleClasses("cover");
+		errorHeader.addStyleClass("cover");
 		errorHeader.addChildren(new HtmlTag(this, TagCreator.h1("Sorry, an error occurred")));
 
 		GenericContainer container = new GenericContainer(this, "div");
@@ -30,6 +34,11 @@ public class ExceptionViewHandler extends ViewHandler {
 		body.addChildren(container);
 
 		return body;
+	}
+
+	@Override
+	protected List<Locale> getSupportedLocales() {
+		return Arrays.asList(Locale.ENGLISH);
 	}
 
 }

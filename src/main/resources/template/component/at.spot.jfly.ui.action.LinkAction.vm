@@ -5,6 +5,7 @@
 	:target="${_state}.navigationTarget" 
 	:href="${_state}.location"
 	depressed flat color="primary"
+	v-bind="${_state}.attributes"
 	>
 
 	$!{component.icon.render()}

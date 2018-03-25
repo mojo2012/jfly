@@ -1,7 +1,6 @@
 package at.spot.jfly;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,22 +12,25 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.http.websocket.ComponentManipulationMessage;
+import at.spot.jfly.http.websocket.ComponentStateUpdateMessage;
+import at.spot.jfly.http.websocket.EventMessage;
+import at.spot.jfly.http.websocket.FunctionCallMessage;
+import at.spot.jfly.http.websocket.IntialStateUpdateMessage;
+import at.spot.jfly.http.websocket.Message;
+import at.spot.jfly.http.websocket.Message.MessageType;
 import at.spot.jfly.templating.ComponentContext;
 import at.spot.jfly.templating.TemplateService;
 import at.spot.jfly.templating.impl.VelocityTemplateService;
 import at.spot.jfly.ui.base.AbstractComponent;
+import at.spot.jfly.ui.base.ClientUpdateCommand;
 import at.spot.jfly.ui.base.Component;
-import at.spot.jfly.ui.base.DrawCommand;
 import at.spot.jfly.ui.base.EventTarget;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.html.Html;
-import at.spot.jfly.util.GsonUtil;
 
 public abstract class ViewHandler implements ComponentHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ViewHandler.class);
@@ -99,45 +101,30 @@ public abstract class ViewHandler implements ComponentHandler {
 	 * Event handling and other functionality.
 	 */
 
-	public Object handleMessage(final JsonObject msg, final String urlPath) {
-		Object retVal = null;
+	public <M extends Message> M handleMessage(final M message) {
+		M retVal = null;
 		// if this is an initial request, we return the current component states
-		if (msg.get("messageType") != null
-				&& StringUtils.equalsIgnoreCase(msg.get("messageType").getAsString(), "init")) {
+		if (MessageType.initialStateRequest.equals(message.getType())) {
+			sendMessage(getViewState());
+		} else if (MessageType.event.equals(message.getType())) {
+			EventMessage eventMessage = (EventMessage) message;
 
-			retVal = getViewState();
-		} else { // this is a regular message, most likely an event
-			JsonElement uuidElem = msg.get("componentUuid");
-
-			if (uuidElem != null) {
-				final String componentUuid = uuidElem.getAsString();
-
-				if (StringUtils.isNotBlank(componentUuid)) {
-					final Component component = getRegisteredComponents().get(componentUuid);
-					final String event = msg.get("event").getAsString();
-					final Map<String, Object> payload = GsonUtil.fromJson(msg.get("payload"), Map.class);
-
-					handleEvent(component, event, payload);
-				}
+			if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
+				final Component component = getRegisteredComponents().get(eventMessage.getComponentUuid());
+				handleEvent(component, eventMessage.getEventType().getIdentifier(), eventMessage.getPayload());
 			} else {
 				LOG.warn("Received message of unknown sender component.");
 			}
+		} else {
+			LOG.warn(String.format("Could not handle message of type %s", message.getType()));
 		}
 
 		return retVal;
+
 	}
 
-	public Map<String, Component> getRegisteredComponents() {
-		return registeredComponents;
-	}
-
-	@Override
-	public void registerComponent(final Component component) {
-		registeredComponents.put(component.getUuid(), component);
-	}
-
-	protected void handleEvent(final Component component, final String event, final Map<String, Object> payload) {
-		final JsEvent e = JsEvent.valueOf(event);
+	protected void handleEvent(final Component component, final String eventType, final Map<String, Object> payload) {
+		final JsEvent e = JsEvent.valueOf(eventType);
 
 		try {
 			((EventTarget) component).handleEvent(new Event(e, component, payload));
@@ -147,11 +134,11 @@ public abstract class ViewHandler implements ComponentHandler {
 		}
 
 		for (final Component c : getRegisteredComponents().values()) {
-			if (c.needsRedraw()) {
-				for (DrawCommand cmd : c.getDrawCommands()) {
+			if (c.hasPendingClientUpdateCommands()) {
+				for (ClientUpdateCommand cmd : c.getClientUpdateCommands()) {
 					switch (cmd.getType()) {
 					case ComponentStateUpdate:
-						updateComponentData(c);
+						updateComponentState(c);
 						break;
 					case FunctionCall:
 						invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
@@ -166,7 +153,7 @@ public abstract class ViewHandler implements ComponentHandler {
 
 				// clear draw commands of the current component, as they have
 				// all been worked off
-				c.clearDrawCommands();
+				c.clearPendingClientUpdateCommands();
 			}
 		}
 	}
@@ -178,12 +165,11 @@ public abstract class ViewHandler implements ComponentHandler {
 	 * @param parameters
 	 */
 	public void invokeFunctionCall(final String object, final String functionCall, final Object... parameters) {
-		final Map<String, Object> message = new HashMap<>();
+		FunctionCallMessage message = new FunctionCallMessage();
 
-		message.put("type", "functionCall");
-		message.put("object", object);
-		message.put("func", functionCall);
-		message.put("params", parameters);
+		message.setObject(object);
+		message.setFunctionCall(functionCall);
+		message.setParameters(parameters);
 
 		sendMessage(message);
 	}
@@ -198,24 +184,19 @@ public abstract class ViewHandler implements ComponentHandler {
 	public void invokeComponentManipulation(final Component component, final String method,
 			final Object... parameters) {
 
-		final Map<String, Object> message = new HashMap<>();
+		final ComponentManipulationMessage message = new ComponentManipulationMessage();
 
-		message.put("type", "objectManipulation");
-		message.put("componentUuid", component.getUuid());
-		message.put("method", method);
-		message.put("params", parameters);
+		message.setComponentUuid(component.getUuid());
+		message.setMethod(method);
+		message.setParameters(parameters);
 
 		sendMessage(message);
 	}
 
-	public void updateComponentData(final Component component) {
-		final String data = component.toJson();
+	public void updateComponentState(final Component component) {
 
-		final Map<String, Object> message = new HashMap<>();
-
-		message.put("type", "componentUpdate");
-		message.put("componentUuid", component.getUuid());
-		message.put("componentState", component);
+		ComponentStateUpdateMessage message = new ComponentStateUpdateMessage();
+		message.setComponent(component);
 
 		sendMessage(message);
 	}
@@ -224,8 +205,17 @@ public abstract class ViewHandler implements ComponentHandler {
 		invokeFunctionCall("jfly", "replaceComponent", component.getUuid(), component.render());
 	}
 
-	public void sendMessage(final Map<String, Object> message) {
+	public <M extends Message> void sendMessage(final M message) {
 		clientCommunicationHandler.sendMessage(message);
+	}
+
+	public Map<String, Component> getRegisteredComponents() {
+		return registeredComponents;
+	}
+
+	@Override
+	public void registerComponent(final Component component) {
+		registeredComponents.put(component.getUuid(), component);
 	}
 
 	@Override
@@ -253,24 +243,18 @@ public abstract class ViewHandler implements ComponentHandler {
 		return output;
 	}
 
-	public Map<String, Object> getViewState() {
-		final Map<String, Object> compState = new HashMap<>();
+	public <M extends Message> M getViewState() {
+		final IntialStateUpdateMessage message = new IntialStateUpdateMessage();
 
-		compState.put("type", "componentInitialization");
-		compState.put("componentStates", getRegisteredComponents());
+		message.getComponentStates().putAll(getRegisteredComponents());
 
-		Map<String, Object> globalState = new HashMap<>();
-		compState.put("globalState", globalState);
+		message.getGlobalState().put("currentLocale", getCurrentLocale());
+		message.getGlobalState().put("supportedLocales", getSupportedLocales());
 
-		Map<String, Object> currentLocale = new HashMap<>();
-		globalState.put("currentLocale", currentLocale);
-
-		currentLocale.put("language", getCurrentLocale().getLanguage());
-		currentLocale.put("country", getCurrentLocale().getCountry());
-		currentLocale.put("code", getCurrentLocale());
-
-		return compState;
+		return (M) message;
 	}
+
+	protected abstract List<Locale> getSupportedLocales();
 
 	public Locale getCurrentLocale() {
 		return currentLocale;

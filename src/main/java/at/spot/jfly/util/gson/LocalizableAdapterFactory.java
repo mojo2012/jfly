@@ -40,7 +40,7 @@ public class LocalizableAdapterFactory implements TypeAdapterFactory {
 
 			out.beginObject();
 			
-			for (Map.Entry<Locale, Object> e : object.getEntries()) {
+			for (Map.Entry<Locale, Object> e : object.getValues().entrySet()) {
 				out.name(e.getKey().toString());
 				out.value(e.toString());
 			}

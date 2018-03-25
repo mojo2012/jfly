@@ -2,7 +2,7 @@ package at.spot.jfly.ui.base;
 
 import java.util.List;
 
-import at.spot.jfly.util.GsonUtil;
+import at.spot.jfly.util.JsonUtil;
 
 public interface Component {
 
@@ -22,13 +22,13 @@ public interface Component {
 	 * 
 	 * @return
 	 */
-	<C extends AbstractComponent> C redraw();
+	void redraw();
 
 	/**
 	 * Serializes the component's state into a json string.
 	 */
 	default String toJson() {
-		return GsonUtil.toJson(this);
+		return JsonUtil.toJson(this);
 	}
 
 	/**
@@ -36,14 +36,14 @@ public interface Component {
 	 * 
 	 * @return
 	 */
-	boolean needsRedraw();
+	boolean hasPendingClientUpdateCommands();
 
 	/**
 	 * This is an ordered list of draw commands. First added is on top.
 	 * 
 	 * @return
 	 */
-	List<DrawCommand> getDrawCommands();
+	List<ClientUpdateCommand> getClientUpdateCommands();
 
-	void clearDrawCommands();
+	void clearPendingClientUpdateCommands();
 }

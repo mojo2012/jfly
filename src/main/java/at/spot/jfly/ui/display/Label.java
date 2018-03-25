@@ -12,6 +12,5 @@ import at.spot.jfly.util.Localizable;
 public class Label extends AbstractTextComponent {
 	public Label(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
-		addStyleClasses("label");
 	}
 }

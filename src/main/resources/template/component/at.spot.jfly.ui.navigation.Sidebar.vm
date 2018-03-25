@@ -3,11 +3,14 @@
 	:class="${_state}.styleClasses"
 	v-model="${_state}.visible"
 	:mini-variant.sync="${_state}.minimized"
-	clipped app 
-	:permanent="${_state}.visible"
-	:stateless="true" :touchless="true" 
+	:stateless="true" 
 	:disable-resize-watcher="true"
-	:hide-overlay="false"
+	:hide-overlay="true"
+	
+	v-bind="${_state}.attributes"
+	
+	
+	app absolute clipped 
 	>
 	
 	$!{component.toolBar.render()}

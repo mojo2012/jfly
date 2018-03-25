@@ -2,13 +2,9 @@ package at.spot.jfly.util;
 
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Map;
 
 public class Localizable<T> {
-	@JsonIgnore
 	private final KeyValueMapping<Locale, T> values = new KeyValueMapping<>();
 
 	public static <T> Localizable<T> of(T value) {
@@ -21,6 +17,13 @@ public class Localizable<T> {
 
 	private Localizable(Locale locale, T value) {
 		this.values.put(locale, value);
+	}
+
+	public Localizable() {
+	}
+
+	public void set(Locale locale, T value) {
+		values.put(locale, value);
 	}
 
 	/**
@@ -53,7 +56,8 @@ public class Localizable<T> {
 		return values.transformValue(locale, v -> v.toString());
 	}
 
-	public Set<Entry<Locale, T>> getEntries() {
-		return Collections.unmodifiableSet(values.entrySet());
+	public Map<Locale, T> getValues() {
+		return Collections.unmodifiableMap(values);
 	}
+
 }

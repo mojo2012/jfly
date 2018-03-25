@@ -132,11 +132,11 @@
 			<version>2.9.4</version>
 		</dependency>
 
-		<dependency>
-			<groupId>io.gsonfire</groupId>
-			<artifactId>gson-fire</artifactId>
-			<version>1.8.2</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>io.gsonfire</groupId> -->
+<!-- 			<artifactId>gson-fire</artifactId> -->
+<!-- 			<version>1.8.2</version> -->
+<!-- 		</dependency> -->
 
 		<!-- util -->
 		<dependency>

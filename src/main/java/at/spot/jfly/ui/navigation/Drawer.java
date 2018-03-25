@@ -1,7 +1,7 @@
 package at.spot.jfly.ui.navigation;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.HorizontalOrientation;
+import at.spot.jfly.attributes.Attributes.HorizontalOrientation;
 
 public class Drawer extends SideBar {
 

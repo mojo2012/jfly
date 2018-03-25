@@ -11,6 +11,7 @@ public class TextField extends AbstractTextComponent {
 	private Localizable<String> placeholder;
 	private Localizable<String> label;
 	private boolean multiLine = false;
+	private boolean isReadOnly = false;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
@@ -43,6 +44,18 @@ public class TextField extends AbstractTextComponent {
 	public void setLabel(Localizable<String> label) {
 		this.label = label;
 	}
+
+	public boolean isReadOnly() {
+		return isReadOnly;
+	}
+
+	public void setReadOnly(boolean isReadOnly) {
+		this.isReadOnly = isReadOnly;
+	}
+
+	/*
+	 * EVENT HANDLERS
+	 */
 
 	public void onChange(EventHandler e) {
 		onEvent(JsEvent.change, e);

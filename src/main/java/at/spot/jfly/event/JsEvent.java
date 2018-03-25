@@ -1,6 +1,6 @@
 package at.spot.jfly.event;
 
-public enum JsEvent {
+public enum JsEvent implements EventType {
 	click("click"),
 	hover("hover"),
 	input("input"),
@@ -29,14 +29,19 @@ public enum JsEvent {
 	submit("submit"),
 	reset("reset");
 
-	private String id;
+	private String identifier;
 
 	private JsEvent(final String id) {
-		this.id = id;
+		this.identifier = id;
 	}
 
 	@Override
 	public String toString() {
-		return this.id;
+		return this.identifier;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return identifier;
 	}
 }

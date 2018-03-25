@@ -6,6 +6,9 @@
 	:placeholder="localize(${_state}.placeholder)"
 	:multi-line="${_state}.multiLine"
 	:value="localize(${_state}.text)"
+	v-bind="${_state}.attributes"
+	:flat="${_state}.flat"
+	
 	>
           
 </v-text-field>

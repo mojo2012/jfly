@@ -6,7 +6,9 @@
 	app :stateless="true"
 	:temporary="${_state}.floating"
 	:disable-resize-watcher="true" 
-	:right="${_state}.horizontalOrientation == 'Right'" >
+	:right="${_state}.horizontalOrientation == 'right'" 
+	v-bind="${_state}.attributes"
+	>
 	
 	$!{component.toolBar.render()}
 	

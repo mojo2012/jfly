@@ -44,9 +44,9 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 
 	public void setIcon(Icon icon) {
 		if (this.icon != null) {
-			updateClient(ClientDrawFunction.REPLACE, this.icon.getUuid(), icon);
+			updateClient(ComponentManipulationFunction.REPLACE, this.icon.getUuid(), icon);
 		} else {
-			updateClient(ClientDrawFunction.ADD, icon);
+			updateClient(ComponentManipulationFunction.ADD, icon);
 		}
 
 		this.icon = icon;

@@ -18,7 +18,7 @@ jfly.websockethandler = {
 		var jsonCookieString = atob(jfly.getCookie("jfly"));
 		var jsonCookie = JSON.parse(jsonCookieString);
 		message.sessionId = jsonCookie.sessionId;
-		message.urlPath = window.location.pathname;
+		message.url = window.location.pathname;
 		
 		var msg = jfly.toString(message);
 		
@@ -37,7 +37,7 @@ jfly.websockethandler = {
 		// only request initial component states if vue has not yet been initialized
 		if (!jfly.uicontroller) {
 			jfly.callAsync(function() {
-				jfly.websockethandler.send({ "messageType": 'init' });
+				jfly.websockethandler.send({ "type": 'initialStateRequest' });
 			});
 		}
 	},
@@ -56,18 +56,24 @@ jfly.websockethandler = {
 		console.debug('WebSocket onmessage');
 		var message = JSON.parse(event.data);
 		
-		if (message.type == "componentInitialization") {
+		if (message.type == "keepAlive") {
+			// ignore pong
+		} else if (message.type == "initialStateUpdate") {
 			jfly.callAsync(function() {
 				jfly.initVue(message);
 			});
-		} else if (message.type == "objectManipulation") {
+		} else if (message.type == "componentManipulation") {
 			var component = jfly.findComponent(message.componentUuid);
-			component[message.method].apply(component, message.params);
+			component[message.method].apply(component, message.parameters);
 		} else if (message.type == "functionCall") {
-			var func = window[message.object][message.func];
-			func.apply(func, message.params);
-		} else if (message.type == "componentUpdate") {
+			var func = window[message.object][message.functionCall];
+			func.apply(func, message.parameters);
+		} else if (message.type == "componentStateUpdate") {
 			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
+		} else if (message.type == "notification") {
+			// show notification
+		} else if (message.type == "stateRequest") {
+			// send component state back
 		} else if (message.type == "exception") {
 			jfly.uicontroller.showExceptionDialog(message);
 		}
@@ -189,8 +195,8 @@ jfly.initVue = function(initMessage) {
 				// payload.componentState = this.componentStates[componentUuid];
 				
 				var message = {
-					"messageType": "event",
-					"event": event,
+					"type": "event",
+					"eventType": event,
 					"componentUuid": componentUuid,
 					"payload": payload,
 				};
@@ -216,8 +222,14 @@ jfly.initVue = function(initMessage) {
 					parent: jfly.uicontroller,
 					template: childHtml,
 					data: function() {
+						// inject the parent states
 						return parent.$data
+					},
+					methods: {
+						// this is necessary, as the child components can not access the parent's methods
+						localize: parent.localize,
 					}
+					// TOOD: also map filters and other stuff?
 				});
 					 
 				var component = new Component().$mount();

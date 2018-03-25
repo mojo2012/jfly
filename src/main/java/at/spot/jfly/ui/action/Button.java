@@ -1,8 +1,8 @@
 package at.spot.jfly.ui.action;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.style.ButtonStyle;
-import at.spot.jfly.style.ComponentType;
+import at.spot.jfly.attributes.Attributes;
+import at.spot.jfly.attributes.Styles;
 import at.spot.jfly.ui.base.AbstractActionComponent;
 import at.spot.jfly.ui.display.Icon;
 import at.spot.jfly.util.Localizable;
@@ -10,18 +10,32 @@ import at.spot.jfly.util.Localizable;
 public class Button extends AbstractActionComponent {
 
 	private Icon icon;
-	private boolean isFlat;
+	private boolean expandFullWidth = false;
+	private Styles.Color color;
+	private Attributes.TextFieldType type;
 
 	public Button(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
-		componentType(ComponentType.Button);
-		addStyleClasses(ButtonStyle.None);
 	}
 
 	public Button(final ComponentHandler handler) {
 		super(handler, null);
-		componentType(ComponentType.Button);
-		addStyleClasses(ButtonStyle.None);
+	}
+
+	public Attributes.TextFieldType getType() {
+		return type;
+	}
+
+	public void setType(Attributes.TextFieldType type) {
+		this.type = type;
+	}
+
+	public Styles.Color getColor() {
+		return color;
+	}
+
+	public void setColor(Styles.Color color) {
+		this.color = color;
 	}
 
 	public Icon getIcon() {
@@ -32,12 +46,12 @@ public class Button extends AbstractActionComponent {
 		this.icon = icon;
 	}
 
-	public boolean isFlat() {
-		return isFlat;
+	public boolean isExpandFullWidth() {
+		return expandFullWidth;
 	}
 
-	public void setFlat(boolean isFlat) {
-		this.isFlat = isFlat;
+	public void setExpandFullWidth(boolean expandFullWidth) {
+		this.expandFullWidth = expandFullWidth;
 	}
 
 }

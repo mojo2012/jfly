@@ -1,5 +1,5 @@
 <v-toolbar uuid="${_uuid}" class="navbar $!{component.cssStyleString}" $!events
-	v-model="${_state}" app absolute clipped-left dense
+	v-model="${_state}" app absolute clipped-left v-bind="${_state}.attributes"
 	>
 
 	$!{component.leftActionItem.render()}

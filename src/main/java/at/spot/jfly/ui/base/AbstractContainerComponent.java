@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.spot.jfly.ComponentHandler;
-import io.gsonfire.annotations.ExposeMethodResult;
 
 public abstract class AbstractContainerComponent<C extends AbstractComponent> extends AbstractComponent {
 
@@ -26,7 +25,7 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		children.addAll(Arrays.asList(components));
 
 		for (Component c : components) {
-			updateClient(ClientDrawFunction.ADD, this.getUuid(), c.render(), c);
+			updateClient(ComponentManipulationFunction.ADD, this.getUuid(), c.render(), c);
 		}
 	}
 
@@ -34,12 +33,12 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		children.removeAll(Arrays.asList(components));
 
 		for (Component c : components) {
-			updateClient(ClientDrawFunction.REMOVE, this.getUuid(), c.getUuid());
+			updateClient(ComponentManipulationFunction.REMOVE, this.getUuid(), c.getUuid());
 		}
 	}
 
 	@JsonProperty(value = "hasChildren")
-	@ExposeMethodResult("hasChildren")
+	// @ExposeMethodResult("hasChildren")
 	public boolean hasChildren() {
 		return children.size() > 0;
 	}

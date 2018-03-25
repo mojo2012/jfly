@@ -1,8 +1,8 @@
 <v-icon
-	uuid="${_uuid}"
+	uuid="${_uuid}" $!events
 	:class="${_state}.styleClasses"
-	$!events
 	:dark="${_state}.inverse"
+	v-bind="${_state}.attributes"
 	>
 	
 	$!{component.icon}

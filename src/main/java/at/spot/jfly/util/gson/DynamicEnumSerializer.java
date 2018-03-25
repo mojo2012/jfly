@@ -1,4 +1,4 @@
-package at.spot.jfly.util;
+package at.spot.jfly.util.gson;
 
 import java.io.IOException;
 
@@ -7,21 +7,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class LocalizableSerializer<T> extends StdSerializer<Localizable<T>> {
+public class DynamicEnumSerializer extends StdSerializer<at.spot.jfly.util.Enum> {
+
 	private static final long serialVersionUID = 1L;
 
-	public LocalizableSerializer() {
+	public DynamicEnumSerializer() {
 		this(null);
 	}
 
-	public LocalizableSerializer(Class<Localizable<T>> t) {
-		super(t);
+	public DynamicEnumSerializer(Class<at.spot.jfly.util.Enum> type) {
+		super(type);
 	}
 
 	@Override
-	public void serialize(Localizable<T> value, JsonGenerator jgen, SerializerProvider provider)
+	public void serialize(at.spot.jfly.util.Enum value, JsonGenerator jgen, SerializerProvider provider)
 			throws IOException, JsonProcessingException {
 
-		jgen.writeObject(value.getEntries());
+		jgen.writeString(value.getInternalName());
 	}
 }
