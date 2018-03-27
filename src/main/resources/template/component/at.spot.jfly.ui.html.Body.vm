@@ -1,4 +1,4 @@
-<body uuid="${_uuid}" class="hidden" :class="${_state}.styleClasses" $!events>
+<body uuid="${_uuid}" class="hidden" $!events>
 	<v-app data-app >
 		<!-- ERROR DIALOG -->
 		<v-snackbar :timeout="200000" color="red" top  v-model="exception.visible">

@@ -1,3 +1,11 @@
-<div class="grid" uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes" >
-
-</div>
+<v-container grid-list-md text-xs-center>
+	<v-layout  >
+		<v-flex v-bind="${_state}.attributes">
+			<div uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes" >
+				#foreach( $!child in $!component.children )
+					$!child.render()
+				#end
+			</div>
+		</v-flex>
+	</v-layout>
+</v-container>

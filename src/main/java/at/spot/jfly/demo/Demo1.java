@@ -44,9 +44,7 @@ public class Demo1 extends ViewHandler {
 
 	@Override
 	protected Head createHeader() {
-		final Head head = new Head(getHandler()).setTitle("jfly UI framework");
-
-		return head;
+		return new Head(getHandler()).setTitle("jfly UI framework");
 	}
 
 	@Override
@@ -90,14 +88,14 @@ public class Demo1 extends ViewHandler {
 
 		final Button button = new Button(getHandler(), Localizable.of("Say hello!"));
 		button.onClick(e -> {
-			button.text(Localizable.of("clicked"));
+			button.setText(Localizable.of("clicked"));
 
 			Label label = new Label(getHandler(), Localizable.of("Current time: " + new Date().toString()));
 			actualContainer.addChildren(label);
 		});
 
 		button.onMouseOut(e -> {
-			button.text(Localizable.of("and out"));
+			button.setText(Localizable.of("and out"));
 		});
 
 		DropDownBox dropdown = new DropDownBox(getHandler(), Localizable.of("Please choose ..."));
@@ -228,8 +226,6 @@ public class Demo1 extends ViewHandler {
 
 	/**
 	 * Entry point for demo application
-	 * 
-	 * @param args
 	 */
 	public static void main(final String[] args) {
 		final Server server = new Server(8080);
