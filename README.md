@@ -80,7 +80,26 @@ The state changes are communicated back to the browser asynchronously and render
 So after you hit run on your breakpoint you get this in your browser:
 ![Vuetify-based UI](docs/img/demo_after_button_click.png)
 
+If you are not happy with the looks of the label you can do:
+1. Configure the component using the Java API (e.g. set style classes)
+2. Override the the HTML template
+3. Subclass the component and do whatever you want
 
+Option 1 and 3 are pretty straig forward. But option 2 does need a few more words.
 
+The template renderer looks for a velocity template with the fully-qualified name of the component, in our case `at.spot.jfly.ui.display.Label`:
+```
+<span
+	uuid="${_uuid}" $!events
+	:class="${_state}.styleClasses" class="label" 
+	v-bind="${_state}.attributes">
+	
+	{{localize(${_state}.text)}}
+</span>
+```
 
+You can alter the HTML as you like, except for the `uuid` attribute. It is necessary to identify the component on the  backend. The `${_state}` represents a javascript object (within vue's data object). It holds the component state and the component reacts on changes of this state object automatically.
+
+## Future work
+Right now I would consider this framework in alpha status. There are only a handful of components implemented. But it's pretty stable right now.
 
