@@ -17,8 +17,9 @@ jfly.websockethandler = {
 	send(message) {
 		var jsonCookieString = atob(jfly.getCookie("jfly"));
 		var jsonCookie = JSON.parse(jsonCookieString);
-		message.sessionId = jsonCookie.sessionId;
+		message.sessionId = jsonCookie.value;
 		message.url = window.location.pathname;
+//		message.locale = navigator.language;
 		
 		var msg = jfly.toString(message);
 		

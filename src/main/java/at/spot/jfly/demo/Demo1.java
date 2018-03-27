@@ -24,6 +24,7 @@ import at.spot.jfly.ui.display.Icon;
 import at.spot.jfly.ui.display.Label;
 import at.spot.jfly.ui.display.VSpacer;
 import at.spot.jfly.ui.generic.GenericContainer;
+import at.spot.jfly.ui.generic.HtmlTag;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.input.TextField;
@@ -36,6 +37,7 @@ import at.spot.jfly.ui.navigation.TreeView.NodeType;
 import at.spot.jfly.ui.selection.DropDownBox;
 import at.spot.jfly.util.Localizable;
 import at.spot.jfly.util.LocalizationBundle;
+import j2html.TagCreator;
 
 public class Demo1 extends ViewHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
@@ -104,18 +106,20 @@ public class Demo1 extends ViewHandler {
 		// TODO: pushing data asynchronously doesn't work yet
 		dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
 			LOG.debug("Starting timer");
-			// new Thread(() -> {
-			// for (byte b = 0; b < 4; b++) {
-			// GenericComponent comp = new GenericComponent(getHandler(),
-			// TagCreator.h2("Time: " + System.currentTimeMillis()));
-			// actualContainer.addChildren(comp);
-			// try {
-			// Thread.sleep(1000);
-			// } catch (InterruptedException e1) {
-			// e1.printStackTrace();
-			// }
-			// }
-			// }).start();
+			new Thread(() -> {
+				for (byte b = 0; b < 4; b++) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					HtmlTag comp = new HtmlTag(getHandler(), TagCreator.h2("Time: " + System.currentTimeMillis()));
+					actualContainer.addChildren(comp);
+
+					flushClientUpdates();
+				}
+			}).start();
 		});
 		dropdown.addMenuItem("test2", "test 2", e -> {
 			dropdown.addMenuItem("addedItem" + dropdown.getMenuItems().size(), "This has been added manually", null);

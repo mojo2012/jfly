@@ -2,12 +2,10 @@ package at.spot.jfly;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -16,6 +14,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.spot.jfly.http.Cookie;
 import at.spot.jfly.http.HttpMethod;
 import at.spot.jfly.http.HttpSession;
 import at.spot.jfly.http.websocket.ExceptionMessage;
@@ -38,7 +37,7 @@ public class Server implements ClientCommunicationHandler {
 	public static final String DEFAULT_STATIC_FILE_PATH = "/web";
 	public static final String DEFAULT_WEBSOCKET_PATH = "/com";
 
-	protected final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
+	protected final KeyValueMapping<String, Session> sessions = new KeyValueMapping<>();
 	protected final ThreadLocal<Session> context = new ThreadLocal<>();
 
 	protected final KeyValueMapping<String, KeyValueMapping<String, ViewHandler>> sessionViewHandlers = new KeyValueMapping<>();
@@ -131,7 +130,10 @@ public class Server implements ClientCommunicationHandler {
 
 	@OnWebSocketConnect
 	public void connected(final Session session) {
-		addSession(session);
+		Optional<Cookie> cookie = session.getUpgradeRequest().getCookies().stream()
+				.filter(c -> "jfly".equals(c.getName())).map(c -> decodeCookie(c.getValue())).findFirst();
+
+		addSession(cookie.get().getValue(), session);
 		setCurrentSession(session);
 	}
 
@@ -145,33 +147,33 @@ public class Server implements ClientCommunicationHandler {
 		LOG.debug("Received message: " + message);
 
 		try {
-		setCurrentSession(session);
+			setCurrentSession(session);
 
-		if (StringUtils.isNotBlank(message)) {
-			final Message msg = JsonUtil.fromJson(message, Message.class);
+			if (StringUtils.isNotBlank(message)) {
+				final Message msg = JsonUtil.fromJson(message, Message.class);
 
-			if (MessageType.keepAlive.equals(msg.getType())) {
-				sendMessage(new KeepAliveMessage());
-			} else {
-				final ViewHandler app = getViewHandler(msg.getSessionId(), msg.getUrl());
-
-				if (app != null) {
-					try {
-						app.handleMessage(msg);
-						// final Message retVal = app.handleMessage(msg);
-						//
-						// if (retVal != null) {
-						// sendMessage(retVal);
-						// }
-					} catch (Exception e) {
-						// send back an error message to allow the UI to react properly
-						sendMessage(generateErrorMessage(e));
-					}
+				if (MessageType.keepAlive.equals(msg.getType())) {
+					sendMessage(new KeepAliveMessage());
 				} else {
-					throw new IOException("No ViewHandler for the given session is found.");
+					final ViewHandler app = getViewHandler(msg.getSessionId(), msg.getUrl());
+
+					if (app != null) {
+						try {
+							app.handleMessage(msg);
+							// final Message retVal = app.handleMessage(msg);
+							//
+							// if (retVal != null) {
+							// sendMessage(retVal);
+							// }
+						} catch (Exception e) {
+							// send back an error message to allow the UI to react properly
+							sendMessage(generateErrorMessage(e));
+						}
+					} else {
+						throw new IOException("No ViewHandler for the given session is found.");
+					}
 				}
 			}
-		}
 		} catch (Throwable e) {
 			sendMessage(generateErrorMessage(e));
 		}
@@ -192,8 +194,8 @@ public class Server implements ClientCommunicationHandler {
 		return msg;
 	}
 
-	protected void addSession(final Session session) {
-		sessions.add(session);
+	protected void addSession(String sessionId, final Session session) {
+		sessions.put(sessionId, session);
 	}
 
 	protected void closeSession(final Session session) {
@@ -217,6 +219,10 @@ public class Server implements ClientCommunicationHandler {
 		context.set(session);
 	}
 
+	protected String getWebSocketSessionId(Session session) {
+		return ((javax.servlet.http.HttpSession) session.getUpgradeRequest().getSession()).getId();
+	}
+
 	public boolean isCalledInRequest() {
 		return getCurrentSession() != null;
 	}
@@ -235,9 +241,10 @@ public class Server implements ClientCommunicationHandler {
 		try {
 			view = getOrCreateViewHandler(request);
 
-			final Map<String, Object> cookie = new HashMap<>();
-			cookie.put("sessionId", view.getSessionId());
-			response.cookie("jfly", Base64.getEncoder().encodeToString(JsonUtil.toJson(cookie).getBytes()));
+			Cookie cookie = new Cookie();
+			cookie.setName("sessionId");
+			cookie.setValue(view.getSessionId());
+			response.cookie("jfly", encodeCookie(cookie));
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
 		}
@@ -247,6 +254,14 @@ public class Server implements ClientCommunicationHandler {
 		}
 
 		return view.render();
+	}
+
+	protected String encodeCookie(Cookie cookie) {
+		return Base64.getEncoder().encodeToString(JsonUtil.toJson(cookie).getBytes());
+	}
+
+	protected Cookie decodeCookie(String cookieString) {
+		return JsonUtil.fromJson(new String(Base64.getDecoder().decode(cookieString)), Cookie.class);
 	}
 
 	protected KeyValueMapping<String, ViewHandler> getViewHandlerMapping(String sessionId) {
@@ -304,17 +319,21 @@ public class Server implements ClientCommunicationHandler {
 
 	@Override
 	public <M extends Message> void sendMessage(final M message) {
-		try {
-			String messageString = JsonUtil.toJson(message);
-			LOG.debug("Sending message: " + JsonUtil.toJson(message));
-			getCurrentSession().getRemote().sendString(messageString);
-		} catch (final Exception e) {
-			LOG.error("Cannot send message to client.");
-		}
+		sendMessage(message, getCurrentSession().getRemote());
 	}
 
 	@Override
-	public <M extends Message> void sendMessage(final String clientSessionId, final M message) {
+	public <M extends Message> void sendMessage(final M message, String sessionId) {
+		sendMessage(message, sessions.get(sessionId).getRemote());
+	}
 
+	protected <M extends Message> void sendMessage(final M message, RemoteEndpoint endpoint) {
+		try {
+			String messageString = JsonUtil.toJson(message);
+			LOG.debug("Sending message: " + JsonUtil.toJson(message));
+			endpoint.sendString(messageString);
+		} catch (final Exception e) {
+			LOG.error("Cannot send message to client.");
+		}
 	}
 }

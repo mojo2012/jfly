@@ -133,6 +133,10 @@ public abstract class ViewHandler implements ComponentHandler {
 			throw ex;
 		}
 
+		flushClientUpdates();
+	}
+
+	protected void flushClientUpdates() {
 		for (final Component c : getRegisteredComponents().values()) {
 			if (c.hasPendingClientUpdateCommands()) {
 				for (ClientUpdateCommand cmd : c.getClientUpdateCommands()) {
@@ -206,7 +210,7 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	public <M extends Message> void sendMessage(final M message) {
-		clientCommunicationHandler.sendMessage(message);
+		clientCommunicationHandler.sendMessage(message, getSessionId());
 	}
 
 	public Map<String, Component> getRegisteredComponents() {
