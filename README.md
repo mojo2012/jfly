@@ -7,6 +7,7 @@ But there are also plenty of good javascript based UI frameworks out there. Why 
 That's how these requirements came together:
 * Provide a thin java API wrapper around vue and vuetifyjs
 * Provide efficient means to store and retrieve UI state in the backend
+* Push data from the backend to individual clients (and also broadcast messages)
 * Easy to customize existing UI components
 * Easy to write or create custom UI components
 
