@@ -18,14 +18,12 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 	}
 
 	public AbstractTextComponent(final ComponentHandler handler, final Localizable<String> text) {
-		super(handler);
-		text(text);
+		this(handler);
+		setText(text);
 	}
 
-	public <C extends AbstractTextComponent> C text(final Localizable<String> text) {
-		this.text = text;
-		updateClientComponent();
-		return (C) this;
+	public AbstractTextComponent(final ComponentHandler handler) {
+		super(handler);
 	}
 
 	public Localizable<String> getText() {
@@ -34,11 +32,10 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 
 	public void setText(Localizable<String> text) {
 		this.text = text;
+		updateClientComponent();
 	}
 
-	public <C extends AbstractActionComponent> C onHover(final EventHandler handler) {
+	public void onHover(final EventHandler handler) {
 		onEvent(JsEvent.hover, handler);
-
-		return (C) this;
 	}
 }
