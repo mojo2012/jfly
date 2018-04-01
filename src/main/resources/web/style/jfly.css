@@ -1,3 +1,7 @@
+[v-cloak] {
+	display: none;
+}
+
 .tag, .badge, .label {
 	background-color: #000;
 	border-color: #000;

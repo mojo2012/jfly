@@ -18,6 +18,8 @@ import at.spot.jfly.attributes.Attributes.Attribute;
 import at.spot.jfly.attributes.Styles.Style;
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
+import at.spot.jfly.event.EventType;
+import at.spot.jfly.event.GenericEvent;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.util.KeyValueListMapping;
 import at.spot.jfly.util.KeyValueMapping;
@@ -40,7 +42,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	/*
 	 * Event handlers
 	 */
-	protected transient KeyValueListMapping<JsEvent, EventHandler> eventHandlers = new KeyValueListMapping<>();
+	protected transient KeyValueListMapping<EventType, EventHandler> eventHandlers = new KeyValueListMapping<>();
 
 	/*
 	 * Initialization
@@ -64,7 +66,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 * Properties
 	 */
 
-	public Set<JsEvent> registeredEvents() {
+	public Set<EventType> registeredEvents() {
 		return this.eventHandlers.keySet();
 	}
 
@@ -147,7 +149,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 * @param handler
 	 * @return
 	 */
-	protected void onEvent(final JsEvent eventType, final EventHandler handler) {
+	protected void onEvent(final EventType eventType, final EventHandler handler) {
 		if (handler != null) {
 			this.eventHandlers.putOrAdd(eventType, handler);
 		}
@@ -276,6 +278,16 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	public void onMouseWheel(final EventHandler handler) {
 		onEvent(JsEvent.mousewheel, handler);
+	}
+
+	public void onStateChanged(final EventHandler handler, String componentPropery) {
+		EventHandler stateChangedHandler = (e) -> {
+			if (StringUtils.equals((String) e.getPayload().get("property"), componentPropery)) {
+				handler.handle(e);
+			}
+		};
+
+		onEvent(GenericEvent.stateChanged, stateChangedHandler);
 	}
 
 	public enum ComponentManipulationFunction {

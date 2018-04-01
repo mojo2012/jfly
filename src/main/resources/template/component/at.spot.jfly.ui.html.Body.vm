@@ -1,5 +1,5 @@
-<body uuid="${_uuid}" class="hidden" $!events>
-	<v-app data-app >
+<body uuid="${_uuid}" $!events>
+	<v-app data-app v-cloak>
 		<!-- ERROR DIALOG -->
 		<v-snackbar :timeout="200000" color="red" top  v-model="exception.visible">
 			 <v-container fluid ma-0 pa-0>

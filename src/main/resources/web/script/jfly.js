@@ -217,7 +217,7 @@ jfly.initVue = function(initMessage) {
 				this.componentStates[childContext.uuid] = childContext;
 				
 				// "this" can't be referenced within the data function,
-				// so we have to create a wrapper for it
+				// so we have to create a proxy for it
 				var parent = this;
 				var Component = Vue.extend({
 					parent: jfly.uicontroller,
@@ -275,16 +275,19 @@ jfly.initVue = function(initMessage) {
 				return value.charAt(0).toUpperCase() + value.slice(1)
 			},
 		},
-// template: {
-//			
-// },
 		beforeCreate: function() {
 			console.debug("Vue beforeCreate");
 		},
 		created: function() {
 			console.debug("Vue created");
-			$("body").removeClass("hidden");
-		}
+		},
+		beforeMount: function() {
+			console.debug("Vue beforeMount");
+			
+		},
+		mounted: function() {
+			console.debug("Vue mounted");
+		},
 	});
 }
 

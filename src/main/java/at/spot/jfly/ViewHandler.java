@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.event.Event;
+import at.spot.jfly.event.EventType;
 import at.spot.jfly.event.JsEvent;
 import at.spot.jfly.http.websocket.ComponentManipulationMessage;
 import at.spot.jfly.http.websocket.ComponentStateUpdateMessage;
@@ -229,7 +230,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		if (templateService != null) {
 			String events = "";
 
-			for (final JsEvent event : component.registeredEvents()) {
+			for (final EventType event : component.registeredEvents()) {
 				events += String.format(" v-on:%s=\"handleEvent('%s', '%s', $event)\"", event.toString(),
 						event.toString(), component.getUuid());
 			}
