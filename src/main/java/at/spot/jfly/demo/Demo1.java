@@ -151,12 +151,12 @@ public class Demo1 extends ViewHandler {
 		Drawer rightDrawer = new Drawer(getHandler(), HorizontalOrientation.Right);
 		rightDrawer.setToolBar(new ToolBar(getHandler()));
 		rightDrawer.getToolBar().setHeader(new Label(getHandler(), Localizable.of("Settings")));
-		rightDrawer.setVisibe(false);
+		rightDrawer.setVisible(false);
 
 		Button drawerCloseButton = new Button(getHandler());
 		drawerCloseButton.setIcon(new Icon(getHandler(), MaterialIcon.close));
 		drawerCloseButton.setFlat(true);
-		drawerCloseButton.onClick(e -> rightDrawer.setVisibe(false));
+		drawerCloseButton.onClick(e -> rightDrawer.setVisible(false));
 		rightDrawer.getToolBar().addChildren(vSpacer);
 		rightDrawer.getToolBar().addChildren(drawerCloseButton);
 
@@ -192,7 +192,7 @@ public class Demo1 extends ViewHandler {
 		final ToolBar toolBar = new ToolBar(getHandler());
 		toolBar.setHeader(new Label(getHandler(), Localizable.of("spOt")));
 
-		toolBar.setLeftActionItem(e -> sidebar.setVisibe(!sidebar.isVisible()));
+		toolBar.setLeftActionItem(e -> sidebar.setVisible(!sidebar.isVisible()));
 		toolBar.addChildren(vSpacer);
 
 		TextField searchBox = new TextField(getHandler());
@@ -212,7 +212,7 @@ public class Demo1 extends ViewHandler {
 		settingsButton.setFlat(true);
 		settingsButton.setIcon(new Icon(getHandler(), MaterialIcon.settings));
 		settingsButton.onClick(e -> {
-			rightDrawer.setVisibe(!rightDrawer.isVisible());
+			rightDrawer.setVisible(!rightDrawer.isVisible());
 		});
 
 		toolBar.addChildren(reloadButton);

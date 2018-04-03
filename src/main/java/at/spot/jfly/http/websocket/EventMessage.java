@@ -1,12 +1,11 @@
 package at.spot.jfly.http.websocket;
 
-import at.spot.jfly.event.EventType;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.EventType;
 import at.spot.jfly.util.KeyValueMapping;
 
 public class EventMessage extends Message {
 
-	private JsEvent eventType;
+	private EventType eventType;
 	private String componentUuid;
 	private KeyValueMapping<String, Object> payload;
 
@@ -38,7 +37,7 @@ public class EventMessage extends Message {
 		return eventType;
 	}
 
-	public void setEventType(JsEvent eventType) {
+	public void setEventType(EventType eventType) {
 		this.eventType = eventType;
 	}
 

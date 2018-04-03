@@ -1,11 +1,13 @@
 package at.spot.jfly;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.event.Event;
-import at.spot.jfly.event.EventType;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.EventType;
+import at.spot.jfly.event.Events.GenericEvent;
 import at.spot.jfly.http.websocket.ComponentManipulationMessage;
 import at.spot.jfly.http.websocket.ComponentStateUpdateMessage;
 import at.spot.jfly.http.websocket.EventMessage;
@@ -104,15 +106,36 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	public <M extends Message> M handleMessage(final M message) {
 		M retVal = null;
+
 		// if this is an initial request, we return the current component states
 		if (MessageType.initialStateRequest.equals(message.getType())) {
 			sendMessage(getViewState());
+
 		} else if (MessageType.event.equals(message.getType())) {
 			EventMessage eventMessage = (EventMessage) message;
 
 			if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
 				final Component component = getRegisteredComponents().get(eventMessage.getComponentUuid());
-				handleEvent(component, eventMessage.getEventType().getIdentifier(), eventMessage.getPayload());
+
+				// apply changed states to the component
+				if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
+					try {
+						// eventMessage.getPayload().entrySet().forEach(entry -> {
+						// try {
+						// PropertyUtils.setProperty(component, entry.getKey(), entry.getValue());
+						// } catch (NoSuchMethodException | IllegalAccessException |
+						// InvocationTargetException e) {
+						// throw new IllegalStateException();
+						// }
+						// });
+
+						BeanUtils.populate(component, eventMessage.getPayload());
+					} catch (IllegalStateException | IllegalAccessException | InvocationTargetException e) {
+						LOG.warn(String.format("Could not update component state with %s", eventMessage.getPayload()));
+					}
+				}
+
+				handleEvent(component, eventMessage.getEventType(), eventMessage.getPayload());
 			} else {
 				LOG.warn("Received message of unknown sender component.");
 			}
@@ -124,11 +147,10 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	}
 
-	protected void handleEvent(final Component component, final String eventType, final Map<String, Object> payload) {
-		final JsEvent e = JsEvent.valueOf(eventType);
-
+	protected void handleEvent(final Component component, final EventType eventType,
+			final Map<String, Object> payload) {
 		try {
-			((EventTarget) component).handleEvent(new Event(e, component, payload));
+			((EventTarget) component).handleEvent(new Event(eventType, component, payload));
 		} catch (Exception ex) {
 			LOG.error(String.format("Exception during handleEvent for component %s", component.getUuid()), ex);
 			throw ex;

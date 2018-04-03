@@ -160,11 +160,6 @@ public class Server implements ClientCommunicationHandler {
 					if (app != null) {
 						try {
 							app.handleMessage(msg);
-							// final Message retVal = app.handleMessage(msg);
-							//
-							// if (retVal != null) {
-							// sendMessage(retVal);
-							// }
 						} catch (Exception e) {
 							// send back an error message to allow the UI to react properly
 							sendMessage(generateErrorMessage(e));

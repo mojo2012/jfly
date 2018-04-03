@@ -1,5 +1,11 @@
 // for bootstrap compatibility reasons
-jfly = {};
+jfly = {
+	constants : {
+		COMPONENT_STATES: "componentStates",
+		ATTRIBUTE_UUID: "uuid",
+	}
+		
+};
 
 jfly.connection = {};
 
@@ -123,7 +129,7 @@ jfly.getCookies = function(){
 }
 
 jfly.findComponent = function(componentUuid) {
-	var component = $("[uuid='" + componentUuid + "']");
+	var component = $("[" + jfly.constants.ATTRIBUTE_UUID + "='" + componentUuid + "']");
 	
 	return component;
 };
@@ -133,7 +139,7 @@ jfly.removeComponent = function(componentUuid) {
 };
 
 jfly.removeChildComponent = function(containerUuid, childUuid) {
-	jfly.findComponent(containerUuid).find("[uuid='" + uuid + "']").remove();
+	jfly.findComponent(containerUuid).find("[" + jfly.constants.ATTRIBUTE_UUID + "='" + uuid + "']").remove();
 };
 
 jfly.addChildComponent = function(containerUuid, childHtml, childContext) {
@@ -284,6 +290,26 @@ jfly.initVue = function(initMessage) {
 		beforeMount: function() {
 			console.debug("Vue beforeMount");
 			
+			var vue = this;
+			
+			// search for all components that want one or more of its properties being watched for changes
+			$("[watch-for-state-change]").each(function(i) {
+				var propertiesToWatch = eval($(this).attr("watch-for-state-change"));
+				var componentUuid = $(this).attr(jfly.constants.ATTRIBUTE_UUID);
+				
+				propertiesToWatch.forEach(function(property) {
+					var selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
+					
+					vue.$watch(selector, function(newValue, oldValue) {
+						// have to create the object like this, otherwise property would be "optimized out" ...
+						var eventData = {};
+						eventData[property] = newValue;
+						
+						vue.handleEvent("stateChanged", componentUuid, eventData);
+					});
+				});
+				
+			});
 		},
 		mounted: function() {
 			console.debug("Vue mounted");

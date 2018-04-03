@@ -2,7 +2,7 @@ package at.spot.jfly.ui.input;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 import at.spot.jfly.util.Localizable;
 
@@ -58,26 +58,26 @@ public class TextField extends AbstractTextComponent {
 	 */
 
 	public void onChange(EventHandler e) {
-		onEvent(JsEvent.change, e);
+		onEvent(JsEvent.Change, e);
 	}
 
 	public void onFocus(EventHandler e) {
-		onEvent(JsEvent.focus, e);
+		onEvent(JsEvent.Focus, e);
 	}
 
 	public void onInput(EventHandler e) {
-		onEvent(JsEvent.input, e);
+		onEvent(JsEvent.Input, e);
 	}
 
 	public void onKeyUp(EventHandler e) {
-		onEvent(JsEvent.keyup, e);
+		onEvent(JsEvent.KeyUp, e);
 	}
 
 	public void onKeyDown(EventHandler e) {
-		onEvent(JsEvent.keydown, e);
+		onEvent(JsEvent.KeyDown, e);
 	}
 
 	public void onKeyPress(EventHandler e) {
-		onEvent(JsEvent.keypress, e);
+		onEvent(JsEvent.KeyPress, e);
 	}
 }

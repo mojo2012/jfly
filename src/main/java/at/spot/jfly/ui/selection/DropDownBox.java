@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.event.EventHandler;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
 import at.spot.jfly.util.Localizable;
 
@@ -29,7 +29,7 @@ public class DropDownBox extends AbstractTextComponent {
 		super.setEventData("'value'");
 		super.setEventData("$event");
 
-		this.onEvent(JsEvent.input, (e) -> {
+		this.onEvent(JsEvent.Input, (e) -> {
 			// forward the select event to the appropriate menu item event handler
 
 			Object itemId = e.getPayload().get("value");

@@ -18,9 +18,9 @@ import at.spot.jfly.attributes.Attributes.Attribute;
 import at.spot.jfly.attributes.Styles.Style;
 import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
-import at.spot.jfly.event.EventType;
-import at.spot.jfly.event.GenericEvent;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.EventType;
+import at.spot.jfly.event.Events.GenericEvent;
+import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.util.KeyValueListMapping;
 import at.spot.jfly.util.KeyValueMapping;
 
@@ -79,7 +79,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return visible;
 	}
 
-	public void setVisibe(final boolean visible) {
+	public void setVisible(final boolean visible) {
 		this.visible = visible;
 		updateClientComponent();
 	}
@@ -253,31 +253,31 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 */
 
 	public void onClick(final EventHandler handler) {
-		onEvent(JsEvent.click, handler);
+		onEvent(JsEvent.Click, handler);
 	}
 
 	public void onMouseOut(final EventHandler handler) {
-		onEvent(JsEvent.mouseout, handler);
+		onEvent(JsEvent.MouseOut, handler);
 	}
 
 	public void onMouseMove(final EventHandler handler) {
-		onEvent(JsEvent.mousemove, handler);
+		onEvent(JsEvent.MouseMove, handler);
 	}
 
 	public void onMouseDown(final EventHandler handler) {
-		onEvent(JsEvent.mousedown, handler);
+		onEvent(JsEvent.MouseDown, handler);
 	}
 
 	public void onMouseOver(final EventHandler handler) {
-		onEvent(JsEvent.mouseover, handler);
+		onEvent(JsEvent.MouseOver, handler);
 	}
 
 	public void onMouseUp(final EventHandler handler) {
-		onEvent(JsEvent.mouseup, handler);
+		onEvent(JsEvent.MouseUp, handler);
 	}
 
 	public void onMouseWheel(final EventHandler handler) {
-		onEvent(JsEvent.mousewheel, handler);
+		onEvent(JsEvent.MouseWheel, handler);
 	}
 
 	public void onStateChanged(final EventHandler handler, String componentPropery) {
@@ -287,7 +287,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 			}
 		};
 
-		onEvent(GenericEvent.stateChanged, stateChangedHandler);
+		onEvent(GenericEvent.StateChanged, stateChangedHandler);
 	}
 
 	public enum ComponentManipulationFunction {

@@ -2,7 +2,7 @@ package at.spot.jfly.ui.base;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
-import at.spot.jfly.event.JsEvent;
+import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.util.Localizable;
 
 public abstract class AbstractTextComponent extends AbstractComponent {
@@ -36,6 +36,6 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 	}
 
 	public void onHover(final EventHandler handler) {
-		onEvent(JsEvent.hover, handler);
+		onEvent(JsEvent.Hover, handler);
 	}
 }

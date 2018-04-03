@@ -2,14 +2,15 @@ package at.spot.jfly.event;
 
 import java.util.Map;
 
+import at.spot.jfly.event.Events.EventType;
 import at.spot.jfly.ui.base.Component;
 
 public class Event {
-	private final JsEvent eventType;
+	private final EventType eventType;
 	private final Component source;
 	private final Map<String, Object> payload;
 
-	public Event(final JsEvent eventType, final Component source, final Map<String, Object> payload) {
+	public Event(final EventType eventType, final Component source, final Map<String, Object> payload) {
 		this.source = source;
 		this.eventType = eventType;
 		this.payload = payload;
@@ -19,7 +20,7 @@ public class Event {
 		return this.source;
 	}
 
-	public JsEvent getEventType() {
+	public EventType getEventType() {
 		return eventType;
 	}
 

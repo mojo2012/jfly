@@ -3,14 +3,10 @@
 	:class="${_state}.styleClasses"
 	v-model="${_state}.visible"
 	:mini-variant.sync="${_state}.minimized"
-	:stateless="true" 
-	:disable-resize-watcher="true"
-	:hide-overlay="true"
-	
 	v-bind="${_state}.attributes"
-	
-	
 	app absolute clipped 
+	
+	watch-for-state-change="[ 'visible' ]"
 	>
 	
 	$!{component.toolBar.render()}
