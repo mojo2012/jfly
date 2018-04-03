@@ -120,15 +120,6 @@ public abstract class ViewHandler implements ComponentHandler {
 				// apply changed states to the component
 				if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
 					try {
-						// eventMessage.getPayload().entrySet().forEach(entry -> {
-						// try {
-						// PropertyUtils.setProperty(component, entry.getKey(), entry.getValue());
-						// } catch (NoSuchMethodException | IllegalAccessException |
-						// InvocationTargetException e) {
-						// throw new IllegalStateException();
-						// }
-						// });
-
 						BeanUtils.populate(component, eventMessage.getPayload());
 					} catch (IllegalStateException | IllegalAccessException | InvocationTargetException e) {
 						LOG.warn(String.format("Could not update component state with %s", eventMessage.getPayload()));
