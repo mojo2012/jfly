@@ -1,6 +1,6 @@
 <v-btn
 	uuid="${_uuid}" 
-	:class="${_state}.styleClasses" $!events
+	:class="${_state}.styleClasses"
 	:flat="${_state}.flat"
 	:block="${_state}.expandFullWidth"
 	:color="${_state}.color"

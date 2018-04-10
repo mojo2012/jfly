@@ -1,4 +1,4 @@
-package at.spot.jfly.util.gson;
+package at.spot.jfly.util.json;
 
 import java.io.IOException;
 import java.util.Arrays;

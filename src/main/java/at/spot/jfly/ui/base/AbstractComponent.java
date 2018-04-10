@@ -39,10 +39,8 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	private final KeyValueMapping<Attribute, String> attributes = new KeyValueMapping<>();
 	private boolean visible = true;
 
-	/*
-	 * Event handlers
-	 */
-	protected transient KeyValueListMapping<EventType, EventHandler> eventHandlers = new KeyValueListMapping<>();
+	// Event handlers
+	protected KeyValueListMapping<EventType, EventHandler> eventHandlers = new KeyValueListMapping<>();
 
 	/*
 	 * Initialization
@@ -65,10 +63,6 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	/*
 	 * Properties
 	 */
-
-	public Set<EventType> registeredEvents() {
-		return this.eventHandlers.keySet();
-	}
 
 	@Override
 	public String getUuid() {
@@ -190,6 +184,10 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		return this.eventData;
 	}
 
+	public Set<EventType> getRegisteredEvents() {
+		return this.eventHandlers.keySet();
+	}
+
 	/*
 	 * INTERNAL
 	 */
@@ -199,7 +197,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	}
 
 	public String getRegisteredEventsString() {
-		return StringUtils.join(registeredEvents(), " ");
+		return StringUtils.join(getRegisteredEvents(), " ");
 	}
 
 	@Override

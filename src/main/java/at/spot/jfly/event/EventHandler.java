@@ -1,5 +1,7 @@
 package at.spot.jfly.event;
 
-public interface EventHandler {
+import java.io.Serializable;
+
+public interface EventHandler extends Serializable {
 	void handle(Event event);
 }

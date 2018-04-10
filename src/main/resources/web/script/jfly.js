@@ -192,6 +192,8 @@ jfly.initVue = function(initMessage) {
 			handleEvent: function(event, componentUuid, eventData) {
 				var payload = null;
 				
+				// special handling for vuetify components that don't emit native JS events
+				// eg. dropdown box which only provides the selected menuItem as eventData
 				if (typeof(eventData) === "object" ) {
 					payload = eventData;
 				} else {

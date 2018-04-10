@@ -8,11 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.EventEnum;
 import at.spot.jfly.event.Events.EventType;
-import at.spot.jfly.util.gson.DynamicEnumSerializer;
-import at.spot.jfly.util.gson.LocaleSerializer;
-import at.spot.jfly.util.gson.LocalizableStringSerializer;
+import at.spot.jfly.util.json.DynamicEnumSerializer;
+import at.spot.jfly.util.json.EventHandlerSerializer;
+import at.spot.jfly.util.json.LocaleSerializer;
+import at.spot.jfly.util.json.LocalizableStringSerializer;
 
 public class JsonUtil {
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -25,6 +27,7 @@ public class JsonUtil {
 		module.addSerializer(Locale.class, new LocaleSerializer());
 		module.addSerializer(localizable.getClass(), new LocalizableStringSerializer());
 		module.addSerializer(Enum.class, new DynamicEnumSerializer());
+		module.addSerializer(EventHandler.class, new EventHandlerSerializer());
 
 		SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
 		resolver.addMapping(EventType.class, EventEnum.class);

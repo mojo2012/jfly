@@ -1,4 +1,4 @@
-package at.spot.jfly.util.gson;
+package at.spot.jfly.util.json;
 
 import java.io.IOException;
 
@@ -7,22 +7,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class DynamicEnumSerializer extends StdSerializer<at.spot.jfly.util.Enum> {
+import at.spot.jfly.event.EventHandler;
 
+public class EventHandlerSerializer extends StdSerializer<EventHandler> {
 	private static final long serialVersionUID = 1L;
 
-	public DynamicEnumSerializer() {
+	public EventHandlerSerializer() {
 		this(null);
 	}
 
-	public DynamicEnumSerializer(Class<at.spot.jfly.util.Enum> type) {
+	public EventHandlerSerializer(Class<EventHandler> type) {
 		super(type);
 	}
 
 	@Override
-	public void serialize(at.spot.jfly.util.Enum value, JsonGenerator jgen, SerializerProvider provider)
+	public void serialize(EventHandler value, JsonGenerator jgen, SerializerProvider provider)
 			throws IOException, JsonProcessingException {
 
-		jgen.writeString(value.getInternalName());
+		jgen.writeString("handleEvent($event.type, $event.target, $event)");
 	}
 }

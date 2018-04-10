@@ -243,7 +243,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		if (templateService != null) {
 			String events = "";
 
-			for (final EventType event : component.registeredEvents()) {
+			for (final EventType event : component.getRegisteredEvents()) {
 				events += String.format(" v-on:%s=\"handleEvent('%s', '%s', $event)\"", event.toString(),
 						event.toString(), component.getUuid());
 			}
