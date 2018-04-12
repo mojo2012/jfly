@@ -2,7 +2,7 @@
 <v-select 
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
-	$!events 
+	v-on="${_state}.eventHandlers" 
 	label="$!{component.text}" dense 
 	:items="${_state}.menuItems"
 	:prepend-icon="${_state}.leftIcon"

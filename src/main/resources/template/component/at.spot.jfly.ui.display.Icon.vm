@@ -1,5 +1,5 @@
 <v-icon
-	uuid="${_uuid}" $!events
+	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses"
 	:dark="${_state}.inverse"
 	v-bind="${_state}.attributes"

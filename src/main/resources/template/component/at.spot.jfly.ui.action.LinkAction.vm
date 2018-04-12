@@ -1,7 +1,7 @@
 <v-btn
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
-	$!events
+	v-on="${_state}.eventHandlers"
 	:target="${_state}.navigationTarget" 
 	:href="${_state}.location"
 	depressed flat color="primary"

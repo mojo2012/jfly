@@ -1,5 +1,5 @@
 <v-btn
-	uuid="${_uuid}"  AA
+	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	:flat="${_state}.flat"
 	:block="${_state}.expandFullWidth"

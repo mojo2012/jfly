@@ -1,5 +1,5 @@
 <span
-	uuid="${_uuid}" $!events
+	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses" class="badge"
 	v-bind="${_state}.attributes">
 	

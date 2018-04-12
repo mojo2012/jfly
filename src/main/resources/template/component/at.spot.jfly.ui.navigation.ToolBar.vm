@@ -1,4 +1,4 @@
-<v-toolbar uuid="${_uuid}" class="navbar $!{component.cssStyleString}" $!events
+<v-toolbar uuid="${_uuid}" class="navbar $!{component.cssStyleString}" v-on="${_state}.eventHandlers"
 	v-model="${_state}" app absolute clipped-left v-bind="${_state}.attributes"
 	>
 

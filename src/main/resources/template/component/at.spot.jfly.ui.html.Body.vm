@@ -1,4 +1,4 @@
-<body uuid="${_uuid}" $!events>
+<body uuid="${_uuid}" v-on="${_state}.eventHandlers">
 	<v-app data-app v-cloak>
 		<!-- ERROR DIALOG -->
 		<v-snackbar :timeout="200000" color="red" top  v-model="exception.visible">
