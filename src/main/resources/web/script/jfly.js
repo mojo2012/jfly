@@ -294,6 +294,30 @@ jfly.initVue = function(initMessage) {
 			
 			var vue = this;
 			
+			// register events
+			for (uuid in this.componentStates) {
+				var componentState = this.componentStates[uuid];
+				var events = componentState.registeredEvents;
+				
+				console.log(uuid);
+				
+				if (events) {
+					componentState.eventHandlers = {};
+
+					events.forEach(function(event) {
+						// this is an ugly hack to put the loop's "current" component uuid into the closure.
+						// if not wrapped in to that anonymous function, the last uuid of the loop will be used for all event handlers
+						(function(){
+							var compUuid = uuid;
+							
+							componentState.eventHandlers[event] = function(eventData) {
+								vue.handleEvent(event, compUuid, eventData);
+							};
+						})();
+					});
+				}
+			}
+			
 			// search for all components that want one or more of its properties being watched for changes
 			$("[watch-for-state-change]").each(function(i) {
 				var propertiesToWatch = eval($(this).attr("watch-for-state-change"));

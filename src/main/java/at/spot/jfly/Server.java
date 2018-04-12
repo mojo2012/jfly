@@ -328,7 +328,7 @@ public class Server implements ClientCommunicationHandler {
 			LOG.debug("Sending message: " + JsonUtil.toJson(message));
 			endpoint.sendString(messageString);
 		} catch (final Exception e) {
-			LOG.error("Cannot send message to client.");
+			LOG.error("Cannot send message to client.", e);
 		}
 	}
 }

@@ -39,7 +39,6 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	private final KeyValueMapping<Attribute, String> attributes = new KeyValueMapping<>();
 	private boolean visible = true;
 
-	// Event handlers
 	protected KeyValueListMapping<EventType, EventHandler> eventHandlers = new KeyValueListMapping<>();
 
 	/*
