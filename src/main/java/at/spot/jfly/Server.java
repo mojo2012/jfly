@@ -55,7 +55,8 @@ public class Server implements ClientCommunicationHandler {
 		Spark.webSocket(DEFAULT_WEBSOCKET_PATH, this);
 		Spark.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
 
-		// NOT YET WORKING: Service.hasMultipleHandlers() returns wrong value in case a
+		// NOT YET WORKING: Service.hasMultipleHandlers() returns wrong value in
+		// case a
 		// websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
 		Spark.notFound((req, res) -> {
@@ -71,7 +72,8 @@ public class Server implements ClientCommunicationHandler {
 			return null;
 		});
 
-		// redirect to the error page in case there is an exception during initial
+		// redirect to the error page in case there is an exception during
+		// initial
 		// rendering of the view
 		Spark.exception(Exception.class, (ex, req, res) -> {
 			res.status(500);
@@ -99,8 +101,8 @@ public class Server implements ClientCommunicationHandler {
 
 	/**
 	 * The static file location defines the path under which static files, like
-	 * javascripts or css styles sheets are looked for. The path has to be in the
-	 * classpath.<br/>
+	 * javascripts or css styles sheets are looked for. The path has to be in
+	 * the classpath.<br/>
 	 * Default: {@link Server#DEFAULT_STATIC_FILE_PATH}
 	 */
 	public Server staticFileLocation(final String staticFileLocation) {
@@ -109,8 +111,8 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	/**
-	 * This is called before every request is executed. A common usecase is to check
-	 * for authentication.
+	 * This is called before every request is executed. A common usecase is to
+	 * check for authentication.
 	 * 
 	 * @param requestFilter
 	 * @return
@@ -161,7 +163,8 @@ public class Server implements ClientCommunicationHandler {
 						try {
 							app.handleMessage(msg);
 						} catch (Exception e) {
-							// send back an error message to allow the UI to react properly
+							// send back an error message to allow the UI to
+							// react properly
 							sendMessage(generateErrorMessage(e));
 						}
 					} else {
@@ -170,6 +173,7 @@ public class Server implements ClientCommunicationHandler {
 				}
 			}
 		} catch (Throwable e) {
+			LOG.error("Could not process message", e);
 			sendMessage(generateErrorMessage(e));
 		}
 	}
@@ -281,7 +285,8 @@ public class Server implements ClientCommunicationHandler {
 		ViewHandler view = mapping.get(request.uri());
 
 		if (view == null) {
-			// get view handler class from registered view handlers mappings and put it into
+			// get view handler class from registered view handlers mappings and
+			// put it into
 			// the session mapping object
 			view = urlViewHandlerMapping.get(request.uri()).newInstance();
 			view.init(createRequest(request), this);

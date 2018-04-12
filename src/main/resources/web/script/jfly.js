@@ -299,8 +299,6 @@ jfly.initVue = function(initMessage) {
 				var componentState = this.componentStates[uuid];
 				var events = componentState.registeredEvents;
 				
-				console.log(uuid);
-				
 				if (events) {
 					componentState.eventHandlers = {};
 
