@@ -1,8 +1,11 @@
 package at.spot.jfly;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
@@ -27,7 +30,7 @@ import at.spot.jfly.viewhandlers.ExceptionViewHandler;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
+import spark.Service;
 
 @WebSocket
 public class Server implements ClientCommunicationHandler {
@@ -42,6 +45,9 @@ public class Server implements ClientCommunicationHandler {
 
 	protected final KeyValueMapping<String, KeyValueMapping<String, ViewHandler>> sessionViewHandlers = new KeyValueMapping<>();
 	protected final KeyValueMapping<String, Class<? extends ViewHandler>> urlViewHandlerMapping = new KeyValueMapping<>();
+	protected final KeyValueMapping<String, Consumer<ViewHandler>> urlViewHandlerPostProcessorMapping = new KeyValueMapping<>();
+
+	protected Service service;
 
 	/**
 	 * Creates a new jfly ViewHandler.
@@ -51,22 +57,23 @@ public class Server implements ClientCommunicationHandler {
 	 * @param componentTemplatePath
 	 */
 	public Server(final int port) {
-		Spark.port(port);
-		Spark.webSocket(DEFAULT_WEBSOCKET_PATH, this);
-		Spark.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
+		service = Service.ignite();
+		service.port(port);
+		service.webSocket(DEFAULT_WEBSOCKET_PATH, this);
+		service.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
 
 		// NOT YET WORKING: Service.hasMultipleHandlers() returns wrong value in
 		// case a
 		// websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
-		Spark.notFound((req, res) -> {
+		service.notFound((req, res) -> {
 			res.status(404);
 			res.redirect("/error");
 			return null;
 		});
 
 		// redirect to the error page in case there is an internal server error
-		Spark.internalServerError((req, res) -> {
+		service.internalServerError((req, res) -> {
 			res.status(500);
 			res.redirect("/error");
 			return null;
@@ -75,7 +82,7 @@ public class Server implements ClientCommunicationHandler {
 		// redirect to the error page in case there is an exception during
 		// initial
 		// rendering of the view
-		Spark.exception(Exception.class, (ex, req, res) -> {
+		service.exception(Exception.class, (ex, req, res) -> {
 			res.status(500);
 			res.redirect("/error");
 		});
@@ -90,9 +97,19 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	public Server registerViewHandler(String url, Class<? extends ViewHandler> handler) {
+		return registerViewHandler(url, handler, null);
+	}
+
+	public Server registerViewHandler(String url, Class<? extends ViewHandler> handler,
+			Consumer<ViewHandler> postProcessor) {
+
 		urlViewHandlerMapping.put(url, handler);
 
-		Spark.get(url, (req, res) -> {
+		if (postProcessor != null) {
+			urlViewHandlerPostProcessorMapping.put(url, postProcessor);
+		}
+
+		service.get(url, (req, res) -> {
 			return render(req, res);
 		});
 
@@ -101,29 +118,29 @@ public class Server implements ClientCommunicationHandler {
 
 	/**
 	 * The static file location defines the path under which static files, like
-	 * javascripts or css styles sheets are looked for. The path has to be in
-	 * the classpath.<br/>
+	 * javascripts or CSS stylesheets are looked for. The path has to be in the
+	 * classpath.<br/>
 	 * Default: {@link Server#DEFAULT_STATIC_FILE_PATH}
 	 */
 	public Server staticFileLocation(final String staticFileLocation) {
-		Spark.staticFileLocation(staticFileLocation);
+		service.staticFileLocation(staticFileLocation);
 		return this;
 	}
 
 	/**
-	 * This is called before every request is executed. A common usecase is to
-	 * check for authentication.
+	 * This is called before every request is executed. A common usecase is to check
+	 * for authentication.
 	 * 
 	 * @param requestFilter
 	 * @return
 	 */
 	public Server before(final Filter requestFilter) {
-		Spark.before(requestFilter);
+		service.before(requestFilter);
 		return this;
 	}
 
 	public void start() {
-		Spark.init();
+		service.init();
 	}
 
 	/*
@@ -132,16 +149,23 @@ public class Server implements ClientCommunicationHandler {
 
 	@OnWebSocketConnect
 	public void connected(final Session session) {
-		Optional<Cookie> cookie = session.getUpgradeRequest().getCookies().stream()
-				.filter(c -> "jfly".equals(c.getName())).map(c -> decodeCookie(c.getValue())).findFirst();
-
-		addSession(cookie.get().getValue(), session);
+		addSession(session);
 		setCurrentSession(session);
 	}
 
 	@OnWebSocketClose
 	public void closed(final Session session, final int statusCode, final String reason) {
 		closeSession(session);
+	}
+
+	protected String getSessionId(Session session) {
+		final Optional<Cookie> cookie = getCookie(session);
+		return cookie.get().getValue();
+	}
+
+	protected Optional<Cookie> getCookie(Session session) {
+		return session.getUpgradeRequest().getCookies().stream().filter(c -> "jfly".equals(c.getName()))
+				.map(c -> decodeCookie(c.getValue())).findFirst();
 	}
 
 	@OnWebSocketMessage
@@ -193,12 +217,14 @@ public class Server implements ClientCommunicationHandler {
 		return msg;
 	}
 
-	protected void addSession(String sessionId, final Session session) {
-		sessions.put(sessionId, session);
+	protected void addSession(final Session session) {
+		sessions.put(getSessionId(session), session);
 	}
 
-	protected void closeSession(final Session session) {
+	protected void closeSession(Session session) {
 		if (session != null) {
+			sessions.remove(getSessionId(session));
+
 			try {
 				session.disconnect();
 			} catch (final IOException e) {
@@ -206,7 +232,6 @@ public class Server implements ClientCommunicationHandler {
 			}
 
 			session.close();
-			sessions.remove(session);
 		}
 	}
 
@@ -286,9 +311,22 @@ public class Server implements ClientCommunicationHandler {
 
 		if (view == null) {
 			// get view handler class from registered view handlers mappings and
-			// put it into
-			// the session mapping object
-			view = urlViewHandlerMapping.get(request.uri()).newInstance();
+			// put it into the session mapping object
+
+			try {
+				Constructor<? extends ViewHandler> constructor = urlViewHandlerMapping.get(request.uri())
+						.getDeclaredConstructor();
+				final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
+				view = newViewHandler;
+
+				urlViewHandlerPostProcessorMapping.apply(request.uri(), i -> i.accept(newViewHandler));
+			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+					| SecurityException e) {
+
+				throw new InstantiationException(
+						String.format("Could not create view handler for url %s", request.uri()));
+			}
+
 			view.init(createRequest(request), this);
 
 			final String url = request.uri();

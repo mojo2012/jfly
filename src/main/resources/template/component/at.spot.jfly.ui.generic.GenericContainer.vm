@@ -2,7 +2,7 @@
 	uuid="${_uuid}" :class="${_state}.styleClasses" $!{component.attributeString}  v-on="${_state}.eventHandlers"
 #end
 
-<${component.tagName} #if (!${component.useWrapper}) #attributes #end>
+<${component.tagName} #if (!${component.useWrapper}) #attributes #end v-show="${_state}.visible">
 	
 	#if (${component.useWrapper})
 		<!--

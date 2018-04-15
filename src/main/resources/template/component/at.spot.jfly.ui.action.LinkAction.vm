@@ -6,6 +6,7 @@
 	:href="${_state}.location"
 	depressed flat color="primary"
 	v-bind="${_state}.attributes"
+	v-show="${_state}.visible"
 	>
 
 	$!{component.icon.render()}

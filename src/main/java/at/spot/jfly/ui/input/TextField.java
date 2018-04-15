@@ -1,6 +1,7 @@
 package at.spot.jfly.ui.input;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.attributes.Attributes.TextFieldType;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
@@ -12,6 +13,7 @@ public class TextField extends AbstractTextComponent {
 	private Localizable<String> label;
 	private boolean multiLine = false;
 	private boolean isReadOnly = false;
+	private TextFieldType type = TextFieldType.Text;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
@@ -57,6 +59,14 @@ public class TextField extends AbstractTextComponent {
 	 * EVENT HANDLERS
 	 */
 
+	public TextFieldType getType() {
+		return type;
+	}
+
+	public void setType(TextFieldType type) {
+		this.type = type;
+	}
+
 	public void onChange(EventHandler e) {
 		onEvent(JsEvent.Change, e);
 	}
@@ -80,4 +90,5 @@ public class TextField extends AbstractTextComponent {
 	public void onKeyPress(EventHandler e) {
 		onEvent(JsEvent.KeyPress, e);
 	}
+
 }

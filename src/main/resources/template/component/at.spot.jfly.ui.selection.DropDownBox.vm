@@ -11,5 +11,7 @@
 	:editable="${_state}.editable"
 	item-value="id" item-text="text" item-disabled="disabled" item-avatar="icon"
 	v-bind="${_state}.attributes"
+	v-show="${_state}.visible"
+	
 >
 </v-select>

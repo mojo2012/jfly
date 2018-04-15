@@ -2,6 +2,7 @@
 	uuid="${_uuid}" $!events
 	:class="${_state}.styleClasses" 
 	v-bind="${_state}.attributes"
+	v-show="${_state}.visible"
 	>
 	
 	#foreach( $!child in $!component.children )

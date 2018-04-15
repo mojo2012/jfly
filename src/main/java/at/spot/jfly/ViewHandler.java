@@ -25,6 +25,7 @@ import at.spot.jfly.http.websocket.IntialStateUpdateMessage;
 import at.spot.jfly.http.websocket.Message;
 import at.spot.jfly.http.websocket.Message.MessageType;
 import at.spot.jfly.templating.ComponentContext;
+import at.spot.jfly.templating.Template;
 import at.spot.jfly.templating.TemplateService;
 import at.spot.jfly.templating.impl.VelocityTemplateService;
 import at.spot.jfly.ui.base.AbstractComponent;
@@ -255,10 +256,28 @@ public abstract class ViewHandler implements ComponentHandler {
 			context.put("_uuid", component.getUuid());
 			context.put("_state", "componentStates['" + component.getUuid() + "']");
 
-			output = templateService.render(context, component.getClass().getName() + ".vm");
+			output = templateService.render(context, getTemplateBaseName(component.getClass()) + ".vm");
 		}
 
 		return output;
+	}
+
+	protected String getTemplateBaseName(Class<? extends AbstractComponent> componentClass) {
+		try {
+			Template templateAnnotation = componentClass.getAnnotation(Template.class);
+
+			if (templateAnnotation != null) {
+				if (StringUtils.isNotBlank(templateAnnotation.useTemplateFilename())) {
+					return templateAnnotation.useTemplateFilename();
+				} else {
+					return getTemplateBaseName(templateAnnotation.useTemplateOf());
+				}
+			}
+		} catch (NullPointerException e) {
+			// ignore
+		}
+
+		return componentClass.getName();
 	}
 
 	public <M extends Message> M getViewState() {

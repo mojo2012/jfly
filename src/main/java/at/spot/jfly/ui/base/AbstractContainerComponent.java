@@ -8,10 +8,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.spot.jfly.ComponentHandler;
+import at.spot.jfly.attributes.Styles.Color;
 
 public abstract class AbstractContainerComponent<C extends AbstractComponent> extends AbstractComponent {
 
 	protected final transient List<Component> children = new ArrayList<>();
+	private Color color;
 
 	public AbstractContainerComponent(final ComponentHandler handler) {
 		super(handler);
@@ -38,8 +40,16 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 	}
 
 	@JsonProperty(value = "hasChildren")
-	// @ExposeMethodResult("hasChildren")
 	public boolean hasChildren() {
 		return children.size() > 0;
 	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 }

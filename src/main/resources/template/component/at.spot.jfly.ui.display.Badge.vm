@@ -1,7 +1,8 @@
 <span
 	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses" class="badge"
-	v-bind="${_state}.attributes">
+	v-bind="${_state}.attributes"
+	v-show="${_state}.visible">
 	
 	{{localize(${_state}.text)}}
 </span>

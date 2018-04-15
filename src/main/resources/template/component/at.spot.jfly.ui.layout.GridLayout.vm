@@ -1,4 +1,4 @@
-<v-container grid-list-md text-xs-center>
+<v-container grid-list-md text-xs-center v-show="${_state}.visible">
 	<v-layout  >
 		<v-flex v-bind="${_state}.attributes">
 			<div uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes" >

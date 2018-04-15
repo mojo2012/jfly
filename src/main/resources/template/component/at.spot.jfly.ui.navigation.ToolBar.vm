@@ -1,6 +1,6 @@
 <v-toolbar uuid="${_uuid}" class="navbar $!{component.cssStyleString}" v-on="${_state}.eventHandlers"
-	v-model="${_state}" app absolute clipped-left v-bind="${_state}.attributes"
-	>
+	v-model="${_state}" app absolute clipped-left v-bind="${_state}.attributes" dense="${_state}.isSlim"
+	:color="${_state}.color" v-show="${_state}.visible">
 
 	$!{component.leftActionItem.render()}
 	

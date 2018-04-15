@@ -5,8 +5,9 @@
 	:mini-variant.sync="${_state}.minimized"
 	v-bind="${_state}.attributes"
 	app absolute clipped 
-	
+	:class="${_state}.color"
 	watch-for-state-change="[ 'visible' ]"
+	v-show="${_state}.visible"
 	>
 	
 	$!{component.toolBar.render()}

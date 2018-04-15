@@ -12,7 +12,7 @@ public class Button extends AbstractActionComponent {
 	private Icon icon;
 	private boolean expandFullWidth = false;
 	private Styles.Color color;
-	private Attributes.TextFieldType type;
+	private Attributes.TextFieldStyle type;
 
 	public Button(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
@@ -22,11 +22,11 @@ public class Button extends AbstractActionComponent {
 		super(handler, null);
 	}
 
-	public Attributes.TextFieldType getType() {
+	public Attributes.TextFieldStyle getType() {
 		return type;
 	}
 
-	public void setType(Attributes.TextFieldType type) {
+	public void setType(Attributes.TextFieldStyle type) {
 		this.type = type;
 	}
 

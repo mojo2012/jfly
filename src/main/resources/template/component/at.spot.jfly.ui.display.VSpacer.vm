@@ -1,1 +1,1 @@
-<v-spacer uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes"></v-spacer>
+<v-spacer uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes" v-show="${_state}.visible"></v-spacer>

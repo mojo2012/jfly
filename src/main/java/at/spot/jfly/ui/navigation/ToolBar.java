@@ -13,6 +13,7 @@ public class ToolBar extends AbstractContainerComponent<AbstractTextComponent> {
 
 	private transient Alignment placement = Alignment.Top;
 	private AbstractTextComponent header = null;
+	private boolean isSlim = false;
 
 	private GenericContainer leftActionItem;
 	private GenericContainer rightActionItem;
@@ -53,5 +54,13 @@ public class ToolBar extends AbstractContainerComponent<AbstractTextComponent> {
 
 	public GenericContainer getRightActionItem() {
 		return rightActionItem;
+	}
+
+	public boolean isSlim() {
+		return isSlim;
+	}
+
+	public void setSlim(boolean isSlim) {
+		this.isSlim = isSlim;
 	}
 }

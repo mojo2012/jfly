@@ -1,0 +1,39 @@
+<v-dialog
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses"
+	:flat="${_state}.flat"
+	:block="${_state}.expandFullWidth"
+	:color="${_state}.color"
+	:icon="${_state}.icon && !${_state}.text" 
+	v-bind="${_state}.attributes"
+	v-on="${_state}.eventHandlers"
+	v-model="${_state}.visible"
+	:fullscreen="${_state}.isFullScreen"
+	:transition="${_state}.transition"
+	:overlay="${_state}.isOverlay"
+	:scrollable="${_state}.isScrollable"
+	:max-width="${_state}.maxWidth"
+	:persistent="${_state}.isPersistent"
+	>
+
+	<v-card>
+		<v-card-title class="headline">
+			{{localize(${_state}.title)}}
+		</v-card-title>
+		
+		<v-card-text>
+			#foreach( $!child in $!component.children )
+				$!child.render()
+			#end
+		</v-card-text>
+		
+		<v-card-actions>
+			<v-spacer></v-spacer>
+		
+			#foreach( $!child in $!component.actions )
+				$!child.render()
+			#end
+		</v-card-actions>
+	</v-card>
+	
+</v-dialog>

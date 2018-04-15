@@ -1,8 +1,11 @@
 package at.spot.jfly.util;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,9 +33,16 @@ public class LocalizationBundle {
 
 	protected void loadBundles() {
 		// load all available bundles
-		for (Locale l : Locale.getAvailableLocales()) {
-			try {
+		Set<Locale> allLocales = new HashSet<>();
 
+		// It might happen that the default locale is not among the available locales
+		// ...
+		// this would mess up the localization in the browser.
+		allLocales.add(Locale.getDefault());
+		allLocales.addAll(Arrays.asList(Locale.getAvailableLocales()));
+
+		for (Locale l : allLocales) {
+			try {
 				// TODO: make this autoreloadable?
 				// but only use the ones which contain messages
 				if (StringUtils.isNotBlank(l.getLanguage())) {

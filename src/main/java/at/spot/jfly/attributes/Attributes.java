@@ -15,15 +15,32 @@ public interface Attributes {
 		public static GenericAttribute RED = new GenericAttribute("red");
 	}
 
-	public static class ButtonType extends DynamicEnum implements Attribute {
-		protected ButtonType(String internalName) {
+	public static class DialogTransitions extends DynamicEnum implements Attribute {
+		private DialogTransitions(String internalName) {
 			super(internalName);
 		}
 
-		public static TextFieldType Success = new TextFieldType("success");
-		public static TextFieldType Info = new TextFieldType("info");
-		public static TextFieldType Warning = new TextFieldType("warning");
-		public static TextFieldType Error = new TextFieldType("error");
+		public static DialogTransitions BottomTransition = new DialogTransitions("dialog-bottom-transition");
+	}
+	
+	public static class ButtonStyle extends DynamicEnum implements Attribute {
+		protected ButtonStyle(String internalName) {
+			super(internalName);
+		}
+
+		public static ButtonStyle Success = new ButtonStyle("success");
+		public static ButtonStyle Info = new ButtonStyle("info");
+		public static ButtonStyle Warning = new ButtonStyle("warning");
+		public static ButtonStyle Error = new ButtonStyle("error");
+	}
+
+	public static class TextFieldStyle extends DynamicEnum implements Attribute {
+		protected TextFieldStyle(String internalName) {
+			super(internalName);
+		}
+
+		public static TextFieldStyle Solo = new TextFieldStyle("solo");
+		public static TextFieldStyle SoloInverted = new TextFieldStyle("solo-inverted");
 	}
 
 	public static class TextFieldType extends DynamicEnum implements Attribute {
@@ -31,8 +48,8 @@ public interface Attributes {
 			super(internalName);
 		}
 
-		public static TextFieldType Solo = new TextFieldType("solo");
-		public static TextFieldType SoloInverted = new TextFieldType("solo-inverted");
+		public static TextFieldType Password = new TextFieldType("password");
+		public static TextFieldType Text = new TextFieldType("text");
 
 	}
 
@@ -90,4 +107,12 @@ public interface Attributes {
 		public static GridBehavior JustifySpaceBetween = new GridBehavior("justify-space-between");
 	}
 
+	public static class GeneralModifiers extends DynamicEnum implements Attribute {
+		protected GeneralModifiers(String internalName) {
+			super(internalName);
+		}
+
+		public static GeneralModifiers DARK = new GeneralModifiers("dark");
+		public static GeneralModifiers LIGHT = new GeneralModifiers("light");
+	}
 }

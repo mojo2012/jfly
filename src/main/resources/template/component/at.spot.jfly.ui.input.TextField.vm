@@ -8,7 +8,7 @@
 	:value="localize(${_state}.text)"
 	v-bind="${_state}.attributes"
 	:flat="${_state}.flat"
-	
+	v-show="${_state}.visible"
 	>
           
 </v-text-field>

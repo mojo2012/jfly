@@ -3,7 +3,7 @@
 	:class="${_state}.styleClasses"
 	:dark="${_state}.inverse"
 	v-bind="${_state}.attributes"
-	>
+	v-show="${_state}.visible" >
 	
 	$!{component.icon}
 	

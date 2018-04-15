@@ -13,7 +13,7 @@ import at.spot.jfly.ViewHandler;
 import at.spot.jfly.attributes.Attributes.GridAlignment;
 import at.spot.jfly.attributes.Attributes.GridBehavior;
 import at.spot.jfly.attributes.Attributes.HorizontalOrientation;
-import at.spot.jfly.attributes.Attributes.TextFieldType;
+import at.spot.jfly.attributes.Attributes.TextFieldStyle;
 import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.attributes.NavigationTarget;
 import at.spot.jfly.attributes.Styles.Color;
@@ -198,7 +198,7 @@ public class Demo1 extends ViewHandler {
 		TextField searchBox = new TextField(getHandler());
 		searchBox.setPlaceholder(localizations.forKey("placeholders.search"));
 		searchBox.setFlat(true);
-		searchBox.addAttribute(TextFieldType.Solo);
+		searchBox.addAttribute(TextFieldStyle.Solo);
 		toolBar.addChildren(searchBox);
 
 		Button reloadButton = new Button(getHandler(), Localizable.of("Reload"));
