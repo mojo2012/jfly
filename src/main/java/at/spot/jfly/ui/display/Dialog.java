@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.attributes.Attributes.DialogTransitions;
+import at.spot.jfly.attributes.Attributes.Transitions;
 import at.spot.jfly.ui.action.Button;
 import at.spot.jfly.ui.base.AbstractActionComponent;
 import at.spot.jfly.ui.base.AbstractComponent;
@@ -21,7 +21,7 @@ public class Dialog extends AbstractContainerComponent<AbstractComponent> {
 	private boolean isFullScreen = false;
 	private boolean isScrollable = true;
 	private boolean isOverlay = false;
-	private DialogTransitions transition = DialogTransitions.BottomTransition;
+	private Transitions transition = Transitions.None;
 	private Localizable<String> title;
 	private Integer maxWidth = null;
 	private boolean isPersistent = false;
@@ -55,11 +55,11 @@ public class Dialog extends AbstractContainerComponent<AbstractComponent> {
 		this.isOverlay = isOverlay;
 	}
 
-	public DialogTransitions getTransition() {
+	public Transitions getTransition() {
 		return transition;
 	}
 
-	public void setTransition(DialogTransitions transition) {
+	public void setTransition(Transitions transition) {
 		this.transition = transition;
 	}
 

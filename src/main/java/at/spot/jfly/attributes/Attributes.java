@@ -15,14 +15,21 @@ public interface Attributes {
 		public static GenericAttribute RED = new GenericAttribute("red");
 	}
 
-	public static class DialogTransitions extends DynamicEnum implements Attribute {
-		private DialogTransitions(String internalName) {
+	public static class Transitions extends DynamicEnum implements Attribute {
+		private Transitions(String internalName) {
 			super(internalName);
 		}
 
-		public static DialogTransitions BottomTransition = new DialogTransitions("dialog-bottom-transition");
+		public static Transitions None = new Transitions("");
+		public static Transitions SlideDown = new Transitions("slide-y-transition");
+		public static Transitions SlideUp = new Transitions("slide-y-reverse-transition");
+		public static Transitions DialogSlideUp = new Transitions("dialog-bottom-transition");
+		public static Transitions SlideFromRight = new Transitions("slide-x-reverse-transition");
+		public static Transitions SlideFromLeft = new Transitions("slide-x-transition");
+		public static Transitions Scale = new Transitions("scale-transition");
+		public static Transitions Fade = new Transitions("fade-transition");
 	}
-	
+
 	public static class ButtonStyle extends DynamicEnum implements Attribute {
 		protected ButtonStyle(String internalName) {
 			super(internalName);

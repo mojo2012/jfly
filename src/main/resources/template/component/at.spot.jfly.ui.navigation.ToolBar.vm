@@ -4,7 +4,9 @@
 
 	$!{component.leftActionItem.render()}
 	
-	<v-toolbar-title>{{localize(${_state}.header.text)}}</v-toolbar-title>
+	<v-toolbar-title v-if="${_state}.header">
+		{{localize(${_state}.header.text)}}
+	</v-toolbar-title>
 	
 	#foreach( $!child in $!component.children )
 		$!child.render()
