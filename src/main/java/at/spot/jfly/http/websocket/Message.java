@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 		@Type(value = ComponentManipulationMessage.class, name = "componentManipulation"),
 		@Type(value = ComponentStateUpdateMessage.class, name = "componentStateUpdate"),
 		@Type(value = FunctionCallMessage.class, name = "functionCall"),
-		@Type(value = EventMessage.class, name = "event"), @Type(value = KeepAliveMessage.class, name = "keepalive"),
+		@Type(value = EventMessage.class, name = "event"), @Type(value = KeepAliveMessage.class, name = "keepAlive"),
 		@Type(value = ExceptionMessage.class, name = "exception"), })
 public class Message {
 	private MessageType type;

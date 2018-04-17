@@ -19,6 +19,13 @@ jfly.websockethandler = {
 		jfly.websockethandler.connection.onerror = jfly.websockethandler.onerror;
 	},
 	
+	keepAlive: function() {
+		console.log("Sending websocket keep alive");
+		jfly.websockethandler.send({ type: "keepAlive" });
+		
+		setTimeout(jfly.websockethandler.keepAlive, 60000);
+	},
+	
 	// send a message to the server
 	send(message) {
 		var jsonCookieString = atob(jfly.getCookie("jfly"));
@@ -46,6 +53,8 @@ jfly.websockethandler = {
 			jfly.callAsync(function() {
 				jfly.websockethandler.send({ "type": 'initialStateRequest' });
 			});
+			
+			jfly.websockethandler.keepAlive();
 		}
 	},
 	
