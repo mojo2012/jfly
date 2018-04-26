@@ -1,5 +1,7 @@
 package at.spot.jfly.ui.input;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.Attributes.TextFieldType;
 import at.spot.jfly.event.EventHandler;
@@ -14,13 +16,16 @@ public class TextField extends AbstractTextComponent {
 	private boolean multiLine = false;
 	private boolean isReadOnly = false;
 	private TextFieldType type = TextFieldType.Text;
+	private Integer maxLength;
+	private Integer minLength;
+	private boolean counterVisible = false;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
 	}
 
 	public TextField(ComponentHandler handler, Localizable<String> text) {
-		super(handler, text);
+		super(handler);
 	}
 
 	public boolean isMultiLine() {
@@ -53,6 +58,32 @@ public class TextField extends AbstractTextComponent {
 
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
+	}
+
+	@JsonIgnore
+	public Integer getMaxLength() {
+		return maxLength;
+	}
+
+	public void setMaxLength(Integer maxLength) {
+		this.maxLength = maxLength;
+	}
+
+	@JsonIgnore
+	public Integer getMinLength() {
+		return minLength;
+	}
+
+	public void setMinLength(Integer minLength) {
+		this.minLength = minLength;
+	}
+
+	public boolean isCounterVisible() {
+		return counterVisible;
+	}
+
+	public void setCounterVisible(boolean counterVisible) {
+		this.counterVisible = counterVisible;
 	}
 
 	/*

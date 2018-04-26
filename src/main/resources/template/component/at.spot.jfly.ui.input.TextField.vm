@@ -9,6 +9,9 @@
 	v-bind="${_state}.attributes"
 	:flat="${_state}.flat"
 	v-show="${_state}.visible"
+	:min="${_state}.minLength"
+	:max="${_state}.maxLength"
+	:counter="${_state}.counterVisible"
 	>
           
 </v-text-field>
