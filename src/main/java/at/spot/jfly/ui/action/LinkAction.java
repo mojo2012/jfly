@@ -12,7 +12,7 @@ public class LinkAction extends AbstractActionComponent {
 	private static final String EMPTY_LOCATION = "javascript:void(0)";
 
 	private String location;
-	private NavigationTarget navigationTarget = NavigationTarget.Blank;
+	private NavigationTarget navigationTarget;
 
 	public LinkAction(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
@@ -44,4 +44,5 @@ public class LinkAction extends AbstractActionComponent {
 		this.navigationTarget = navigationTarget;
 		updateClientComponent();
 	}
+
 }

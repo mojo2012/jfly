@@ -3,9 +3,10 @@ package at.spot.jfly.ui.base;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
+import at.spot.jfly.util.Localizable;
 
-public abstract class AbstractTextComponent extends AbstractComponent {
-	private String text;
+public abstract class AbstractLabelledComponent extends AbstractComponent {
+	private Localizable<String> text;
 	private boolean isFlat = false;
 
 	public boolean isFlat() {
@@ -16,20 +17,20 @@ public abstract class AbstractTextComponent extends AbstractComponent {
 		this.isFlat = isFlat;
 	}
 
-	public AbstractTextComponent(final ComponentHandler handler, String text) {
+	public AbstractLabelledComponent(final ComponentHandler handler, final Localizable<String> text) {
 		this(handler);
 		setText(text);
 	}
 
-	public AbstractTextComponent(final ComponentHandler handler) {
+	public AbstractLabelledComponent(final ComponentHandler handler) {
 		super(handler);
 	}
 
-	public String getText() {
+	public Localizable<String> getText() {
 		return this.text;
 	}
 
-	public void setText(String text) {
+	public void setText(Localizable<String> text) {
 		this.text = text;
 		updateClientComponent();
 	}

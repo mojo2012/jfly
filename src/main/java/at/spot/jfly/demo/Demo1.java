@@ -22,7 +22,7 @@ import at.spot.jfly.ui.action.LinkAction;
 import at.spot.jfly.ui.display.Badge;
 import at.spot.jfly.ui.display.Icon;
 import at.spot.jfly.ui.display.Label;
-import at.spot.jfly.ui.display.VSpacer;
+import at.spot.jfly.ui.display.Spacer;
 import at.spot.jfly.ui.generic.GenericContainer;
 import at.spot.jfly.ui.generic.HtmlTag;
 import at.spot.jfly.ui.html.Body;
@@ -82,7 +82,7 @@ public class Demo1 extends ViewHandler {
 		// multiLineTextBox.setPlaceholder("Enter text here ...");
 		multiLineTextBox.setMultiLine(true);
 		multiLineTextBox.setLabel(localizations.forKey("placeholders.story"));
-		multiLineTextBox.setText(Localizable.of("This is a test text"));
+		multiLineTextBox.setText("This is a test text");
 		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
 
 		final LinkAction linkAction = new LinkAction(getHandler(), Localizable.of("google.at"), "https://google.at",
@@ -142,7 +142,7 @@ public class Demo1 extends ViewHandler {
 	}
 
 	protected void createNavigation(Body body) {
-		VSpacer vSpacer = new VSpacer(getHandler());
+		Spacer vSpacer = new Spacer(getHandler());
 
 		// sidebar
 

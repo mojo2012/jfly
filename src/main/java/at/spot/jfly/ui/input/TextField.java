@@ -19,13 +19,14 @@ public class TextField extends AbstractTextComponent {
 	private Integer maxLength;
 	private Integer minLength;
 	private boolean counterVisible = false;
+	private boolean isRequired = false;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
 	}
 
-	public TextField(ComponentHandler handler, Localizable<String> text) {
-		super(handler);
+	public TextField(ComponentHandler handler, String text) {
+		super(handler, text);
 	}
 
 	public boolean isMultiLine() {
@@ -58,6 +59,14 @@ public class TextField extends AbstractTextComponent {
 
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
+	}
+
+	public boolean isRequired() {
+		return isRequired;
+	}
+
+	public void setRequired(boolean isRequired) {
+		this.isRequired = isRequired;
 	}
 
 	@JsonIgnore

@@ -2,6 +2,7 @@
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"
+	:block="${_state}.expandHorizontally"
 	:target="${_state}.navigationTarget" 
 	:href="${_state}.location"
 	depressed flat color="primary"

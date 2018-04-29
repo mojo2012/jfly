@@ -85,7 +85,8 @@ jfly.websockethandler = {
 			var func = window[message.object][message.functionCall];
 			func.apply(func, message.parameters);
 		} else if (message.type == "componentStateUpdate") {
-			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
+//			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
+			jQuery.extend(jfly.uicontroller.componentStates[message.componentUuid], message.componentState);
 		} else if (message.type == "notification") {
 			// show notification
 		} else if (message.type == "stateRequest") {
@@ -313,7 +314,7 @@ jfly.initVue = function(initMessage) {
 
 					events.forEach(function(event) {
 						// this is an ugly hack to put the loop's "current" component uuid into the closure.
-						// if not wrapped in to that anonymous function, the last uuid of the loop will be used for all event handlers
+						// if not wrapped into a anonymous function, the last uuid of the loop will be used for all event handlers
 						(function(){
 							var compUuid = uuid;
 							

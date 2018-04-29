@@ -26,4 +26,8 @@ div.list__group__items div.list {
 	min-width: 40px !important;
 }
 
+div.spacer {
+	height: 10px;
+}
+
 /* END TREE VIEW FIXES */

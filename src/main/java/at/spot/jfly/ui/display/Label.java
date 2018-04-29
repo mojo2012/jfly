@@ -1,7 +1,7 @@
 package at.spot.jfly.ui.display;
 
 import at.spot.jfly.ComponentHandler;
-import at.spot.jfly.ui.base.AbstractTextComponent;
+import at.spot.jfly.ui.base.AbstractLabelledComponent;
 import at.spot.jfly.util.Localizable;
 
 /**
@@ -9,7 +9,7 @@ import at.spot.jfly.util.Localizable;
  * <br>
  * <button type="button" class="btn btn-default">Default</button>
  */
-public class Label extends AbstractTextComponent {
+public class Label extends AbstractLabelledComponent {
 	public Label(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
 	}

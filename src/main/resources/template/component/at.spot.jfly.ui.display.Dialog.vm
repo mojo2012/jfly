@@ -28,8 +28,6 @@
 		</v-card-text>
 		
 		<v-card-actions>
-			<v-spacer></v-spacer>
-		
 			#foreach( $!child in $!component.actions )
 				$!child.render()
 			#end

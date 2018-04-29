@@ -11,10 +11,10 @@ import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
-import at.spot.jfly.ui.base.AbstractTextComponent;
+import at.spot.jfly.ui.base.AbstractLabelledComponent;
 import at.spot.jfly.util.Localizable;
 
-public class DropDownBox extends AbstractTextComponent {
+public class DropDownBox extends AbstractLabelledComponent {
 	final private Map<String, SelectMenuItem> menuItems = new TreeMap<>();
 
 	private MaterialIcon leftIcon;

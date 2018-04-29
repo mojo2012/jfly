@@ -10,7 +10,6 @@ import at.spot.jfly.util.Localizable;
 public class Button extends AbstractActionComponent {
 
 	private Icon icon;
-	private boolean expandFullWidth = false;
 	private Styles.Color color;
 	private Attributes.TextFieldStyle type;
 
@@ -44,14 +43,6 @@ public class Button extends AbstractActionComponent {
 
 	public void setIcon(Icon icon) {
 		this.icon = icon;
-	}
-
-	public boolean isExpandFullWidth() {
-		return expandFullWidth;
-	}
-
-	public void setExpandFullWidth(boolean expandFullWidth) {
-		this.expandFullWidth = expandFullWidth;
 	}
 
 }

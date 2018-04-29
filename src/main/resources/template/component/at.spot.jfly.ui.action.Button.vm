@@ -2,12 +2,12 @@
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	:flat="${_state}.flat"
-	:block="${_state}.expandFullWidth"
+	:block="${_state}.expandHorizontally"
 	:color="${_state}.color"
 	:icon="${_state}.icon && !${_state}.text" 
 	v-bind="${_state}.attributes"
 	v-on="${_state}.eventHandlers"
-	v-show="${_state}.visible"
+	v-if="${_state}.visible"
 	>
 	
 	$!{component.icon.render()}

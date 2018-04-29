@@ -5,13 +5,14 @@
 	:label="localize(${_state}.label)"
 	:placeholder="localize(${_state}.placeholder)"
 	:multi-line="${_state}.multiLine"
-	:value="localize(${_state}.text)"
+	:value="${_state}.text"
 	v-bind="${_state}.attributes"
 	:flat="${_state}.flat"
 	v-show="${_state}.visible"
 	:min="${_state}.minLength"
 	:max="${_state}.maxLength"
 	:counter="${_state}.counterVisible"
+	:required="${_state}.isRequired"
 	>
           
 </v-text-field>
