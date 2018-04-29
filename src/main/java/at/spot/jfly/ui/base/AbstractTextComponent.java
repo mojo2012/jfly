@@ -5,8 +5,8 @@ import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
 
 public abstract class AbstractTextComponent extends AbstractComponent {
-	private String text;
-	private boolean isFlat = false;
+	protected String text;
+	protected boolean isFlat = false;
 
 	public boolean isFlat() {
 		return isFlat;

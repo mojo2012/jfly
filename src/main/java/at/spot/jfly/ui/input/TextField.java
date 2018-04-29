@@ -1,9 +1,8 @@
 package at.spot.jfly.ui.input;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.Attributes.TextFieldType;
+import at.spot.jfly.event.Event;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
@@ -20,6 +19,7 @@ public class TextField extends AbstractTextComponent {
 	private Integer minLength;
 	private boolean counterVisible = false;
 	private boolean isRequired = false;
+	private boolean isError = false;
 
 	public TextField(ComponentHandler handler) {
 		this(handler, null);
@@ -35,6 +35,7 @@ public class TextField extends AbstractTextComponent {
 
 	public void setMultiLine(boolean isMultiLine) {
 		this.multiLine = isMultiLine;
+		updateClientComponent();
 	}
 
 	public Localizable<String> getPlaceholder() {
@@ -43,6 +44,7 @@ public class TextField extends AbstractTextComponent {
 
 	public void setPlaceholder(Localizable<String> placeholder) {
 		this.placeholder = placeholder;
+		updateClientComponent();
 	}
 
 	public Localizable<String> getLabel() {
@@ -51,6 +53,7 @@ public class TextField extends AbstractTextComponent {
 
 	public void setLabel(Localizable<String> label) {
 		this.label = label;
+		updateClientComponent();
 	}
 
 	public boolean isReadOnly() {
@@ -59,6 +62,7 @@ public class TextField extends AbstractTextComponent {
 
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
+		updateClientComponent();
 	}
 
 	public boolean isRequired() {
@@ -67,24 +71,25 @@ public class TextField extends AbstractTextComponent {
 
 	public void setRequired(boolean isRequired) {
 		this.isRequired = isRequired;
+		updateClientComponent();
 	}
 
-	@JsonIgnore
 	public Integer getMaxLength() {
 		return maxLength;
 	}
 
 	public void setMaxLength(Integer maxLength) {
 		this.maxLength = maxLength;
+		updateClientComponent();
 	}
 
-	@JsonIgnore
 	public Integer getMinLength() {
 		return minLength;
 	}
 
 	public void setMinLength(Integer minLength) {
 		this.minLength = minLength;
+		updateClientComponent();
 	}
 
 	public boolean isCounterVisible() {
@@ -93,11 +98,17 @@ public class TextField extends AbstractTextComponent {
 
 	public void setCounterVisible(boolean counterVisible) {
 		this.counterVisible = counterVisible;
+		updateClientComponent();
 	}
 
-	/*
-	 * EVENT HANDLERS
-	 */
+	public boolean isError() {
+		return isError;
+	}
+
+	public void setError(boolean isError) {
+		this.isError = isError;
+		updateClientComponent();
+	}
 
 	public TextFieldType getType() {
 		return type;
@@ -105,6 +116,22 @@ public class TextField extends AbstractTextComponent {
 
 	public void setType(TextFieldType type) {
 		this.type = type;
+		updateClientComponent();
+	}
+
+	/*
+	 * EVENT HANDLERS
+	 */
+
+	@Override
+	public void handleEvent(Event event) {
+		// populate changed text from event data
+		if (JsEvent.Change.equals(event.getEventType())) {
+			String value = (String) event.getPayload().get("value");
+			this.text = value;
+		}
+
+		super.handleEvent(event);
 	}
 
 	public void onChange(EventHandler e) {

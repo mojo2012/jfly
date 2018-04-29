@@ -23,7 +23,7 @@ jfly.websockethandler = {
 		console.log("Sending websocket keep alive");
 		jfly.websockethandler.send({ type: "keepAlive" });
 		
-		setTimeout(jfly.websockethandler.keepAlive, 60000);
+		setTimeout(jfly.websockethandler.keepAlive, 600000);
 	},
 	
 	// send a message to the server

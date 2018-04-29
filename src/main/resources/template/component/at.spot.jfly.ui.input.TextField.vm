@@ -1,3 +1,4 @@
+
  <v-text-field
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses" $!events
@@ -11,8 +12,10 @@
 	v-show="${_state}.visible"
 	:min="${_state}.minLength"
 	:max="${_state}.maxLength"
-	:counter="${_state}.counterVisible"
-	:required="${_state}.isRequired"
+	:counter="${_state}.maxLength"
+	:required="${_state}.required"
+	:error="${_state}.error"
+	:type="${_state}.type"
 	>
           
 </v-text-field>
