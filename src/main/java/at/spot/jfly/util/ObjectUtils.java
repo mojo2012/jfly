@@ -14,14 +14,21 @@ public class ObjectUtils {
 
 		for (Map.Entry<String, Object> entry : properties.entrySet()) {
 			try {
-				Field field = klass.getDeclaredField(entry.getKey());
+				while (klass != null) {
+					try {
+						Field field = klass.getDeclaredField(entry.getKey());
 
-				if (!field.isAccessible()) {
-					field.setAccessible(true);
+						if (!field.isAccessible()) {
+							field.setAccessible(true);
+						}
+
+						field.set(object, entry.getValue());
+					} catch (NoSuchFieldException e) {
+						klass = klass.getSuperclass();
+						continue;
+					}
 				}
-
-				field.set(object, entry.getValue());
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				// ignore unknown property
 			}
 
