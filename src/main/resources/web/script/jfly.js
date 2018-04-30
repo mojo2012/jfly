@@ -334,13 +334,15 @@ jfly.initVue = function(initMessage) {
 				propertiesToWatch.forEach(function(property) {
 					var selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
 					
-					vue.$watch(selector, function(newValue, oldValue) {
-						// have to create the object like this, otherwise property would be "optimized out" ...
-						var eventData = {};
-						eventData[property] = newValue;
-						
-						vue.handleEvent("stateChanged", componentUuid, eventData);
-					});
+					(function(){
+						vue.$watch(selector, function(newValue, oldValue) {
+							// have to create the object like this, otherwise property would be "optimized out" ...
+							var eventData = {};
+							eventData[property] = newValue;
+							
+							vue.handleEvent("stateChanged", componentUuid, eventData);
+						});
+					})();
 				});
 				
 			});

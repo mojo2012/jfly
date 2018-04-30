@@ -6,7 +6,7 @@
 	:label="localize(${_state}.label)"
 	:placeholder="localize(${_state}.placeholder)"
 	:multi-line="${_state}.multiLine"
-	:value="${_state}.text"
+	v-model="${_state}.text"
 	v-bind="${_state}.attributes"
 	:flat="${_state}.flat"
 	v-show="${_state}.visible"
@@ -16,6 +16,7 @@
 	:required="${_state}.required"
 	:error="${_state}.error"
 	:type="${_state}.type"
+	watch-for-state-change="[ 'text' ]"
 	>
           
 </v-text-field>

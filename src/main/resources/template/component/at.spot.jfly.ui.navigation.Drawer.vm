@@ -8,6 +8,7 @@
 	:disable-resize-watcher="true" 
 	:right="${_state}.horizontalOrientation == 'right'" 
 	v-bind="${_state}.attributes"
+	watch-for-state-change="[ 'visible' ]"
 	v-show="${_state}.visible"
 	>
 	

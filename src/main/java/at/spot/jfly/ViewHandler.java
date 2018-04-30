@@ -1,13 +1,11 @@
 package at.spot.jfly;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,6 +33,7 @@ import at.spot.jfly.ui.base.EventTarget;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.html.Html;
+import at.spot.jfly.util.ObjectUtils;
 
 public abstract class ViewHandler implements ComponentHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ViewHandler.class);
@@ -120,11 +119,7 @@ public abstract class ViewHandler implements ComponentHandler {
 
 				// apply changed states to the component
 				if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
-					try {
-						BeanUtils.populate(component, eventMessage.getPayload());
-					} catch (IllegalStateException | IllegalAccessException | InvocationTargetException e) {
-						LOG.warn(String.format("Could not update component state with %s", eventMessage.getPayload()));
-					}
+					ObjectUtils.populate(component, eventMessage.getPayload());
 				}
 
 				handleEvent(component, eventMessage.getEventType(), eventMessage.getPayload());
