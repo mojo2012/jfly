@@ -41,7 +41,11 @@ jfly.websockethandler = {
 			jfly.websockethandler.init();
 		}
 		
-		jfly.websockethandler.connection.send(msg);
+		try {
+			jfly.websockethandler.connection.send(msg);
+		} catch (e) {
+			jfly.uicontroller.showExceptionDialog({ message: "Sorry, the service seems to be interrupted." });
+		}
 	},
 	
 	// event handling
@@ -189,6 +193,24 @@ jfly.replaceElementWithId = function(id, element) {
 	jfly.findElementById(id).replaceWith(element);
 };
 
+jfly.debounce = function(func, wait, immediate) {
+	var timeout;
+	
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		
+		if (callNow) func.apply(context, args);
+	};
+};
+
 jfly.init = function() {
 	jfly.websockethandler.init();
 };
@@ -199,6 +221,7 @@ jfly.initVue = function(initMessage) {
 		components: {
 		},
 		methods: {
+			// this weird little debounce functionality prevents event flooding
 			handleEvent: function(event, componentUuid, eventData) {
 				var payload = null;
 				
@@ -318,9 +341,16 @@ jfly.initVue = function(initMessage) {
 						(function(){
 							var compUuid = uuid;
 							
-							componentState.eventHandlers[event] = function(eventData) {
+							var handler = function(eventData) {
 								vue.handleEvent(event, compUuid, eventData);
 							};
+							
+							// debounce those event types to prevent too much traffic 
+							if (event == "input" || event == "change") {
+								handler = jfly.debounce(handler, 400);
+							}
+							
+							componentState.eventHandlers[event] = handler;
 						})();
 					});
 				}
@@ -335,13 +365,13 @@ jfly.initVue = function(initMessage) {
 					var selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
 					
 					(function(){
-						vue.$watch(selector, function(newValue, oldValue) {
+						vue.$watch(selector, jfly.debounce(function(newValue, oldValue) {
 							// have to create the object like this, otherwise property would be "optimized out" ...
 							var eventData = {};
 							eventData[property] = newValue;
 							
 							vue.handleEvent("stateChanged", componentUuid, eventData);
-						});
+						}, 400));
 					})();
 				});
 				

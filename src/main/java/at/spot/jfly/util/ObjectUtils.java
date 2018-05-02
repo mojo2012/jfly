@@ -15,14 +15,23 @@ public class ObjectUtils {
 		for (Map.Entry<String, Object> entry : properties.entrySet()) {
 			try {
 				while (klass != null) {
+					boolean changedAccessLevel = false;
+
 					try {
 						Field field = klass.getDeclaredField(entry.getKey());
 
 						if (!field.isAccessible()) {
 							field.setAccessible(true);
+							changedAccessLevel = true;
 						}
 
 						field.set(object, entry.getValue());
+						
+						if (changedAccessLevel) {
+							field.setAccessible(false);
+						}
+
+						klass = null;
 					} catch (NoSuchFieldException e) {
 						klass = klass.getSuperclass();
 						continue;

@@ -282,6 +282,7 @@ public abstract class ViewHandler implements ComponentHandler {
 
 		message.getGlobalState().put("currentLocale", getCurrentLocale());
 		message.getGlobalState().put("supportedLocales", getSupportedLocales());
+		message.getGlobalState().put("eventDelay", 200);
 
 		return (M) message;
 	}
