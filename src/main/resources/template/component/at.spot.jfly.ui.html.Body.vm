@@ -3,8 +3,8 @@
 		<!-- ERROR DIALOG -->
 		<v-snackbar :timeout="200000" color="red" top  v-model="exception.visible">
 			 <v-container fluid ma-0 pa-0>
-			 	<v-layout row justify>
-					<v-flex xs2 mt-1>
+			 	<v-layout row justify align-center>
+					<v-flex xs2>
 						<v-icon medium dark>error</v-icon>
 					</v-flex>
 					<v-flex xs10 ma-2>

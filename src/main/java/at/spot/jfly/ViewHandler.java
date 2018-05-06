@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.event.Event;
+import at.spot.jfly.event.Events;
 import at.spot.jfly.event.Events.EventType;
 import at.spot.jfly.event.Events.GenericEvent;
 import at.spot.jfly.http.websocket.ComponentManipulationMessage;
@@ -75,8 +76,8 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering the UI
-	 * components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering
+	 * the UI components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
@@ -114,7 +115,10 @@ public abstract class ViewHandler implements ComponentHandler {
 		} else if (MessageType.event.equals(message.getType())) {
 			EventMessage eventMessage = (EventMessage) message;
 
-			if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
+			// handle browser history changes
+			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())) {
+				onBrowserHistoryChange(eventMessage);
+			} else if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
 				final Component component = getRegisteredComponents().get(eventMessage.getComponentUuid());
 
 				// apply changed states to the component
@@ -189,7 +193,8 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given parameters.
+	 * Calls a javascript function on the given object with the given
+	 * parameters.
 	 * 
 	 * @param component
 	 * @param method
@@ -304,6 +309,10 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	public void onDestroy(Runnable eventListener) {
 		onDestroyEventListener.add(eventListener);
+	}
+
+	protected void onBrowserHistoryChange(EventMessage eventMessage) {
+		// to be implemented by subclasses
 	}
 
 	/*

@@ -128,8 +128,8 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	/**
-	 * This is called before every request is executed. A common usecase is to check
-	 * for authentication.
+	 * This is called before every request is executed. A common usecase is to
+	 * check for authentication.
 	 * 
 	 * @param requestFilter
 	 * @return
@@ -211,8 +211,11 @@ public class Server implements ClientCommunicationHandler {
 	protected ExceptionMessage generateErrorMessage(Throwable exception) {
 		ExceptionMessage msg = new ExceptionMessage();
 
-		msg.setName(exception.getClass().getName());
-		msg.setDescription(exception.getMessage());
+		String exceptionName = exception.getClass().getName();
+
+		msg.setName(exceptionName);
+		msg.setDescription(exception.getMessage() != null ? exception.getMessage()
+				: "An exception of type '" + exceptionName + "' has occurred.");
 
 		return msg;
 	}
