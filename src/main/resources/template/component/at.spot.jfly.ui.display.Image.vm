@@ -1,0 +1,5 @@
+<img
+	uuid="${_uuid}" v-on="${_state}.eventHandlers"
+	:class="${_state}.styleClasses"
+	:src="${_state}.imageSource"
+	v-if="${_state}.visible" />

@@ -131,7 +131,6 @@ public abstract class ViewHandler implements ComponentHandler {
 		}
 
 		return retVal;
-
 	}
 
 	protected void handleEvent(final Component component, final EventType eventType,
@@ -148,27 +147,32 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	protected void flushClientUpdates() {
 		for (final Component c : getRegisteredComponents().values()) {
-			if (c.hasPendingClientUpdateCommands()) {
-				for (ClientUpdateCommand cmd : c.getClientUpdateCommands()) {
-					switch (cmd.getType()) {
-					case ComponentStateUpdate:
-						updateComponentState(c);
-						break;
-					case FunctionCall:
-						invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
-						break;
-					case ObjectManipulation:
-						invokeComponentManipulation(c, cmd.getFunction(), cmd.getParamters());
-						break;
-					default:
-						break;
-					}
-				}
+			flushClientUpdates(c);
+		}
+	}
 
-				// clear draw commands of the current component, as they have
-				// all been worked off
-				c.clearPendingClientUpdateCommands();
+	@Override
+	public void flushClientUpdates(Component component) {
+		if (component.hasPendingClientUpdateCommands()) {
+			for (ClientUpdateCommand cmd : component.getClientUpdateCommands()) {
+				switch (cmd.getType()) {
+				case ComponentStateUpdate:
+					updateComponentState(component);
+					break;
+				case FunctionCall:
+					invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
+					break;
+				case ObjectManipulation:
+					invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
+					break;
+				default:
+					break;
+				}
 			}
+
+			// clear draw commands of the current component, as they have
+			// all been worked off
+			component.clearPendingClientUpdateCommands();
 		}
 	}
 

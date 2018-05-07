@@ -1,0 +1,9 @@
+<v-avatar
+	uuid="${_uuid}" v-on="${_state}.eventHandlers"
+	:class="${_state}.styleClasses"
+	:tile="!${_state}.round"
+	v-if="${_state}.visible" >
+	
+	$!{component.icon.render()}
+	
+</v-avatar>
