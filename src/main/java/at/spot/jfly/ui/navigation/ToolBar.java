@@ -2,7 +2,7 @@ package at.spot.jfly.ui.navigation;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.Alignment;
-import at.spot.jfly.ui.action.Button;
+import at.spot.jfly.ui.base.AbstractActionComponent;
 import at.spot.jfly.ui.base.AbstractComponent;
 import at.spot.jfly.ui.base.AbstractContainerComponent;
 import at.spot.jfly.ui.base.AbstractLabelledComponent;
@@ -15,8 +15,8 @@ public class ToolBar extends AbstractContainerComponent<AbstractComponent> {
 	private AbstractLabelledComponent header = null;
 	private boolean isSlim = false;
 
-	private AbstractComponent leftActionItem;
-	private AbstractComponent rightActionItem;
+	private AbstractActionComponent leftActionItem;
+	private AbstractActionComponent rightActionItem;
 
 	public ToolBar(final ComponentHandler handler) {
 		super(handler);
@@ -38,21 +38,21 @@ public class ToolBar extends AbstractContainerComponent<AbstractComponent> {
 		this.placement = placement;
 	}
 
-	public void setLeftActionItem(AbstractComponent action) {
+	public void setLeftActionItem(AbstractActionComponent action) {
 		this.leftActionItem = action;
 		this.leftActionItem.setFlat(true);
 	}
 
-	public void setRightActionItem(AbstractComponent action) {
+	public void setRightActionItem(AbstractActionComponent action) {
 		this.rightActionItem = action;
 		this.rightActionItem.setFlat(true);
 	}
 
-	public Button getLeftActionItem() {
+	public AbstractActionComponent getLeftActionItem() {
 		return leftActionItem;
 	}
 
-	public Button getRightActionItem() {
+	public AbstractActionComponent getRightActionItem() {
 		return rightActionItem;
 	}
 

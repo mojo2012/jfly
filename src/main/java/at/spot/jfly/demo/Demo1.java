@@ -192,9 +192,6 @@ public class Demo1 extends ViewHandler {
 		final ToolBar toolBar = new ToolBar(getHandler());
 		toolBar.setHeader(new Label(getHandler(), Localizable.of("spOt")));
 
-		toolBar.setLeftActionItem(e -> sidebar.setVisible(!sidebar.isVisible()));
-		toolBar.addChildren(vSpacer);
-
 		TextField searchBox = new TextField(getHandler());
 		searchBox.setPlaceholder(localizations.forKey("placeholders.search"));
 		searchBox.setFlat(true);
