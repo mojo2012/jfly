@@ -213,6 +213,19 @@ jfly.debounce = function(func, wait, immediate) {
 
 jfly.init = function() {
 	jfly.websockethandler.init();
+
+	// set the first history state, this is necessary to make the onpopstate work
+	window.history.pushState({page: 1}, "", "");
+	
+    // The popstate event is fired each time when the current history entry changes.
+	window.onpopstate = function(event) {
+		// Stay on the current page.
+		history.pushState(null, null, window.location.pathname);
+		
+		// send popstate event to the backend
+		jfly.uicontroller.handleEvent("popstate", null, event);
+	};
+	
 };
 
 jfly.initVue = function(initMessage) {

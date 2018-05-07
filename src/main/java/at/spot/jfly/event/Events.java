@@ -45,6 +45,9 @@ public interface Events {
 		public static JsEvent Select = new JsEvent("select");
 		public static JsEvent Submit = new JsEvent("submit");
 		public static JsEvent Reset = new JsEvent("reset");
+
+		// window history navigation events
+		public static JsEvent PopState = new JsEvent("popstate");
 	}
 
 	public static class GenericEvent extends EventEnum implements EventType {
