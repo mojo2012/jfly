@@ -20,7 +20,11 @@
 	
 		<!-- COMPONENTS -->
 		#foreach( $!child in $!component.children )
-			$!child.render()
+			$!child.render()≤
 		#end
 	</v-app>
+	
+	<script>
+		var applicationState = ${componentStates};
+	</script>
 </body>

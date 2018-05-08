@@ -1,6 +1,7 @@
 package at.spot.jfly.templating.impl;
 
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.velocity.Template;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import at.spot.jfly.templating.ComponentContext;
 import at.spot.jfly.templating.TemplateService;
+import at.spot.jfly.util.KeyValueMapping;
 
 /**
  * This is a small velocity utility, that renders templates and objects.
@@ -26,6 +28,8 @@ public class VelocityTemplateService implements TemplateService {
 	private final String templateBasePath;
 
 	private boolean isDebugEnabled = true;
+
+	private KeyValueMapping<String, CachedTemplate> templateCache = new KeyValueMapping<>();
 
 	public VelocityTemplateService(final String templateBasePath) {
 		ve = new VelocityEngine();
@@ -44,7 +48,7 @@ public class VelocityTemplateService implements TemplateService {
 
 	@Override
 	public String render(final ComponentContext context, final String templateFile) {
-		final Template tmpl = ve.getTemplate(Paths.get(templateBasePath, templateFile).toString());
+		final Template tmpl = getTemplate(templateFile);
 
 		final StringWriter writer = new StringWriter();
 
@@ -63,6 +67,37 @@ public class VelocityTemplateService implements TemplateService {
 		return writer.toString();
 	}
 
+	/**
+	 * Returns the content of the given template file. In case it is read the first
+	 * time, or the file content has changed, the actual file is read and cached.
+	 * All successive reads are returned from the cache.
+	 */
+	protected Template getTemplate(String templateFile) {
+		final Path templateFilePath = Paths.get(templateBasePath, templateFile);
+		final long templateFileLastModifiedTimestamp = getLastModifiedDate(templateFilePath);
+
+		CachedTemplate cachedEntry = templateCache.get(templateFile);
+
+		if (cachedEntry != null) {
+			if (cachedEntry.getLastModifiedTimestamp() < templateFileLastModifiedTimestamp) {
+				// reset cached template
+				cachedEntry = null;
+			}
+		}
+
+		if (cachedEntry == null) {
+			final Template tmpl = ve.getTemplate(templateFilePath.toString());
+			cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
+			templateCache.put(templateFile, cachedEntry);
+		}
+
+		return cachedEntry.getTemplate();
+	}
+
+	protected long getLastModifiedDate(Path templateFilePath) {
+		return Paths.get(getClass().getResource(templateFilePath.toString()).getFile()).toFile().lastModified();
+	}
+
 	public boolean isDebugEnabled() {
 		return isDebugEnabled;
 	}
@@ -71,4 +106,29 @@ public class VelocityTemplateService implements TemplateService {
 		this.isDebugEnabled = isDebugEnabled;
 	}
 
+	protected class CachedTemplate {
+		private Template template;
+		private long lastModifiedTimestamp;
+
+		public CachedTemplate(Template template, long lastModifiedTimestamp) {
+			this.template = template;
+			this.lastModifiedTimestamp = lastModifiedTimestamp;
+		}
+
+		public Template getTemplate() {
+			return template;
+		}
+
+		public void setTemplate(Template template) {
+			this.template = template;
+		}
+
+		public long getLastModifiedTimestamp() {
+			return lastModifiedTimestamp;
+		}
+
+		public void setLastModifiedTimestamp(long lastModifiedTimestamp) {
+			this.lastModifiedTimestamp = lastModifiedTimestamp;
+		}
+	}
 }

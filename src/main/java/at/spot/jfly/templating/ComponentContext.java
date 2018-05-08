@@ -22,6 +22,10 @@ public class ComponentContext {
 		values.put(key, value);
 	}
 
+	public void putAll(Map<String, Object> values) {
+		values.putAll(values);
+	}
+
 	public Map<String, Object> getValues() {
 		return values;
 	}

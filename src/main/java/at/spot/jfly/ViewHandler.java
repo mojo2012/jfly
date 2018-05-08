@@ -34,6 +34,7 @@ import at.spot.jfly.ui.base.EventTarget;
 import at.spot.jfly.ui.html.Body;
 import at.spot.jfly.ui.html.Head;
 import at.spot.jfly.ui.html.Html;
+import at.spot.jfly.util.JsonUtil;
 import at.spot.jfly.util.ObjectUtils;
 
 public abstract class ViewHandler implements ComponentHandler {
@@ -110,7 +111,7 @@ public abstract class ViewHandler implements ComponentHandler {
 
 		// if this is an initial request, we return the current component states
 		if (MessageType.initialStateRequest.equals(message.getType())) {
-			sendMessage(getViewState());
+			sendMessage(getApplicationState());
 
 		} else if (MessageType.event.equals(message.getType())) {
 			EventMessage eventMessage = (EventMessage) message;
@@ -243,6 +244,11 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	@Override
 	public String renderComponent(final AbstractComponent component) {
+		return renderComponent(component, null);
+	}
+
+	@Override
+	public String renderComponent(final AbstractComponent component, Map<String, Object> additionalValues) {
 		String output = "<could not render>";
 
 		if (templateService != null) {
@@ -259,6 +265,10 @@ public abstract class ViewHandler implements ComponentHandler {
 			context.put("_events", events);
 			context.put("_uuid", component.getUuid());
 			context.put("_state", "componentStates['" + component.getUuid() + "']");
+
+			if (additionalValues != null) {
+				context.putAll(additionalValues);
+			}
 
 			output = templateService.render(context, getTemplateBaseName(component.getClass()) + ".vm");
 		}
@@ -284,7 +294,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		return componentClass.getName();
 	}
 
-	public <M extends Message> M getViewState() {
+	public <M extends Message> M getApplicationState() {
 		final IntialStateUpdateMessage message = new IntialStateUpdateMessage();
 
 		message.getComponentStates().putAll(getRegisteredComponents());
@@ -341,6 +351,8 @@ public abstract class ViewHandler implements ComponentHandler {
 
 	public String render() {
 		String ret = html.render();
+
+		ret = StringUtils.replace(ret, "${componentStates}", JsonUtil.toJson(getApplicationState()));
 
 		if (formatOutput) {
 			ret = format(ret);

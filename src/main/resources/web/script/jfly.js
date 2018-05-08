@@ -212,6 +212,12 @@ jfly.debounce = function(func, wait, immediate) {
 };
 
 jfly.init = function() {
+	// check if the application state is already pre rendered
+	// if not, it will be requested after the websocket connection has been established
+	if (applicationState) {
+		jfly.initVue(applicationState);
+	}
+	
 	jfly.websockethandler.init();
 
 	// set the first history state, this is necessary to make the onpopstate work
