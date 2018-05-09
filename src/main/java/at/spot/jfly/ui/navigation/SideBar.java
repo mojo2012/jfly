@@ -7,6 +7,7 @@ import at.spot.jfly.ui.base.AbstractContainerComponent;
 public class SideBar extends AbstractContainerComponent<AbstractComponent> {
 
 	private boolean minimized = false;
+	private boolean permanent = false;
 
 	public SideBar(final ComponentHandler handler) {
 		super(handler);
@@ -21,4 +22,11 @@ public class SideBar extends AbstractContainerComponent<AbstractComponent> {
 		updateClientComponent();
 	}
 
+	public boolean isPermanent() {
+		return this.permanent;
+	}
+
+	public void setPermanent(boolean isPermanent) {
+		this.permanent = isPermanent;
+	}
 }

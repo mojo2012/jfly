@@ -1,5 +1,5 @@
 <img
 	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses"
-	:src="${_state}.imageSource"
+	:src="${_state}.sourceUrl"
 	v-if="${_state}.visible" />

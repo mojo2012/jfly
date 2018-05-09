@@ -10,7 +10,12 @@
 	v-show="${_state}.visible"
 	>
 
-	$!{component.icon.render()}
+	<v-template v-if="${_state}.icon" style="height: 100%">
+		$!{component.icon.render()}
+	</v-template>
+	<v-template v-else style="height: 100%">
+		$!{component.image.render()}
+	</v-template>
 	
 	{{localize(${_state}.text)}}
 </v-btn>

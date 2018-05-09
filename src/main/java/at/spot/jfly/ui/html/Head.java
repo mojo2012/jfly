@@ -20,11 +20,11 @@ public class Head extends AbstractComponent {
 	}
 
 	private Head addDefaultStyles() {
-		setStylesheet(new Stylesheet(getHandler(), "/fonts/material-icons.css"));
-		setStylesheet(new Stylesheet(getHandler(), "/style/vuetify.min.css"));
+		addStylesheet(new Stylesheet(getHandler(), "/fonts/material-icons.css"));
+		addStylesheet(new Stylesheet(getHandler(), "/style/vuetify.min.css"));
 
-		setStylesheet(new Stylesheet(getHandler(), "/style/jfly.css"));
-		setStylesheet(new Stylesheet(getHandler(), "/style/vuetify-custom.css"));
+		addStylesheet(new Stylesheet(getHandler(), "/style/jfly.css"));
+		addStylesheet(new Stylesheet(getHandler(), "/style/vuetify-custom.css"));
 
 		return this;
 	}
@@ -51,7 +51,7 @@ public class Head extends AbstractComponent {
 		return title;
 	}
 
-	public Head setStylesheet(final Stylesheet stylesheet) {
+	public Head addStylesheet(final Stylesheet stylesheet) {
 		stylesheets.add(stylesheet);
 		return this;
 	}

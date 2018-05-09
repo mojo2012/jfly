@@ -14,6 +14,10 @@ public class LinkAction extends AbstractActionComponent {
 	private String location;
 	private NavigationTarget navigationTarget;
 
+	public LinkAction(final ComponentHandler handler) {
+		this(handler, null);
+	}
+
 	public LinkAction(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
 		setLocation(EMPTY_LOCATION);
