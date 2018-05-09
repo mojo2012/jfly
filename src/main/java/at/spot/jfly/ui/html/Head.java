@@ -20,8 +20,7 @@ public class Head extends AbstractComponent {
 	}
 
 	private Head addDefaultStyles() {
-		setStylesheet(new Stylesheet(getHandler(), "https://fonts.googleapis.com/icon?family=Material+Icons"));
-		setStylesheet(new Stylesheet(getHandler(), "/style/material-icons.min.css"));
+		setStylesheet(new Stylesheet(getHandler(), "/fonts/material-icons.css"));
 		setStylesheet(new Stylesheet(getHandler(), "/style/vuetify.min.css"));
 
 		setStylesheet(new Stylesheet(getHandler(), "/style/jfly.css"));

@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "jquery": "^3.3.1",
-    "material-icons": "^0.1.0",
+    "material-design-icons-iconfont": "^3.0.3",
     "vue": "^2.5.16",
     "vuetify": "^1.0.17"
   },
