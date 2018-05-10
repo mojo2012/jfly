@@ -1,4 +1,3 @@
-<!-- Single button -->
 <v-select 
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"

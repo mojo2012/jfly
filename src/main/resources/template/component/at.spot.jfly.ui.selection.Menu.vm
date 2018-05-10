@@ -1,0 +1,18 @@
+<v-menu 
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses"
+	v-on="${_state}.eventHandlers" 
+	v-bind="${_state}.attributes"
+	v-if="${_state}.visible"
+>
+	<v-btn slot="activator" :color="${_state}.color">
+		{{localize(${_state}.text)}}
+	</v-btn>
+	
+	<v-list>
+		<v-list-tile v-for="item in ${_state}.menuItems" :key="item.id" @click="">
+			<v-list-tile-title>{{ localize(item.text) }}</v-list-tile-title>
+		</v-list-tile>
+	</v-list>
+
+</v-select>
