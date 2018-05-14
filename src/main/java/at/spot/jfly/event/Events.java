@@ -48,6 +48,9 @@ public interface Events {
 
 		// window history navigation events
 		public static JsEvent PopState = new JsEvent("popstate");
+		public static JsEvent Unload = new JsEvent("unload");
+		public static JsEvent BeforeUnload = new JsEvent("onbeforeunload");
+		public static JsEvent Load = new JsEvent("load");
 	}
 
 	public static class GenericEvent extends EventEnum implements EventType {

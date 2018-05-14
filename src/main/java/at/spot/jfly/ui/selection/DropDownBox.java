@@ -1,15 +1,10 @@
 package at.spot.jfly.ui.selection;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.MaterialIcon;
 import at.spot.jfly.util.Localizable;
 
 public class DropDownBox extends Menu {
-	final private Map<String, SelectMenuItem> menuItems = new TreeMap<>();
-
 	private MaterialIcon leftIcon;
 	private MaterialIcon rightIcon;
 	private boolean editable = false;
@@ -22,18 +17,16 @@ public class DropDownBox extends Menu {
 		return editable;
 	}
 
-	public DropDownBox setEditable(boolean editable) {
+	public void setEditable(boolean editable) {
 		this.editable = editable;
-		return this;
 	}
 
 	public MaterialIcon getLeftIcon() {
 		return leftIcon;
 	}
 
-	public DropDownBox setLeftIcon(MaterialIcon leftIcon) {
+	public void setLeftIcon(MaterialIcon leftIcon) {
 		this.leftIcon = leftIcon;
-		return this;
 	}
 
 	public MaterialIcon getRightIcon() {

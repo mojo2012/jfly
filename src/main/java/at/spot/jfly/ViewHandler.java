@@ -77,8 +77,8 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering
-	 * the UI components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering the UI
+	 * components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
@@ -119,6 +119,11 @@ public abstract class ViewHandler implements ComponentHandler {
 			// handle browser history changes
 			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())) {
 				onBrowserHistoryChange(eventMessage);
+
+			} else if (Events.JsEvent.BeforeUnload.equals(eventMessage.getEventType())) {
+				// before unload is also called on browser refresh
+				// getHandler().destroy();
+
 			} else if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
 				final Component component = getRegisteredComponents().get(eventMessage.getComponentUuid());
 
@@ -128,6 +133,7 @@ public abstract class ViewHandler implements ComponentHandler {
 				}
 
 				handleEvent(component, eventMessage.getEventType(), eventMessage.getPayload());
+
 			} else {
 				LOG.warn("Received message of unknown sender component.");
 			}
@@ -198,8 +204,7 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given
-	 * parameters.
+	 * Calls a javascript function on the given object with the given parameters.
 	 * 
 	 * @param component
 	 * @param method

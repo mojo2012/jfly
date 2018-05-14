@@ -232,6 +232,9 @@ jfly.init = function() {
 		jfly.uicontroller.handleEvent("popstate", null, event);
 	};
 	
+	window.onbeforeunload = function(event) {
+		jfly.uicontroller.handleEvent("onbeforeunload", null, event);
+	}
 };
 
 jfly.initVue = function(initMessage) {
@@ -262,9 +265,9 @@ jfly.initVue = function(initMessage) {
 					"payload": payload,
 				};
 				
-				jfly.callAsync(function() {
+				// jfly.callAsync(function() {
 					jfly.websockethandler.send(message);
-				})
+				// })
 			},
 			
 			getComponentStateProperty(componentUuid, propertyName) {
