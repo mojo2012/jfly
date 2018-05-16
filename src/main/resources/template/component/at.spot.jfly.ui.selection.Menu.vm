@@ -1,12 +1,15 @@
 <v-menu 
 	uuid="${_uuid}" 
+	offset-y
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers" 
 	v-bind="${_state}.attributes"
 	v-if="${_state}.visible"
 >
-	<v-btn slot="activator" :color="${_state}.color">
+	<v-btn slot="activator" :flat="${_state}.flat" :color="${_state}.color">
+		$!{component.icon.render()}
 		{{localize(${_state}.text)}}
+		<v-icon dark>arrow_drop_down</v-icon>
 	</v-btn>
 	
 	<v-list>
@@ -15,4 +18,4 @@
 		</v-list-tile>
 	</v-list>
 
-</v-select>
+</v-menu>
