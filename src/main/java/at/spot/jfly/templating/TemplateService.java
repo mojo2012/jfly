@@ -4,7 +4,7 @@ public interface TemplateService {
 	/**
 	 * Renders the given template file with the given.
 	 * 
-	 * @param context
+	 * @param currentWebSocketSession
 	 * @param templatePath
 	 * @return
 	 */

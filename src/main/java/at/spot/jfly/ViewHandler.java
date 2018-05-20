@@ -311,6 +311,11 @@ public abstract class ViewHandler implements ComponentHandler {
 		return (M) message;
 	}
 
+	@Override
+	public void showErrorMessage(String message) {
+		clientCommunicationHandler.sendErrorMessage(message, null);
+	}
+
 	protected abstract List<Locale> getSupportedLocales();
 
 	public Locale getCurrentLocale() {
