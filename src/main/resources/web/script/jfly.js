@@ -218,7 +218,9 @@ jfly.init = function() {
 		jfly.initVue(applicationState);
 	}
 	
-	jfly.websockethandler.init();
+	jfly.callAsync(function() {
+		jfly.websockethandler.init();
+	})
 
 	// set the first history state, this is necessary to make the onpopstate work
 	window.history.pushState({page: 1}, "", "");

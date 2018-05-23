@@ -30,4 +30,18 @@ div.spacer {
 	height: 10px;
 }
 
+aside.navigation-drawer {
+	padding-bottom: 0px;
+}
+
+aside.navigation-drawer > div.list {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+aside.navigation-drawer > div.list div.splitter {
+	flex: 1;
+}
+
 /* END TREE VIEW FIXES */

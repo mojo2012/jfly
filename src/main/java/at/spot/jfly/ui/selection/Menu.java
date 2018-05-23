@@ -52,6 +52,12 @@ public class Menu extends AbstractLabelledComponent {
 
 	public void removeMenuItem(final String itemId) {
 		menuItems.get(itemId);
+		updateClientComponent();
+	}
+
+	public void clearMenuItems() {
+		menuItems.clear();
+		updateClientComponent();
 	}
 
 	public boolean isEditable() {
@@ -60,6 +66,7 @@ public class Menu extends AbstractLabelledComponent {
 
 	public void setEditable(boolean editable) {
 		this.editable = editable;
+		updateClientComponent();
 	}
 
 	public MaterialIcon getLeftIcon() {
@@ -68,6 +75,7 @@ public class Menu extends AbstractLabelledComponent {
 
 	public void setLeftIcon(MaterialIcon leftIcon) {
 		this.leftIcon = leftIcon;
+		updateClientComponent();
 	}
 
 	public MaterialIcon getRightIcon() {
@@ -76,6 +84,7 @@ public class Menu extends AbstractLabelledComponent {
 
 	public void setRightIcon(MaterialIcon rightIcon) {
 		this.rightIcon = rightIcon;
+		updateClientComponent();
 	}
 
 	public Collection<SelectMenuItem> getMenuItems() {
