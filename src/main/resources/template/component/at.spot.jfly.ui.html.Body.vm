@@ -20,7 +20,7 @@
 	
 		<!-- COMPONENTS -->
 		#foreach( $!child in $!component.children )
-			$!child.render()≤
+			$!child.render()
 		#end
 	</v-app>
 	

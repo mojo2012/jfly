@@ -29,4 +29,9 @@ public interface ComponentHandler {
 	 */
 	void flushClientUpdates(Component component);
 
+	/**
+	 * Shows and error message in the client.
+	 */
+	void showErrorMessage(String message);
+
 }

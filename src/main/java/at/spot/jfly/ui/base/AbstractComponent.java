@@ -117,12 +117,6 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		updateClientComponent();
 	}
 
-	// public String getAttributeString() {
-	// return attributes.entrySet().stream() //
-	// .map(e -> e.getKey() + (e.getValue() != null ? "=" + e.getValue() : "")) //
-	// .collect(Collectors.joining(" "));
-	// }
-
 	/**
 	 * Returns an immutable set of the style classes.
 	 */
