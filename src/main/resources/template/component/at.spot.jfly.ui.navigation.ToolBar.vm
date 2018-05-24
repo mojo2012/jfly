@@ -10,7 +10,7 @@
 
 	$!{component.leftActionItem.render()}
 	
-	<v-toolbar-title v-if="${_state}.header & ${_state}.header.visible">
+	<v-toolbar-title uuid="${_state.header.uuid}" v-if="${_state}.header != null & ${_state}.header.visible">
 		{{localize(${_state}.header.text)}}
 	</v-toolbar-title>
 	
