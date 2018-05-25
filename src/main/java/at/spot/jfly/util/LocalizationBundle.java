@@ -36,14 +36,13 @@ public class LocalizationBundle {
 		Set<Locale> allLocales = new HashSet<>();
 
 		// It might happen that the default locale is not among the available locales
-		// ...
 		// this would mess up the localization in the browser.
 		allLocales.add(Locale.getDefault());
 		allLocales.addAll(Arrays.asList(Locale.getAvailableLocales()));
 
 		for (Locale l : allLocales) {
 			try {
-				// TODO: make this autoreloadable?
+				// TODO: make this auto reloadable?
 				// but only use the ones which contain messages
 				if (StringUtils.isNotBlank(l.getLanguage())) {
 					// WARNING: this returns the bundle of the default language in case there is no

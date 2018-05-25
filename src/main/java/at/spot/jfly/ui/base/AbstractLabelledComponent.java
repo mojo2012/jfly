@@ -35,6 +35,11 @@ public abstract class AbstractLabelledComponent extends AbstractComponent {
 		updateClientComponent();
 	}
 
+	public void setText(String text) {
+		this.text = Localizable.of(text);
+		updateClientComponent();
+	}
+
 	public void onHover(final EventHandler handler) {
 		onEvent(JsEvent.Hover, handler);
 	}
