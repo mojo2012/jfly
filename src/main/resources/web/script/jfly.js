@@ -212,15 +212,15 @@ jfly.debounce = function(func, wait, immediate) {
 };
 
 jfly.init = function() {
+	jfly.callAsync(function() {
+		jfly.websockethandler.init();
+	})
+
 	// check if the application state is already pre rendered
 	// if not, it will be requested after the websocket connection has been established
 	if (applicationState) {
 		jfly.initVue(applicationState);
 	}
-	
-	jfly.callAsync(function() {
-		jfly.websockethandler.init();
-	})
 
 	// set the first history state, this is necessary to make the onpopstate work
 	window.history.pushState({page: 1}, "", "");
@@ -235,7 +235,7 @@ jfly.init = function() {
 	};
 	
 	window.onbeforeunload = function(event) {
-		jfly.uicontroller.handleEvent("onbeforeunload", null, event);
+		//jfly.uicontroller.handleEvent("onbeforeunload", null, event);
 	}
 };
 

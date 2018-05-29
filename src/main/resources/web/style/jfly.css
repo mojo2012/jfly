@@ -1,3 +1,51 @@
+/* TREE VIEW FIXES */
+
+div.list__group__items > div.list__tile,
+div.list__group__items div.list {
+	margin-left: 7px;
+}
+
+.list__group--active::before {
+	background: initial !important;
+}
+
+.list__group::after {
+	height: 0px !important;
+}
+
+.list-hotfix {
+    flex: 1 1 auto !important;
+    overflow: hidden;
+}
+.list-hotfix > .list__tile {
+	padding-left: 0px;
+}
+
+.list__tile__action {
+/* 	max-width: 24px !important; */
+	min-width: 40px !important;
+}
+
+div.spacer {
+	height: 10px;
+}
+
+aside.navigation-drawer {
+	padding-bottom: 0px;
+}
+
+aside.navigation-drawer > div.list {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+aside.navigation-drawer > div.list div.splitter {
+	flex: 1;
+}
+
+/* END TREE VIEW FIXES */
+
 [v-cloak] {
 	display: none;
 }

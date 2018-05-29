@@ -78,15 +78,25 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-						
 						<configuration>
 							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<id>Run npm run concat</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						
+						<configuration>
+							<arguments>run concat</arguments>
 						</configuration>
 					</execution>
 				</executions>
 				
 				<configuration>
-					<nodeVersion>v9.8.0</nodeVersion>
+					<nodeVersion>v10.0.0</nodeVersion>
 				</configuration>
 			</plugin>
 		</plugins>

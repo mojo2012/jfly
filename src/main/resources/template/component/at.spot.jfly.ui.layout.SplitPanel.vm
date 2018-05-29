@@ -1,0 +1,21 @@
+<template 
+	uuid="${_uuid}" 
+	:class="${_state}.styleClasses"
+	v-on="${_state}.eventHandlers"
+	v-bind="${_state}.attributes"
+	v-show="${_state}.visible"
+>
+	
+	<v-layout row wrap class="sub-container">
+		<v-flex xs4 class="column-left" >
+			$!component.left.render()
+		</v-flex>
+	</v-layout>
+	
+	<v-layout row wrap class="sub-container">
+		<v-flex xs4 class="column-right">
+			$!component.right.render()
+		</v-flex>
+	</v-layout>
+	
+</template>

@@ -19,27 +19,17 @@ public class Head extends AbstractComponent {
 		addDefaultScripts();
 	}
 
-	private Head addDefaultStyles() {
-		addStylesheet(new Stylesheet(getHandler(), "/fonts/material-icons.css"));
-		addStylesheet(new Stylesheet(getHandler(), "/style/vuetify.min.css"));
-
+	private void addDefaultStyles() {
+		addStylesheet(new Stylesheet(getHandler(), "/style/deps.css"));
 		addStylesheet(new Stylesheet(getHandler(), "/style/jfly.css"));
-		addStylesheet(new Stylesheet(getHandler(), "/style/vuetify-custom.css"));
-
-		return this;
 	}
 
-	protected Head addDefaultScripts() {
-		// vue.js draws the client components
-		setScript(new Script(getHandler(), "/script/vue.min.js"));
-
-		setScript(new Script(getHandler(), "/script/jquery.min.js"));
-		setScript(new Script(getHandler(), "/script/vuetify.min.js"));
+	protected void addDefaultScripts() {
+		// vue and other dependencies (merged into a single file)
+		setScript(new Script(getHandler(), "/script/deps.js"));
 
 		// jfly custom javascript
 		setScript(new Script(getHandler(), "/script/jfly.js"));
-
-		return this;
 	}
 
 	public Head setTitle(final String title) {
