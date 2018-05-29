@@ -1,4 +1,4 @@
-<v-layout row wrap class="sub-container">
+<v-layout row wrap class="sub-container"
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"

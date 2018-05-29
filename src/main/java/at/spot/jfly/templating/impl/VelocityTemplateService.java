@@ -1,8 +1,11 @@
 package at.spot.jfly.templating.impl;
 
+import java.io.File;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -31,6 +34,8 @@ public class VelocityTemplateService implements TemplateService {
 
 	private KeyValueMapping<String, CachedTemplate> templateCache = new KeyValueMapping<>();
 
+	private final Template COMPONENT_NOT_FOUND_TEMPLATE;
+
 	public VelocityTemplateService(final String templateBasePath) {
 		ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
@@ -42,6 +47,9 @@ public class VelocityTemplateService implements TemplateService {
 		ve.addProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
 		ve.init();
 		ve.init();
+
+		String componentNotFoundTemplatePath = Paths.get(templateBasePath, "notFound.vm").toString();
+		COMPONENT_NOT_FOUND_TEMPLATE = ve.getTemplate(componentNotFoundTemplatePath);
 
 		this.templateBasePath = templateBasePath;
 	}
@@ -85,17 +93,53 @@ public class VelocityTemplateService implements TemplateService {
 			}
 		}
 
+		Template ret = null;
+
 		if (cachedEntry == null) {
-			final Template tmpl = ve.getTemplate(templateFilePath.toString());
-			cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
-			templateCache.put(templateFile, cachedEntry);
+			final Template tmpl = getTemplate(templateFilePath);
+
+			if (tmpl != null) {
+				cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
+				templateCache.put(templateFile, cachedEntry);
+				ret = tmpl;
+			} else {
+				ret = COMPONENT_NOT_FOUND_TEMPLATE;
+			}
+		} else {
+			ret = cachedEntry.getTemplate();
 		}
 
-		return cachedEntry.getTemplate();
+		return ret;
+	}
+
+	protected Template getTemplate(Path templateFilePath) {
+		final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
+
+		if (file.isPresent()) {
+			return ve.getTemplate(templateFilePath.toString());
+		}
+
+		return null;
+	}
+
+	protected Optional<File> getAbsoluteTemplatePath(Path templateFilePath) {
+		final URL resourceUrl = getClass().getResource(templateFilePath.toString());
+
+		if (resourceUrl != null) {
+			return Optional.of(Paths.get(resourceUrl.getFile()).toFile());
+		}
+
+		return Optional.empty();
 	}
 
 	protected long getLastModifiedDate(Path templateFilePath) {
-		return Paths.get(getClass().getResource(templateFilePath.toString()).getFile()).toFile().lastModified();
+		final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
+
+		if (file.isPresent()) {
+			return file.get().lastModified();
+		}
+
+		return -1;
 	}
 
 	public boolean isDebugEnabled() {

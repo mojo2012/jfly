@@ -3,7 +3,7 @@
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"
 	v-bind="${_state}.attributes"
-	v-show="${_state}.visible"
+	v-if="${_state}.visible"
 >
 	
 	<v-layout row wrap class="sub-container">
