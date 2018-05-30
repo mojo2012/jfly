@@ -84,13 +84,24 @@
 					</execution>
 					
 					<execution>
-						<id>Run npm run concat</id>
+						<id>Run npm run concat:css</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						
 						<configuration>
-							<arguments>run concat</arguments>
+							<arguments>run concat:css</arguments>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<id>Run npm run concat:js</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						
+						<configuration>
+							<arguments>run concat:js</arguments>
 						</configuration>
 					</execution>
 				</executions>
