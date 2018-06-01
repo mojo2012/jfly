@@ -1,12 +1,13 @@
-<v-layout row wrap class="sub-container"
+<v-flex
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"
 	v-bind="${_state}.attributes"
 	v-show="${_state}.visible"
 >
-	
-	#foreach( $!child in $!component.children )
-		$!child.render()
-	#end	
-</v-layout>
+	<v-container >
+		#foreach( $!child in $!component.children )
+			$!child.render()
+		#end
+	</v-container>
+</v-flex>

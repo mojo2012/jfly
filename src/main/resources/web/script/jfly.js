@@ -44,7 +44,7 @@ jfly.websockethandler = {
 		try {
 			jfly.websockethandler.connection.send(msg);
 		} catch (e) {
-			jfly.uicontroller.showExceptionDialog({ message: "Sorry, the service seems to be interrupted." });
+			jfly.uicontroller.showExceptionDialog({ description: "Sorry, the service seems to be interrupted." });
 		}
 	},
 	
@@ -247,29 +247,77 @@ jfly.initVue = function(initMessage) {
 		methods: {
 			// this weird little debounce functionality prevents event flooding
 			handleEvent: function(event, componentUuid, eventData) {
-				var payload = null;
+				var message = {};
 				
 				// special handling for vuetify components that don't emit native JS events
 				// eg. dropdown box which only provides the selected menuItem as eventData
-				if (typeof(eventData) === "object" ) {
-					payload = eventData;
+				if (typeof(eventData) === "object" && eventData.target) {
+					// events cannot be serialized, so we need this hack
+					message.domEventData = this.serializeEvent(eventData);
 				} else {
-					payload = {"value": eventData};
+					message.domEventData = { "eventName": event, "data": eventData };
 				}
 				
+				message.type = "event";
+				message.eventType = event;
+				message.componentUuid = componentUuid;
+
 				// add whole component state to the event payload
-				// payload.componentState = this.componentStates[componentUuid];
+				message.componentState = this.componentStates[componentUuid];
 				
-				var message = {
-					"type": "event",
-					"eventType": event,
-					"componentUuid": componentUuid,
-					"payload": payload,
-				};
+				jfly.websockethandler.send(message);
+			},
+			
+			serializeEvent: function(e) {
+				var ret = null;
 				
-				// jfly.callAsync(function() {
-					jfly.websockethandler.send(message);
-				// })
+				if (e) {
+					ret = {
+						eventName: e.type,
+						altKey: e.altKey,
+						bubbles: e.bubbles,
+						button: e.button,
+						buttons: e.buttons,
+						cancelBubble: e.cancelBubble,
+						cancelable: e.cancelable,
+						clientX: e.clientX,
+						clientY: e.clientY,
+						composed: e.composed,
+						ctrlKey: e.ctrlKey,
+						currentTarget: e.currentTarget ? e.currentTarget.outerHTML : null,
+						defaultPrevented: e.defaultPrevented,
+						detail: e.detail,
+						eventPhase: e.eventPhase,
+						fromElement: e.fromElement ? e.fromElement.outerHTML : null,
+						isTrusted: e.isTrusted,
+						layerX: e.layerX,
+						layerY: e.layerY,
+						metaKey: e.metaKey,
+						movementX: e.movementX,
+						movementY: e.movementY,
+						offsetX: e.offsetX,
+						offsetY: e.offsetY,
+						pageX: e.pageX,
+						pageY: e.pageY,
+						//path: pathToSelector(e.path && e.path.length ? e.path[0] : null),
+						relatedTarget: e.relatedTarget ? e.relatedTarget.outerHTML : null,
+						returnValue: e.returnValue,
+						screenX: e.screenX,
+						screenY: e.screenY,
+						shiftKey: e.shiftKey,
+						sourceCapabilities: e.sourceCapabilities ? e.sourceCapabilities.toString() : null,
+						target: e.target ? e.target.outerHTML : null,
+						timeStamp: e.timeStamp,
+						toElement: e.toElement ? e.toElement.outerHTML : null,
+						type: e.type,
+						view: e.view ? e.view.toString() : null,
+						which: e.which,
+						x: e.x,
+						y: e.y
+					}
+				}
+				
+				return ret;
 			},
 			
 			getComponentStateProperty(componentUuid, propertyName) {
@@ -310,7 +358,9 @@ jfly.initVue = function(initMessage) {
 			localize: function(value) {
 				var ret = value;
 				
-				if (value && value.values) {
+				if (value && value.defaultValue) {
+					ret = value.defaultValue;
+				} else if (value && value.values) {
 					var globalState = this.globalState;
 					
 					ret = value.values[globalState.currentLocale.code];

@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -76,15 +77,17 @@ public class Server implements ClientCommunicationHandler {
 		// websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
 		service.notFound((req, res) -> {
-			res.status(404);
-			res.redirect("/error");
+			res.status(HttpStatus.NOT_FOUND_404);
+			res.body("PagenNot found");
 			return null;
 		});
 
 		// redirect to the error page in case there is an internal server error
 		service.internalServerError((req, res) -> {
-			res.status(500);
-			res.redirect("/error");
+			res.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+			// TODO return nice error page
+			res.body("An error occurred");
+
 			return null;
 		});
 
@@ -92,8 +95,9 @@ public class Server implements ClientCommunicationHandler {
 		// initial
 		// rendering of the view
 		service.exception(Exception.class, (ex, req, res) -> {
-			res.status(500);
-			res.redirect("/error");
+			res.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+			// TODO return nice error page
+			res.body("An error occurred");
 		});
 
 		registerViewHandler("/error", ExceptionViewHandler.class);

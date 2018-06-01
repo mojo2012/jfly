@@ -92,8 +92,10 @@ public interface Attributes {
 		}
 
 		public static GridLayoutSize XS12 = new GridLayoutSize("xs12");
-		public static GridLayoutSize XS6 = new GridLayoutSize("xs5");
-		public static GridLayoutSize XS43 = new GridLayoutSize("xs4");
+		public static GridLayoutSize XS10 = new GridLayoutSize("xs10");
+		public static GridLayoutSize XS8 = new GridLayoutSize("xs8");
+		public static GridLayoutSize XS6 = new GridLayoutSize("xs6");
+		public static GridLayoutSize XS4 = new GridLayoutSize("xs4");
 		public static GridLayoutSize XS3 = new GridLayoutSize("xs3");
 		public static GridLayoutSize XS2 = new GridLayoutSize("xs2");
 		public static GridLayoutSize XS1 = new GridLayoutSize("xs1");

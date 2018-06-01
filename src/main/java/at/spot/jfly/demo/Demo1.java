@@ -83,7 +83,7 @@ public class Demo1 extends ViewHandler {
 		multiLineTextBox.setMultiLine(true);
 		multiLineTextBox.setLabel(localizations.forKey("placeholders.story"));
 		multiLineTextBox.setText("This is a test text");
-		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getPayload().get("value")));
+		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getData().get("value")));
 
 		final LinkAction linkAction = new LinkAction(getHandler(), Localizable.of("google.at"), "https://google.at",
 				NavigationTarget.Blank);

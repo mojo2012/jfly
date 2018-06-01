@@ -18,6 +18,7 @@ public class SplitPanel extends AbstractComponent {
 
 	public void setLeft(Panel left) {
 		this.left = left;
+		this.left.addStyleClass("column-left");
 		updateClient(ComponentManipulationFunction.ADD, left);
 	}
 
@@ -27,6 +28,7 @@ public class SplitPanel extends AbstractComponent {
 
 	public void setRight(Panel right) {
 		this.right = right;
+		this.right.addStyleClass("column-right");
 		updateClient(ComponentManipulationFunction.ADD, right);
 	}
 

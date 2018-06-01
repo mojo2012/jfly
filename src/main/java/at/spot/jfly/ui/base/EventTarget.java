@@ -1,11 +1,11 @@
 package at.spot.jfly.ui.base;
 
-import at.spot.jfly.event.Event;
+import at.spot.jfly.event.DomEvent;
 
 public interface EventTarget {
 	/**
 	 * Pass an event for the component to process.
 	 */
-	<E extends Event> void handleEvent(final E event);
+	<E extends DomEvent> void handleEvent(final E event);
 
 }

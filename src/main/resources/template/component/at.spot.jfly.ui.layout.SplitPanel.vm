@@ -1,21 +1,14 @@
-<template 
+<v-layout 
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"
 	v-bind="${_state}.attributes"
 	v-if="${_state}.visible"
+	class="split-panel"
+	row wrap text-xs-center
 >
 	
-	<v-layout row wrap class="sub-container">
-		<v-flex xs4 class="column-left" >
-			$!component.left.render()
-		</v-flex>
-	</v-layout>
+	$!component.left.render()
+	$!component.right.render()
 	
-	<v-layout row wrap class="sub-container">
-		<v-flex xs4 class="column-right">
-			$!component.right.render()
-		</v-flex>
-	</v-layout>
-	
-</template>
+</v-layout>

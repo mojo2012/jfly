@@ -94,3 +94,14 @@ aside.navigation-drawer > div.list div.splitter {
 	border-color: rgb(76, 175, 80);
 	color: #fff;
 }
+
+/* split panel content */
+.split-panel .column-left {
+	border-right: 1px solid grey;
+	padding-right: 0;
+}
+
+.split-panel .column-right {
+	padding: 0px;
+}
+/* split panel content */

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.Attributes.Attribute;
 import at.spot.jfly.attributes.Styles.Style;
-import at.spot.jfly.event.Event;
+import at.spot.jfly.event.DomEvent;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.EventType;
 import at.spot.jfly.event.Events.GenericEvent;
@@ -147,7 +147,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	}
 
 	@Override
-	public void handleEvent(final Event event) {
+	public void handleEvent(final DomEvent event) {
 		final List<EventHandler> handlers = eventHandlers.get(event.getEventType());
 
 		handlers.stream().forEach((h) -> h.handle(event));
@@ -273,7 +273,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	public void onStateChanged(final EventHandler handler, String componentPropery) {
 		EventHandler stateChangedHandler = (e) -> {
-			if (StringUtils.equals((String) e.getPayload().get("property"), componentPropery)) {
+			if (StringUtils.equals((String) e.getData().get("property"), componentPropery)) {
 				handler.handle(e);
 			}
 		};

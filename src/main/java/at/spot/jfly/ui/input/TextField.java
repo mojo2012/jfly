@@ -2,7 +2,7 @@ package at.spot.jfly.ui.input;
 
 import at.spot.jfly.ComponentHandler;
 import at.spot.jfly.attributes.Attributes.TextFieldType;
-import at.spot.jfly.event.Event;
+import at.spot.jfly.event.DomEvent;
 import at.spot.jfly.event.EventHandler;
 import at.spot.jfly.event.Events.JsEvent;
 import at.spot.jfly.ui.base.AbstractTextComponent;
@@ -124,10 +124,10 @@ public class TextField extends AbstractTextComponent {
 	 */
 
 	@Override
-	public void handleEvent(Event event) {
+	public void handleEvent(DomEvent event) {
 		// populate changed text from event data
 		if (JsEvent.Change.equals(event.getEventType())) {
-			String value = (String) event.getPayload().get("value");
+			String value = (String) event.getData().get("value");
 			this.text = value;
 		}
 

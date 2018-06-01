@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.spot.jfly.event.Event;
+import at.spot.jfly.event.DomEvent;
 import at.spot.jfly.event.Events;
 import at.spot.jfly.event.Events.EventType;
 import at.spot.jfly.event.Events.GenericEvent;
@@ -129,10 +129,10 @@ public abstract class ViewHandler implements ComponentHandler {
 
 				// apply changed states to the component
 				if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
-					ObjectUtils.populate(component, eventMessage.getPayload());
+					ObjectUtils.populate(component, eventMessage.getComponentState());
 				}
 
-				handleEvent(component, eventMessage.getEventType(), eventMessage.getPayload());
+				handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
 
 			} else {
 				LOG.warn("Received message of unknown sender component.");
@@ -145,9 +145,9 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	protected void handleEvent(final Component component, final EventType eventType,
-			final Map<String, Object> payload) {
+			final DomEvent payload) {
 		try {
-			((EventTarget) component).handleEvent(new Event(eventType, component, payload));
+			((EventTarget) component).handleEvent(payload);
 		} catch (Exception ex) {
 			LOG.error(String.format("Exception during handleEvent for component %s", component.getUuid()), ex);
 			throw ex;
