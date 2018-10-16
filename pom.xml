@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>at.spot</groupId>
+	<groupId>io.spot-next</groupId>
 	<artifactId>jfly</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
@@ -17,8 +17,8 @@
 		<junit.version>4.10</junit.version>
 
 		<!-- nexus repositry -->
-		<nexus.snapshot.host>http://5.249.148.46:8081/repository/spot-snapshot/</nexus.snapshot.host>
-		<nexus.release.host>http://5.249.148.46:8081/repository/spot-release/</nexus.release.host>
+		<nexus.snapshot.host>https://nexus.spot-next.io/repository/spot-snapshot/</nexus.snapshot.host>
+		<nexus.release.host>https://nexus.spot-next.io/repository/spot-release/</nexus.release.host>
 	</properties>
 
 	<distributionManagement>
@@ -116,7 +116,7 @@
 	<dependencies>
 		<!-- spot -->
 		<dependency>
-			<groupId>at.spot</groupId>
+			<groupId>io.spot-next</groupId>
 			<artifactId>spot-core-support</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -140,17 +140,17 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.9.4</version>
+			<version>2.9.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.4</version>
+			<version>2.9.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.9.4</version>
+			<version>2.9.5</version>
 		</dependency>
 
 <!-- 		<dependency> -->
