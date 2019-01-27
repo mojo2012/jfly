@@ -88,7 +88,7 @@ If you are not happy with the looks of the label you can do:
 
 Option 1 and 3 are pretty straig forward. But option 2 does need a few more words.
 
-The template renderer looks for a velocity template with the fully-qualified name of the component, in our case `at.spot.jfly.ui.display.Label`:
+The template renderer looks for a velocity template with the fully-qualified name of the component, in our case `io.spot-next.jfly.ui.display.Label`:
 ```
 <span
 	uuid="${_uuid}" $!events

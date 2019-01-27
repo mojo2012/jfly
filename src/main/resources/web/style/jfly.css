@@ -41,7 +41,8 @@ aside.navigation-drawer > div.list {
 }
 
 aside.navigation-drawer > div.list div.splitter {
-	flex: 1;
+/* 	flex: 1; */
+	border-bottom: 1px solid #DDD;
 }
 
 /* END TREE VIEW FIXES */
