@@ -1,5 +1,6 @@
 package io.spotnext.jfly.event;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -279,7 +280,7 @@ public class DomEvent extends ComponentEvent {
 
 	@JsonAnyGetter
 	public Map<String, Object> getData() {
-		return data;
+		return data != null ? data : Collections.emptyMap();
 	}
 
 	@JsonAnySetter

@@ -103,7 +103,6 @@ public class Demo1 extends ViewHandler {
 		DropDownBox dropdown = new DropDownBox(getHandler(), Localizable.of("Please choose ..."));
 		dropdown.setLeftIcon(MaterialIcon.map);
 
-		// TODO: pushing data asynchronously doesn't work yet
 		dropdown.addMenuItem("startUpdateTimer", "Start update timer", e -> {
 			LOG.debug("Starting timer");
 			new Thread(() -> {

@@ -40,7 +40,7 @@ aside.navigation-drawer > div.list {
 	height: 100%;
 }
 
-aside.navigation-drawer > div.list div.splitter {
+div.splitter {
 /* 	flex: 1; */
 	border-bottom: 1px solid #DDD;
 }
@@ -106,3 +106,17 @@ aside.navigation-drawer > div.list div.splitter {
 	padding: 0px;
 }
 /* split panel content */
+
+
+/* paddings and marings */
+.padding-20 {
+	padding: 20px;	
+}
+
+.padding-left-20 {
+	padding-left: 20px;	
+}
+
+.padding-right-20 {
+	padding-right: 20px;	
+}

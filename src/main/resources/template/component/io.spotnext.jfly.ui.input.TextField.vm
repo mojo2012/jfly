@@ -16,6 +16,7 @@
 	:required="${_state}.required"
 	:error="${_state}.error"
 	:type="${_state}.type"
+	hide-details
 	watch-for-state-change="[ 'text' ]"
 	>
           

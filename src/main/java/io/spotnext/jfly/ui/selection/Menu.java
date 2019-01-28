@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spotnext.jfly.ComponentHandler;
 import io.spotnext.jfly.attributes.MaterialIcon;
 import io.spotnext.jfly.event.EventHandler;
+import io.spotnext.jfly.event.Events.JsEvent;
 import io.spotnext.jfly.ui.base.AbstractLabelledComponent;
 import io.spotnext.jfly.util.Localizable;
 
@@ -23,6 +24,17 @@ public class Menu extends AbstractLabelledComponent {
 
 	public Menu(final ComponentHandler handler, final Localizable<String> text) {
 		super(handler, text);
+
+		this.onEvent(JsEvent.Input, (e) -> {
+			// forward the select event to the appropriate menu item event
+			// handler
+			Object itemId = e.getData().get("data");
+			selectedItem = menuItems.get(itemId);
+
+			if (selectedItem != null && selectedItem.handler != null) {
+				selectedItem.handler.handle(e);
+			}
+		});
 	}
 
 	public void addMenuItem(final String itemId, String text, final EventHandler handler) {
