@@ -7,7 +7,7 @@
     "jquery": "^3.3.1",
     "material-design-icons-iconfont": "^3.0.3",
     "vue": "^2.5.22",
-    "vuetify": "^1.4.3"
+    "vuetify": "^1.4.4"
   },
   "devDependencies": {
     "node-minify": "^2.4.2",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "concat:js": "mkdir -p target/classes/web/script && concat -o target/classes/web/script/deps.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.min.js node_modules/vuetify/dist/vuetify.min.js",
-    "concat:css": "mkdir -p target/classes/web/style && concat -o target/classes/web/style/deps.css node_modules/vuetify/dist/vuetify.min.css node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css",
+    "concat:js": "mkdir -p target/classes/public/script && concat -o target/classes/public/script/deps.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.min.js node_modules/vuetify/dist/vuetify.min.js",
+    "concat:css": "mkdir -p target/classes/public/style && concat -o target/classes/public/style/deps.css node_modules/vuetify/dist/vuetify.min.css node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css",
     "concat": "npm run concat:css && npm run concat:js"
   },
   "repository": {

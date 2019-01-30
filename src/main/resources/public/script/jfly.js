@@ -225,6 +225,8 @@ jfly.init = function() {
 	// set the first history state, this is necessary to make the onpopstate work
 	window.history.pushState({page: 1}, "", "");
 	
+	window.location.hash = "#/";
+	
     // The popstate event is fired each time when the current history entry changes.
 	window.onpopstate = function(event) {
 		// Stay on the current page.

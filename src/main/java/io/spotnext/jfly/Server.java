@@ -44,7 +44,7 @@ public class Server implements ClientCommunicationHandler {
 	private static ThreadLocal<Server> currentInstance = new ThreadLocal<>();
 
 	public static final int DEFAULT_PORT = 8080;
-	public static final String DEFAULT_STATIC_FILE_PATH = "/web";
+	public static final String DEFAULT_STATIC_FILE_PATH = "/public";
 	public static final String DEFAULT_WEBSOCKET_PATH = "/com";
 
 	protected final KeyValueMapping<String, HttpSession> httpSessions = new KeyValueMapping<>();
@@ -92,8 +92,7 @@ public class Server implements ClientCommunicationHandler {
 		});
 
 		// redirect to the error page in case there is an exception during
-		// initial
-		// rendering of the view
+		// initial rendering of the view
 		service.exception(Exception.class, (ex, req, res) -> {
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			// TODO return nice error page
