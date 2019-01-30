@@ -1,5 +1,11 @@
 /* TREE VIEW FIXES */
 
+.center {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 div.list__group__items > div.list__tile,
 div.list__group__items div.list {
 	margin-left: 7px;
