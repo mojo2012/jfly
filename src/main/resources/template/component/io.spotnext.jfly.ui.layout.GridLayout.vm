@@ -1,11 +1,20 @@
-<v-container grid-list-md text-xs-center v-show="${_state}.visible">
-	<v-layout  >
-		<v-flex v-bind="${_state}.attributes">
-			<div uuid="${_uuid}" :class="${_state}.styleClasses" v-bind="${_state}.attributes" >
-				#foreach( $!child in $!component.children )
-					$!child.render()
-				#end
-			</div>
-		</v-flex>
+<v-container 
+	uuid="${_uuid}"
+	$!component.gutterSize text-xs-center 
+	
+	v-bind="${_state}.attributes"
+	:class="${_state}.styleClasses">
+
+	<v-layout
+		wrap row $!component.behavior
+		v-show="${_state}.visible" 
+		>
+		
+		#foreach( $!child in $!component.children )
+			<v-flex $!component.size>
+				$!child.render()
+			</v-flex>
+		#end
 	</v-layout>
+	
 </v-container>

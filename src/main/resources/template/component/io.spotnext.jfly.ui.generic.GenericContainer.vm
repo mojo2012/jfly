@@ -1,5 +1,5 @@
 #macro( attributes )
-	uuid="${_uuid}" :class="${_state}.styleClasses" $!{component.attributeString}  v-on="${_state}.eventHandlers"
+	uuid="${_uuid}" :class="${_state}.styleClasses" #foreach($attr in $!component.attributes.entrySet()) $attr.key="${attr.value}" #end  v-on="${_state}.eventHandlers"
 #end
 
 <${component.tagName} #if (!${component.useWrapper}) #attributes #end v-show="${_state}.visible">

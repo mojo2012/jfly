@@ -225,15 +225,18 @@ jfly.init = function() {
 	// set the first history state, this is necessary to make the onpopstate work
 	window.history.pushState({page: 1}, "", "");
 	
-	window.location.hash = "#/";
+	if (!window.location.hash) {
+		window.location.hash = "#/";
+	}
 	
     // The popstate event is fired each time when the current history entry changes.
 	window.onpopstate = function(event) {
 		// Stay on the current page.
-		history.pushState(null, null, window.location.pathname);
+//		history.pushState(null, null, window.location.pathname + window.location.hash);
 		
 		// send popstate event to the backend
-		jfly.uicontroller.handleEvent("popstate", null, event);
+		let data = { currentUrl: window.location.pathname, currentUrlHash: window.location.hash}
+		jfly.uicontroller.handleEvent("popstate", null, event, data);
 	};
 	
 	window.onbeforeunload = function(event) {
@@ -248,14 +251,14 @@ jfly.initVue = function(initMessage) {
 		},
 		methods: {
 			// this weird little debounce functionality prevents event flooding
-			handleEvent: function(event, componentUuid, eventData) {
+			handleEvent: function(event, componentUuid, eventData, additionalData) {
 				var message = {};
 				
 				// special handling for vuetify components that don't emit native JS events
 				// eg. dropdown box which only provides the selected menuItem as eventData
 				if (typeof(eventData) === "object" && eventData.target) {
 					// events cannot be serialized, so we need this hack
-					message.domEventData = this.serializeEvent(eventData);
+					message.domEventData = { ...this.serializeEvent(eventData), ...additionalData };
 				} else {
 					message.domEventData = { "eventName": event, "data": eventData };
 				}
@@ -315,7 +318,8 @@ jfly.initVue = function(initMessage) {
 						view: e.view ? e.view.toString() : null,
 						which: e.which,
 						x: e.x,
-						y: e.y
+						y: e.y,
+						data: e.data
 					}
 				}
 				

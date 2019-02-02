@@ -1,5 +1,8 @@
-<img
+<v-img
 	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses"
 	:src="${_state}.sourceUrl"
-	v-if="${_state}.visible" />
+	v-if="${_state}.visible"
+	:aspect-ratio="${_state}.aspectRatio" >
+
+</v-img>

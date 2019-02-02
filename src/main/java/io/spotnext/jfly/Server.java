@@ -215,7 +215,7 @@ public class Server implements ClientCommunicationHandler {
 							// send back an error message to allow the UI to
 							// react properly
 							LOG.error("An error occurred", e);
-							;
+
 							sendErrorMessage(null, e);
 						}
 					} else {

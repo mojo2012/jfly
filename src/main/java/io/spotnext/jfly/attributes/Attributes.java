@@ -108,12 +108,23 @@ public interface Attributes {
 
 		public static GridBehavior Fluid = new GridBehavior("fluid");
 		public static GridBehavior Wrap = new GridBehavior("wrap");
+		public static GridBehavior Row = new GridBehavior("row");
 		public static GridBehavior FillHeight = new GridBehavior("fill-height");
 		public static GridBehavior JustifyCenter = new GridBehavior("justify-center");
 		public static GridBehavior JustifyEnd = new GridBehavior("justify-end");
 		public static GridBehavior JustifyStart = new GridBehavior("justify-start");
 		public static GridBehavior JustifySpaceAround = new GridBehavior("justify-space-around");
 		public static GridBehavior JustifySpaceBetween = new GridBehavior("justify-space-between");
+	}
+
+	public static class GridGutterSize extends DynamicEnum implements Attribute {
+		protected GridGutterSize(String internalName) {
+			super(internalName);
+		}
+
+		public static GridGutterSize GridListXS = new GridGutterSize("grid-list-xs");
+		public static GridGutterSize GridListXL = new GridGutterSize("grid-list-xl");
+		public static GridGutterSize GridListMD = new GridGutterSize("grid-list-md");
 	}
 
 	public static class GeneralModifiers extends DynamicEnum implements Attribute {

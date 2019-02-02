@@ -7,7 +7,6 @@
 <!-- 	:items="${_state}.children"> -->
 <!-- 	:item-text="title" -->
 	
-<!-- 	<!-- --> 
 <!-- </v-treeview> -->
 
 <v-list

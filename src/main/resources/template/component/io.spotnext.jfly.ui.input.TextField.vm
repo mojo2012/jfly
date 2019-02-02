@@ -1,4 +1,3 @@
-
  <v-text-field
 	uuid="${_uuid}" 
 	:class="${_state}.styleClasses" $!events

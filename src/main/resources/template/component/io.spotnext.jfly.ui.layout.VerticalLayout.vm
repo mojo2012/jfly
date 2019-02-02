@@ -1,0 +1,13 @@
+<v-content
+	uuid="${_uuid}"
+	v-on="${_state}.eventHandlers"
+	v-bind="${_state}.attributes"
+	:class="${_state}.styleClasses"
+	v-if="${_state}.visible"
+	>
+	
+	#foreach( $!child in $!component.children )
+		$!child.render()
+	#end
+
+</v-content>

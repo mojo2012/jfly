@@ -1,12 +1,11 @@
 <v-toolbar uuid="${_uuid}" 
 	:class="${_state}.styleClasses"
 	v-on="${_state}.eventHandlers"
-	v-model="${_state}"
-	app absolute clipped-left
+	app clipped-left fixed
 	v-bind="${_state}.attributes"
 	:dense="${_state}.slim"
 	:color="${_state}.color"
-	v-if="${_state}.visible">
+	v-show="${_state}.visible">
 
 	$!{component.leftActionItem.render()}
 	
