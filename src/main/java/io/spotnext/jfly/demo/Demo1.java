@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.spotnext.jfly.Server;
-import io.spotnext.jfly.ViewHandler;
+import io.spotnext.jfly.SinglePageApplication;
 import io.spotnext.jfly.attributes.Attributes.GridAlignment;
 import io.spotnext.jfly.attributes.Attributes.GridBehavior;
 import io.spotnext.jfly.attributes.Attributes.HorizontalOrientation;
@@ -39,7 +39,7 @@ import io.spotnext.jfly.util.Localizable;
 import io.spotnext.jfly.util.LocalizationBundle;
 import j2html.TagCreator;
 
-public class Demo1 extends ViewHandler {
+public class Demo1 extends SinglePageApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
 
 	private final static LocalizationBundle localizations = new LocalizationBundle("messages/demo_messages");
@@ -229,8 +229,12 @@ public class Demo1 extends ViewHandler {
 	 */
 	public static void main(final String[] args) {
 		final Server server = new Server(8080);
-		server.registerViewHandler("/", Demo1.class);
+		server.registerViewHandler(Arrays.asList("/"), Demo1.class);
 		server.start();
 	}
 
+	@Override
+	public void route(String url, boolean flushChanges) {
+
+	}
 }

@@ -74,11 +74,17 @@ public abstract class ViewHandler implements ComponentHandler {
 		html = new Html(this);
 		html.setHead(createHeader());
 		html.setBody(createBody());
+
+		setupRouting(html.getBody());
+	}
+
+	private void setupRouting(Body body) {
+		body.onLocationChange(this::onLocationChanged);
 	}
 
 	/**
-	 * Defines the path under which the velocity template files for rendering the UI
-	 * components in the browser is looked for. The path has to be in the
+	 * Defines the path under which the velocity template files for rendering
+	 * the UI components in the browser is looked for. The path has to be in the
 	 * classpath.<br />
 	 * Default: {@link Server#DEFAULT_COMPONENT_TEMPLATE_PATH}
 	 */
@@ -111,14 +117,15 @@ public abstract class ViewHandler implements ComponentHandler {
 
 		// if this is an initial request, we return the current component states
 		if (MessageType.initialStateRequest.equals(message.getType())) {
+			route(message.getUrl(), false);
 			sendMessage(getApplicationState());
-
 		} else if (MessageType.event.equals(message.getType())) {
 			EventMessage eventMessage = (EventMessage) message;
 
 			// handle browser history changes
-			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())) {
-				onBrowserHistoryChange(eventMessage);
+			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())
+					|| Events.JsEvent.HashChange.equals(eventMessage.getEventType())) {
+				onLocationChanged(eventMessage.getDomEventData());
 
 			} else if (Events.JsEvent.BeforeUnload.equals(eventMessage.getEventType())) {
 				// before unload is also called on browser refresh
@@ -144,8 +151,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		return retVal;
 	}
 
-	protected void handleEvent(final Component component, final EventType eventType,
-			final DomEvent payload) {
+	protected void handleEvent(final Component component, final EventType eventType, final DomEvent payload) {
 		try {
 			((EventTarget) component).handleEvent(payload);
 		} catch (Exception ex) {
@@ -204,7 +210,8 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	/**
-	 * Calls a javascript function on the given object with the given parameters.
+	 * Calls a javascript function on the given object with the given
+	 * parameters.
 	 * 
 	 * @param component
 	 * @param method
@@ -335,8 +342,11 @@ public abstract class ViewHandler implements ComponentHandler {
 		onDestroyEventListener.add(eventListener);
 	}
 
-	protected void onBrowserHistoryChange(EventMessage eventMessage) {
-		// to be implemented by subclasses
+	public void onLocationChanged(DomEvent event) {
+		String url = (String) event.getData().get("currentUrl");
+		String urlHash = (String) event.getData().get("currentUrlHash");
+
+		route(url + urlHash, true);
 	}
 
 	/*
@@ -363,6 +373,7 @@ public abstract class ViewHandler implements ComponentHandler {
 		String ret = html.render();
 
 		ret = StringUtils.replace(ret, "${componentStates}", JsonUtil.toJson(getApplicationState()));
+		ret = StringUtils.replace(ret, "${viewId}", JsonUtil.toJson(this.getViewUid()));
 
 		if (formatOutput) {
 			ret = format(ret);
@@ -375,4 +386,8 @@ public abstract class ViewHandler implements ComponentHandler {
 		Document doc = Jsoup.parse(html);
 		return doc.outerHtml();
 	}
+
+	public abstract String getViewUid();
+
+	public abstract void route(String url, boolean flushChanges);
 }

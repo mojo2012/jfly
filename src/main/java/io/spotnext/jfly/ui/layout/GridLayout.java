@@ -20,9 +20,18 @@ public class GridLayout extends AbstractLayoutComponent {
 			GridGutterSize gutterSize) {
 
 		super(handler);
-		this.size = size;
-		this.gutterSize = gutterSize;
-		this.behavior = behavior;
+
+		if (size != null) {
+			this.size = size;
+		}
+
+		if (gutterSize != null) {
+			this.gutterSize = gutterSize;
+		}
+
+		if (behavior != null) {
+			this.behavior = behavior;
+		}
 	}
 
 	public GridLayoutSize getSize() {

@@ -47,6 +47,7 @@ public interface Events {
 		public static JsEvent Reset = new JsEvent("reset");
 
 		// window history navigation events
+		public static JsEvent HashChange = new JsEvent("hashchange");
 		public static JsEvent PopState = new JsEvent("popstate");
 		public static JsEvent Unload = new JsEvent("unload");
 		public static JsEvent BeforeUnload = new JsEvent("onbeforeunload");

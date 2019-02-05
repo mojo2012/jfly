@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import io.spotnext.jfly.ViewHandler;
+import io.spotnext.jfly.PageOrientedApplication;
 import io.spotnext.jfly.ui.generic.GenericContainer;
 import io.spotnext.jfly.ui.generic.HtmlTag;
 import io.spotnext.jfly.ui.html.Body;
 import io.spotnext.jfly.ui.html.Head;
 import j2html.TagCreator;
 
-public class ExceptionViewHandler extends ViewHandler {
+public class ExceptionViewHandler extends PageOrientedApplication {
 
 	@Override
 	protected Head createHeader() {
@@ -41,4 +41,8 @@ public class ExceptionViewHandler extends ViewHandler {
 		return Arrays.asList(Locale.ENGLISH);
 	}
 
+	@Override
+	public void route(String url, boolean flushChanges) {
+		//
+	}
 }

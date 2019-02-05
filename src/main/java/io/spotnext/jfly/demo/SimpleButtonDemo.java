@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.spotnext.jfly.Server;
-import io.spotnext.jfly.ViewHandler;
+import io.spotnext.jfly.SinglePageApplication;
 import io.spotnext.jfly.attributes.Attributes.GridLayoutSize;
 import io.spotnext.jfly.ui.action.Button;
 import io.spotnext.jfly.ui.display.Label;
@@ -14,7 +14,7 @@ import io.spotnext.jfly.ui.html.Head;
 import io.spotnext.jfly.ui.layout.GridLayout;
 import io.spotnext.jfly.util.Localizable;
 
-public class SimpleButtonDemo extends ViewHandler {
+public class SimpleButtonDemo extends SinglePageApplication {
 	@Override
 	protected Head createHeader() {
 		return new Head(getHandler()).setTitle("jfly UI framework");
@@ -30,8 +30,7 @@ public class SimpleButtonDemo extends ViewHandler {
 	}
 
 	private void createMainContent(Body body) {
-		GridLayout mainContainer = new GridLayout(getHandler());
-		mainContainer.setSize(GridLayoutSize.XS1);
+		GridLayout mainContainer = new GridLayout(getHandler(), null, GridLayoutSize.XS1, null);
 
 		body.addChildren(mainContainer);
 
@@ -55,8 +54,13 @@ public class SimpleButtonDemo extends ViewHandler {
 	 */
 	public static void main(final String[] args) {
 		final Server server = new Server(8080);
-		server.registerViewHandler("/", SimpleButtonDemo.class);
+		server.registerViewHandler(Arrays.asList("/"), SimpleButtonDemo.class);
 		server.start();
+	}
+
+	@Override
+	public void route(String url, boolean flushChanges) {
+
 	}
 
 }

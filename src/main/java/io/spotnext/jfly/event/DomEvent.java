@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -278,9 +277,13 @@ public class DomEvent extends ComponentEvent {
 		this.which = which;
 	}
 
-	@JsonAnyGetter
+	@JsonAnySetter
 	public Map<String, Object> getData() {
 		return data != null ? data : Collections.emptyMap();
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data.putAll(data);
 	}
 
 	@JsonAnySetter

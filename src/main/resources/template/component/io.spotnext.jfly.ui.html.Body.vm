@@ -26,5 +26,6 @@
 	
 	<script>
 		var applicationState = ${componentStates};
+		var viewId = ${viewId};
 	</script>
 </body>

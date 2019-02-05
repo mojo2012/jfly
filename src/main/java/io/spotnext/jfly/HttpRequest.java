@@ -12,12 +12,14 @@ public class HttpRequest {
 	private final KeyValueMapping<String, String> cookies = new KeyValueMapping<>();
 
 	private HttpMethod method;
+	private String url;
 	private HttpSession session;
 
-	public HttpRequest(HttpMethod method, Map<String, String> parameters, Map<String, String> cookies,
+	public HttpRequest(HttpMethod method, String url, Map<String, String> parameters, Map<String, String> cookies,
 			HttpSession session) {
 
 		this.method = method;
+		this.url = url;
 		this.parameters.putAll(parameters);
 		this.cookies.putAll(cookies);
 		this.session = session;
@@ -45,6 +47,14 @@ public class HttpRequest {
 
 	public KeyValueMapping<String, String> getCookies() {
 		return cookies;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

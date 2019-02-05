@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import io.spotnext.jfly.http.websocket.KeepAliveMessage;
 import io.spotnext.jfly.http.websocket.Message;
 import io.spotnext.jfly.http.websocket.Message.MessageType;
 import io.spotnext.jfly.util.JsonUtil;
+import io.spotnext.jfly.util.KeyValueListMapping;
 import io.spotnext.jfly.util.KeyValueMapping;
 import io.spotnext.jfly.viewhandlers.ExceptionViewHandler;
 import spark.Filter;
@@ -51,13 +53,17 @@ public class Server implements ClientCommunicationHandler {
 	protected final KeyValueMapping<String, Session> websocketSessions = new KeyValueMapping<>();
 	protected final ThreadLocal<Session> currentWebSocketSession = new ThreadLocal<>();
 
-	protected final KeyValueMapping<String, KeyValueMapping<String, ViewHandler>> sessionViewHandlers = new KeyValueMapping<>();
-	protected final KeyValueMapping<String, Class<? extends ViewHandler>> urlViewHandlerMapping = new KeyValueMapping<>();
+	protected final KeyValueListMapping<String, ViewHandler> sessionViewHandlers = new KeyValueListMapping<>();
+	protected final KeyValueMapping<String, Class<? extends ViewHandler>> viewHandlerMapping = new KeyValueMapping<>();
 	protected final KeyValueMapping<String, Consumer<ViewHandler>> urlViewHandlerPostProcessorMapping = new KeyValueMapping<>();
 
 	protected List<BiConsumer<HttpSession, Message>> onMessageReceivedHandlers = new ArrayList<>();
 
 	protected Service service;
+
+	public Server(final int port) {
+		this(port, null, null);
+	}
 
 	/**
 	 * Creates a new jfly ViewHandler.
@@ -66,19 +72,28 @@ public class Server implements ClientCommunicationHandler {
 	 * @param staticFileLocation
 	 * @param componentTemplatePath
 	 */
-	public Server(final int port) {
+	public Server(final int port, BiConsumer<Request, Response> beforeFilter,
+			BiConsumer<Request, Response> afterFilter) {
+
 		service = Service.ignite();
 		service.port(port);
 		service.webSocket(DEFAULT_WEBSOCKET_PATH, this);
 		service.staticFileLocation(DEFAULT_STATIC_FILE_PATH);
 
+		if (beforeFilter != null) {
+			service.before((req, res) -> beforeFilter.accept(req, res));
+		}
+
+		if (afterFilter != null) {
+			service.after((req, res) -> afterFilter.accept(req, res));
+		}
+
 		// NOT YET WORKING: Service.hasMultipleHandlers() returns wrong value in
-		// case a
-		// websocket handler is set ...
+		// case a websocket handler is set ...
 		// redirect to the error page in case there is a 404 error
 		service.notFound((req, res) -> {
 			res.status(HttpStatus.NOT_FOUND_404);
-			res.body("PagenNot found");
+			res.body("Page not found");
 			return null;
 		});
 
@@ -99,7 +114,7 @@ public class Server implements ClientCommunicationHandler {
 			res.body("An error occurred");
 		});
 
-		registerViewHandler("/error", ExceptionViewHandler.class);
+		registerViewHandler(Arrays.asList("/error"), ExceptionViewHandler.class);
 	}
 
 	protected ExceptionViewHandler getErrorHandler(Request request) {
@@ -108,23 +123,25 @@ public class Server implements ClientCommunicationHandler {
 		return handler;
 	}
 
-	public Server registerViewHandler(String url, Class<? extends ViewHandler> handler) {
-		return registerViewHandler(url, handler, null);
+	public Server registerViewHandler(List<String> urls, Class<? extends ViewHandler> handler) {
+		return registerViewHandler(urls, handler, null);
 	}
 
-	public Server registerViewHandler(String url, Class<? extends ViewHandler> handler,
+	public Server registerViewHandler(List<String> urls, Class<? extends ViewHandler> handler,
 			Consumer<ViewHandler> postProcessor) {
 
-		urlViewHandlerMapping.put(url, handler);
+		for (String url : urls) {
+			service.get(url, (req, res) -> {
+				final String pathInfo = req.raw().getPathInfo();
 
-		if (postProcessor != null) {
-			urlViewHandlerPostProcessorMapping.put(url, postProcessor);
+				if (!pathInfo.equals(DEFAULT_WEBSOCKET_PATH)) {
+					httpSessions.put(req.session().id(), req.session().raw());
+					return render(handler, postProcessor, req, res);
+				}
+
+				return null;
+			});
 		}
-
-		service.get(url, (req, res) -> {
-			httpSessions.put(req.session().id(), req.session().raw());
-			return render(req, res);
-		});
 
 		return this;
 	}
@@ -206,11 +223,11 @@ public class Server implements ClientCommunicationHandler {
 				if (MessageType.keepAlive.equals(msg.getType())) {
 					sendMessage(new KeepAliveMessage());
 				} else {
-					final ViewHandler app = getViewHandler(msg.getSessionId(), msg.getUrl());
+					final ViewHandler viewHandler = getViewHandler(msg.getSessionId(), msg.getViewId());
 
-					if (app != null) {
+					if (viewHandler != null) {
 						try {
-							app.handleMessage(msg);
+							viewHandler.handleMessage(msg);
 						} catch (Exception e) {
 							// send back an error message to allow the UI to
 							// react properly
@@ -304,11 +321,13 @@ public class Server implements ClientCommunicationHandler {
 	 * ViewHandler functionality
 	 */
 
-	protected String render(final Request request, final Response response) throws Exception {
+	protected String render(Class<? extends ViewHandler> handler, Consumer<ViewHandler> postProcessor,
+			final Request request, final Response response) throws Exception {
+
 		ViewHandler view = null;
 
 		try {
-			view = getOrCreateViewHandler(request);
+			view = getOrCreateViewHandler(request, handler, postProcessor);
 
 			Cookie cookie = new Cookie();
 			cookie.setName("sessionId");
@@ -333,57 +352,46 @@ public class Server implements ClientCommunicationHandler {
 		return JsonUtil.fromJson(new String(Base64.getDecoder().decode(cookieString)), Cookie.class);
 	}
 
-	protected KeyValueMapping<String, ViewHandler> getViewHandlerMapping(String sessionId) {
-		KeyValueMapping<String, ViewHandler> mapping = sessionViewHandlers.get(sessionId);
+	// protected KeyValueMapping<String, ViewHandler>
+	// getViewHandlerMapping(String sessionId) {
+	// KeyValueMapping<String, ViewHandler> mapping =
+	// sessionViewHandlers.get(sessionId);
+	//
+	// if (mapping == null) {
+	// mapping = new KeyValueMapping<>();
+	// sessionViewHandlers.put(sessionId, mapping);
+	// }
+	//
+	// return mapping;
+	// }
 
-		if (mapping == null) {
-			mapping = new KeyValueMapping<>();
-			sessionViewHandlers.put(sessionId, mapping);
-		}
+	protected ViewHandler getViewHandler(String sessionId, String viewId) {
+		List<ViewHandler> views = sessionViewHandlers.get(sessionId);
 
-		return mapping;
+		return views.stream().filter(v -> viewId.equals(v.getViewUid())).findFirst().orElse(null);
 	}
 
-	protected ViewHandler getViewHandler(String sessionId, String url) {
-		return getViewHandlerMapping(sessionId).get(url);
-	}
+	protected ViewHandler getOrCreateViewHandler(Request request, Class<? extends ViewHandler> handler,
+			Consumer<ViewHandler> postProcessor) throws InstantiationException, IllegalAccessException {
 
-	protected ViewHandler getOrCreateViewHandler(Request request)
-			throws InstantiationException, IllegalAccessException {
+		ViewHandler view = null;
 
-		final KeyValueMapping<String, ViewHandler> mapping = getViewHandlerMapping(request.session().id());
-		ViewHandler view = mapping.get(request.uri());
+		try {
+			Constructor<? extends ViewHandler> constructor = handler.getDeclaredConstructor();
+			final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
+			view = newViewHandler;
 
-		if (view == null) {
-			// get view handler class from registered view handlers mappings and
-			// put it into the session mapping object
-
-			try {
-				Constructor<? extends ViewHandler> constructor = urlViewHandlerMapping.get(request.uri())
-						.getDeclaredConstructor();
-				final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
-				view = newViewHandler;
-
-				urlViewHandlerPostProcessorMapping.apply(request.uri(), i -> i.accept(newViewHandler));
-			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-					| SecurityException e) {
-
-				throw new InstantiationException(
-						String.format("Could not create view handler for url %s", request.uri()));
-			}
-
-			view.init(createRequest(request), this);
-
-			final String url = request.uri();
-
-			view.onDestroy(() -> {
-				mapping.remove(url);
-
-				LOG.debug(String.format("Destroyed view %s", request.uri()));
-			});
-
-			mapping.put(request.uri(), view);
+			postProcessor.accept(newViewHandler);
+			sessionViewHandlers.putOrAdd(request.session().id(), view);
+		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			throw new InstantiationException(String.format("Could not create view handler for url %s", request.uri()));
 		}
+
+		view.init(createRequest(request), this);
+
+		view.onDestroy(() -> {
+			LOG.debug(String.format("Destroyed view %s", request.uri()));
+		});
 
 		return view;
 	}
@@ -394,7 +402,7 @@ public class Server implements ClientCommunicationHandler {
 		request.session().attributes().forEach(k -> sessionAttributes.put(k, request.session().attribute(k)));
 		io.spotnext.jfly.http.HttpSession session = new io.spotnext.jfly.http.HttpSession(sessionId, sessionAttributes);
 
-		HttpRequest req = new HttpRequest(HttpMethod.valueOf(request.requestMethod()), request.params(),
+		HttpRequest req = new HttpRequest(HttpMethod.valueOf(request.requestMethod()), request.uri(), request.params(),
 				request.cookies(), session);
 
 		return req;

@@ -1,10 +1,8 @@
-// for bootstrap compatibility reasons
 jfly = {
 	constants : {
 		COMPONENT_STATES: "componentStates",
 		ATTRIBUTE_UUID: "uuid",
 	}
-		
 };
 
 jfly.connection = {};
@@ -28,13 +26,14 @@ jfly.websockethandler = {
 	
 	// send a message to the server
 	send(message) {
-		var jsonCookieString = atob(jfly.getCookie("jfly"));
-		var jsonCookie = JSON.parse(jsonCookieString);
+		let jsonCookieString = atob(jfly.getCookie("jfly"));
+		let jsonCookie = JSON.parse(jsonCookieString);
 		message.sessionId = jsonCookie.value;
+		message.viewId = viewId;
 		message.url = window.location.pathname;
 //		message.locale = navigator.language;
 		
-		var msg = jfly.toString(message);
+		let msg = jfly.toString(message);
 		
 		// check the connection status and re-initialize connection in case it's disconnected
 		if (jfly.websockethandler.connection.readyState == 3) {
@@ -44,6 +43,7 @@ jfly.websockethandler = {
 		try {
 			jfly.websockethandler.connection.send(msg);
 		} catch (e) {
+			console.log(e);
 			jfly.uicontroller.showExceptionDialog({ description: "Sorry, the service seems to be interrupted." });
 		}
 	},
@@ -52,14 +52,16 @@ jfly.websockethandler = {
 	onopen: function (event) {
 		console.debug('WebSocket onopen ' + event);
 		
-		// only request initial component states if vue has not yet been initialized
-		if (!jfly.uicontroller) {
+		if (applicationState) {
+			jfly.initVue(applicationState);
+		} else {
+			// only request initial component states if vue has not yet been initialized
 			jfly.callAsync(function() {
 				jfly.websockethandler.send({ "type": 'initialStateRequest' });
 			});
-			
-			jfly.websockethandler.keepAlive();
 		}
+		
+		jfly.websockethandler.keepAlive();
 	},
 	
 	onclose: function (event) {
@@ -74,7 +76,7 @@ jfly.websockethandler = {
 	// Log messages from the server
 	onmessage: function (event) {
 		console.debug('WebSocket onmessage');
-		var message = JSON.parse(event.data);
+		let message = JSON.parse(event.data);
 		
 		if (message.type == "keepAlive") {
 			// ignore pong
@@ -83,10 +85,10 @@ jfly.websockethandler = {
 				jfly.initVue(message);
 			});
 		} else if (message.type == "componentManipulation") {
-			var component = jfly.findComponent(message.componentUuid);
+			let component = jfly.findComponent(message.componentUuid);
 			component[message.method].apply(component, message.parameters);
 		} else if (message.type == "functionCall") {
-			var func = window[message.object][message.functionCall];
+			let func = window[message.object][message.functionCall];
 			func.apply(func, message.parameters);
 		} else if (message.type == "componentStateUpdate") {
 //			jfly.uicontroller.componentStates[message.componentUuid] = message.componentState;
@@ -115,7 +117,7 @@ jfly.reloadApp = function() {
 };
 
 jfly.getCookie = function(cookieId, subKey) {
-	var cookies = jfly.getCookies();
+	let cookies = jfly.getCookies();
 	
 	if (subKey) {
 		return cookies[cookieId][subKey];
@@ -125,12 +127,12 @@ jfly.getCookie = function(cookieId, subKey) {
 }
 
 jfly.getCookies = function(){
-	var cookies = {};
+	let cookies = {};
 	for (c of document.cookie.split(";")) {
-		var obj = c.split("=");
+		let obj = c.split("=");
 		
-		var key = obj[0].trim();
-		var value = obj[1];
+		let key = obj[0].trim();
+		let value = obj[1];
 		
 		try {
 			value = JSON.parse(JSON.parse(value));
@@ -143,7 +145,7 @@ jfly.getCookies = function(){
 }
 
 jfly.findComponent = function(componentUuid) {
-	var component = $("[" + jfly.constants.ATTRIBUTE_UUID + "='" + componentUuid + "']");
+	let component = $("[" + jfly.constants.ATTRIBUTE_UUID + "='" + componentUuid + "']");
 	
 	return component;
 };
@@ -161,7 +163,7 @@ jfly.addChildComponent = function(containerUuid, childHtml, childContext) {
 };
 
 jfly.replaceComponent = function(componentUuid, component) {
-	var elem = $(component);
+	let elem = $(component);
 	
 	jfly.findComponent(componentUuid).replaceWith(elem);
 	jfly.setupEventHandling(jfly.findComponent(componentUuid));
@@ -194,16 +196,16 @@ jfly.replaceElementWithId = function(id, element) {
 };
 
 jfly.debounce = function(func, wait, immediate) {
-	var timeout;
+	let timeout;
 	
 	return function() {
-		var context = this, args = arguments;
-		var later = function() {
+		let context = this, args = arguments;
+		let later = function() {
 			timeout = null;
 			if (!immediate) func.apply(context, args);
 		};
 		
-		var callNow = immediate && !timeout;
+		let callNow = immediate && !timeout;
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
 		
@@ -212,37 +214,21 @@ jfly.debounce = function(func, wait, immediate) {
 };
 
 jfly.init = function() {
-	jfly.callAsync(function() {
-		jfly.websockethandler.init();
-	})
-
-	// check if the application state is already pre rendered
-	// if not, it will be requested after the websocket connection has been established
-	if (applicationState) {
-		jfly.initVue(applicationState);
-	}
-
-	// set the first history state, this is necessary to make the onpopstate work
-	window.history.pushState({page: 1}, "", "");
+	jfly.websockethandler.init();
 	
-	if (!window.location.hash) {
-		window.location.hash = "#/";
-	}
-	
-    // The popstate event is fired each time when the current history entry changes.
-	window.onpopstate = function(event) {
-		// Stay on the current page.
-//		history.pushState(null, null, window.location.pathname + window.location.hash);
-		
-		// send popstate event to the backend
-		let data = { currentUrl: window.location.pathname, currentUrlHash: window.location.hash}
-		jfly.uicontroller.handleEvent("popstate", null, event, data);
+	// TODO bug in vue? hashchange is not working properly
+	window.onhashchange = function(event) {
+		jfly.uicontroller.handleEvent("hashchange", null, event, jfly.getCurrentUrlLocation());
 	};
 	
 	window.onbeforeunload = function(event) {
-		//jfly.uicontroller.handleEvent("onbeforeunload", null, event);
+//		window.history.pushState({page: 1}, "", "");
 	}
 };
+
+jfly.getCurrentUrlLocation = function() {
+	return { currentUrl: window.location.pathname, currentUrlHash: window.location.hash };
+}
 
 jfly.initVue = function(initMessage) {
 	jfly.uicontroller = new Vue({
@@ -252,7 +238,7 @@ jfly.initVue = function(initMessage) {
 		methods: {
 			// this weird little debounce functionality prevents event flooding
 			handleEvent: function(event, componentUuid, eventData, additionalData) {
-				var message = {};
+				let message = {};
 				
 				// special handling for vuetify components that don't emit native JS events
 				// eg. dropdown box which only provides the selected menuItem as eventData
@@ -274,7 +260,7 @@ jfly.initVue = function(initMessage) {
 			},
 			
 			serializeEvent: function(e) {
-				var ret = null;
+				let ret = null;
 				
 				if (e) {
 					ret = {
@@ -331,14 +317,14 @@ jfly.initVue = function(initMessage) {
 			},
 			
 			addChildComponent: function(containerUuid, childHtml, childContext) {
-				var childUuid = childContext.uuid;
+				let childUuid = childContext.uuid;
 
 				this.componentStates[childContext.uuid] = childContext;
 				
 				// "this" can't be referenced within the data function,
 				// so we have to create a proxy for it
-				var parent = this;
-				var Component = Vue.extend({
+				let parent = this;
+				let Component = Vue.extend({
 					parent: jfly.uicontroller,
 					template: childHtml,
 					data: function() {
@@ -352,7 +338,7 @@ jfly.initVue = function(initMessage) {
 					// TOOD: also map filters and other stuff?
 				});
 					 
-				var component = new Component().$mount();
+				let component = new Component().$mount();
 				jfly.findComponent(containerUuid).append(component.$el);
 			},
 			
@@ -362,12 +348,12 @@ jfly.initVue = function(initMessage) {
 			},
 			
 			localize: function(value) {
-				var ret = value;
+				let ret = value;
 				
 				if (value && value.defaultValue) {
 					ret = value.defaultValue;
 				} else if (value && value.values) {
-					var globalState = this.globalState;
+					let globalState = this.globalState;
 					
 					ret = value.values[globalState.currentLocale.code];
 					
@@ -405,12 +391,12 @@ jfly.initVue = function(initMessage) {
 		beforeMount: function() {
 			console.debug("Vue beforeMount");
 			
-			var vue = this;
+			let vue = this;
 			
 			// register events
 			for (uuid in this.componentStates) {
-				var componentState = this.componentStates[uuid];
-				var events = componentState.registeredEvents;
+				let componentState = this.componentStates[uuid];
+				let events = componentState.registeredEvents;
 				
 				if (events) {
 					componentState.eventHandlers = {};
@@ -419,9 +405,9 @@ jfly.initVue = function(initMessage) {
 						// this is an ugly hack to put the loop's "current" component uuid into the closure.
 						// if not wrapped into a anonymous function, the last uuid of the loop will be used for all event handlers
 						(function(){
-							var compUuid = uuid;
+							let compUuid = uuid;
 							
-							var handler = function(eventData) {
+							let handler = function(eventData) {
 								vue.handleEvent(event, compUuid, eventData);
 							};
 							
@@ -438,16 +424,16 @@ jfly.initVue = function(initMessage) {
 			
 			// search for all components that want one or more of its properties being watched for changes
 			$("[watch-for-state-change]").each(function(i) {
-				var propertiesToWatch = eval($(this).attr("watch-for-state-change"));
-				var componentUuid = $(this).attr(jfly.constants.ATTRIBUTE_UUID);
+				let propertiesToWatch = eval($(this).attr("watch-for-state-change"));
+				let componentUuid = $(this).attr(jfly.constants.ATTRIBUTE_UUID);
 				
 				propertiesToWatch.forEach(function(property) {
-					var selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
+					let selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
 					
 					(function(){
 						vue.$watch(selector, jfly.debounce(function(newValue, oldValue) {
 							// have to create the object like this, otherwise property would be "optimized out" ...
-							var eventData = {};
+							let eventData = {};
 							eventData[property] = newValue;
 							
 							vue.handleEvent("stateChanged", componentUuid, eventData);
@@ -459,6 +445,11 @@ jfly.initVue = function(initMessage) {
 		},
 		mounted: function() {
 			console.debug("Vue mounted");
+			
+			let body = $("body")[0];
+			let bodyComponentId = body.attributes["uuid"].value;
+			
+			this.handleEvent("load", bodyComponentId, jfly.getCurrentUrlLocation(), null);
 		},
 	});
 }

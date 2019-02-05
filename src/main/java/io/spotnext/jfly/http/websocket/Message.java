@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public class Message {
 	private MessageType type;
 	private String sessionId;
+	private String viewId;
 	private String url;
 
 	public Message() {
@@ -46,6 +47,14 @@ public class Message {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getViewId() {
+		return viewId;
+	}
+
+	public void setViewId(String viewId) {
+		this.viewId = viewId;
 	}
 
 	public enum MessageType {

@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +27,8 @@ import io.spotnext.jfly.util.KeyValueListMapping;
 import io.spotnext.jfly.util.KeyValueMapping;
 
 public abstract class AbstractComponent implements Component, EventTarget, Comparable<AbstractComponent> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractComponent.class);
 
 	@JsonIgnore
 	private final transient List<ClientUpdateCommand> drawCommands = new LinkedList<>();
@@ -129,8 +133,8 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	 */
 
 	/**
-	 * Registers an event handler for the given javascript event. The event can be
-	 * unregistered by passing null as handler.
+	 * Registers an event handler for the given javascript event. The event can
+	 * be unregistered by passing null as handler.
 	 * 
 	 * @param eventType
 	 * @param handler
@@ -150,7 +154,11 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	public void handleEvent(final DomEvent event) {
 		final List<EventHandler> handlers = eventHandlers.get(event.getEventType());
 
-		handlers.stream().forEach((h) -> h.handle(event));
+		if (handlers.size() == 0) {
+			LOG.warn(String.format("No event handler for event '%s' found", event.getType()));
+		} else {
+			handlers.stream().forEach((h) -> h.handle(event));
+		}
 	}
 
 	@Override
@@ -167,14 +175,6 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	@Override
 	public List<ClientUpdateCommand> getClientUpdateCommands() {
 		return drawCommands;
-	}
-
-	public void setEventData(String data) {
-		this.eventData.add(data);
-	}
-
-	public List<String> getEventData() {
-		return this.eventData;
 	}
 
 	public Set<EventType> getRegisteredEvents() {
