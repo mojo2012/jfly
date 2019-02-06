@@ -126,6 +126,7 @@ public abstract class ViewHandler implements ComponentHandler {
 			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())
 					|| Events.JsEvent.HashChange.equals(eventMessage.getEventType())) {
 				onLocationChanged(eventMessage.getDomEventData());
+				flushClientUpdates();
 
 			} else if (Events.JsEvent.BeforeUnload.equals(eventMessage.getEventType())) {
 				// before unload is also called on browser refresh

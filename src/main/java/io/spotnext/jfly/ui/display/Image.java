@@ -13,6 +13,10 @@ public class Image extends AbstractComponent {
 	private Integer maxHeight;
 	private Integer maxWidth;
 
+	public Image(final ComponentHandler handler) {
+		this(handler, "");
+	}
+
 	public Image(final ComponentHandler handler, String sourceUrl) {
 		super(handler);
 		this.sourceUrl = sourceUrl;
@@ -33,6 +37,7 @@ public class Image extends AbstractComponent {
 
 	public void setAspectRatio(double aspectRatio) {
 		this.aspectRatio = aspectRatio;
+		updateClientComponent();
 	}
 
 	public Integer getHeight() {
@@ -41,6 +46,7 @@ public class Image extends AbstractComponent {
 
 	public void setHeight(Integer height) {
 		this.height = height;
+		updateClientComponent();
 	}
 
 	public Integer getWidth() {
@@ -49,6 +55,7 @@ public class Image extends AbstractComponent {
 
 	public void setWidth(Integer width) {
 		this.width = width;
+		updateClientComponent();
 	}
 
 	public Integer getMinHeight() {
@@ -57,6 +64,7 @@ public class Image extends AbstractComponent {
 
 	public void setMinHeight(Integer minHeight) {
 		this.minHeight = minHeight;
+		updateClientComponent();
 	}
 
 	public Integer getMinWidth() {
@@ -65,6 +73,7 @@ public class Image extends AbstractComponent {
 
 	public void setMinWidth(Integer minWidth) {
 		this.minWidth = minWidth;
+		updateClientComponent();
 	}
 
 	public Integer getMaxHeight() {
@@ -73,6 +82,7 @@ public class Image extends AbstractComponent {
 
 	public void setMaxHeight(Integer maxHeight) {
 		this.maxHeight = maxHeight;
+		updateClientComponent();
 	}
 
 	public Integer getMaxWidth() {
@@ -81,6 +91,7 @@ public class Image extends AbstractComponent {
 
 	public void setMaxWidth(Integer maxWidth) {
 		this.maxWidth = maxWidth;
+		updateClientComponent();
 	}
 
 }
