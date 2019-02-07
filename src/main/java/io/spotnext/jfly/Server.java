@@ -3,13 +3,19 @@ package io.spotnext.jfly;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -54,7 +60,6 @@ public class Server implements ClientCommunicationHandler {
 	protected final ThreadLocal<Session> currentWebSocketSession = new ThreadLocal<>();
 
 	protected final KeyValueListMapping<String, ViewHandler> sessionViewHandlers = new KeyValueListMapping<>();
-	protected final KeyValueMapping<String, Class<? extends ViewHandler>> viewHandlerMapping = new KeyValueMapping<>();
 	protected final KeyValueMapping<String, Consumer<ViewHandler>> urlViewHandlerPostProcessorMapping = new KeyValueMapping<>();
 
 	protected List<BiConsumer<HttpSession, Message>> onMessageReceivedHandlers = new ArrayList<>();
@@ -117,6 +122,29 @@ public class Server implements ClientCommunicationHandler {
 		registerViewHandler(Arrays.asList("/error"), ExceptionViewHandler.class);
 	}
 
+	private void startScavengerThread() {
+		final TimerTask scavenger = new TimerTask() {
+			@Override
+			public void run() {
+				final LocalDateTime threshold = LocalDateTime.now().minus(10l, ChronoUnit.MINUTES);
+
+				for (Map.Entry<String, List<ViewHandler>> handlers : sessionViewHandlers.entrySet()) {
+					final List<ViewHandler> expiredHandlers = handlers.getValue().stream() //
+							.filter(v -> v.lastKeepAlive.isBefore(threshold)) //
+							.collect(Collectors.toList());
+
+					for (ViewHandler h : expiredHandlers) {
+						sessionViewHandlers.remove(handlers.getKey(), h);
+					}
+				}
+
+				System.gc();
+			}
+		};
+
+		new Timer().scheduleAtFixedRate(scavenger, 60 * 1000, 60 * 1000);
+	}
+
 	protected ExceptionViewHandler getErrorHandler(Request request) {
 		ExceptionViewHandler handler = new ExceptionViewHandler();
 		handler.init(createRequest(request), this);
@@ -171,6 +199,7 @@ public class Server implements ClientCommunicationHandler {
 
 	public void start() {
 		service.init();
+		startScavengerThread();
 	}
 
 	/*
@@ -220,12 +249,13 @@ public class Server implements ClientCommunicationHandler {
 
 				onMessageReceivedHandlers.stream().forEach(h -> h.accept(getCurrentHttpSession(), msg));
 
-				if (MessageType.keepAlive.equals(msg.getType())) {
-					sendMessage(new KeepAliveMessage());
-				} else {
-					final ViewHandler viewHandler = getViewHandler(msg.getSessionId(), msg.getViewId());
+				final ViewHandler viewHandler = getViewHandler(msg.getSessionId(), msg.getViewId());
 
-					if (viewHandler != null) {
+				if (viewHandler != null) {
+					if (MessageType.keepAlive.equals(msg.getType())) {
+						viewHandler.lastKeepAlive = LocalDateTime.now();
+						sendMessage(new KeepAliveMessage());
+					} else {
 						try {
 							viewHandler.handleMessage(msg);
 						} catch (Exception e) {
@@ -235,9 +265,9 @@ public class Server implements ClientCommunicationHandler {
 
 							sendErrorMessage(null, e);
 						}
-					} else {
-						throw new IOException("No ViewHandler for the given session is found.");
 					}
+				} else {
+					throw new IOException("No ViewHandler for the given session is found.");
 				}
 			}
 		} catch (Throwable e) {

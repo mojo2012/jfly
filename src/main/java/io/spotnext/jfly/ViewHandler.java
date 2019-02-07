@@ -1,5 +1,6 @@
 package io.spotnext.jfly;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +42,8 @@ public abstract class ViewHandler implements ComponentHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ViewHandler.class);
 
 	public static final String DEFAULT_COMPONENT_TEMPLATE_PATH = "/template/component";
+
+	protected transient LocalDateTime lastKeepAlive;
 
 	protected final Map<String, Component> registeredComponents = new ConcurrentHashMap<>();
 	protected TemplateService templateService;
