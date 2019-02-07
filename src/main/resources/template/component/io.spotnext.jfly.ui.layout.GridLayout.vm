@@ -2,12 +2,12 @@
 	uuid="${_uuid}"
 	$!component.gutterSize text-xs-center 
 	
+	v-show="${_state}.visible" 
 	v-bind="${_state}.attributes"
 	:class="${_state}.styleClasses">
 
 	<v-layout
 		wrap row $!component.behavior
-		v-show="${_state}.visible" 
 		>
 		
 		#foreach( $!child in $!component.children )
