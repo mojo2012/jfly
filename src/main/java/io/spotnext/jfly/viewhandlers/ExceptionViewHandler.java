@@ -6,10 +6,9 @@ import java.util.Locale;
 
 import io.spotnext.jfly.PageOrientedApplication;
 import io.spotnext.jfly.ui.generic.GenericContainer;
-import io.spotnext.jfly.ui.generic.HtmlTag;
+import io.spotnext.jfly.ui.generic.SimpleHtmlTag;
 import io.spotnext.jfly.ui.html.Body;
 import io.spotnext.jfly.ui.html.Head;
-import j2html.TagCreator;
 
 public class ExceptionViewHandler extends PageOrientedApplication {
 
@@ -24,9 +23,12 @@ public class ExceptionViewHandler extends PageOrientedApplication {
 	protected Body createBody() {
 		Body body = new Body(this);
 
+		SimpleHtmlTag title = new SimpleHtmlTag(getHandler(), "h1");
+		title.setContent("Sorry, an error occurred");
+
 		GenericContainer errorHeader = new GenericContainer(this, "div");
 		errorHeader.addStyleClass("cover");
-		errorHeader.addChildren(new HtmlTag(this, TagCreator.h1("Sorry, an error occurred")));
+		errorHeader.addChildren(title);
 
 		GenericContainer container = new GenericContainer(this, "div");
 		container.addChildren(errorHeader);

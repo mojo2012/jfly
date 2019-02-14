@@ -1,6 +1,6 @@
 <v-container 
 	uuid="${_uuid}"
-	$!component.gutterSize text-xs-center 
+	$!component.gutterSize  
 	
 	v-show="${_state}.visible" 
 	v-bind="${_state}.attributes"

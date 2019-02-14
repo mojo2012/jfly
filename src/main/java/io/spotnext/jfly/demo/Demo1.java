@@ -24,7 +24,7 @@ import io.spotnext.jfly.ui.display.Icon;
 import io.spotnext.jfly.ui.display.Label;
 import io.spotnext.jfly.ui.display.Spacer;
 import io.spotnext.jfly.ui.generic.GenericContainer;
-import io.spotnext.jfly.ui.generic.HtmlTag;
+import io.spotnext.jfly.ui.generic.SimpleHtmlTag;
 import io.spotnext.jfly.ui.html.Body;
 import io.spotnext.jfly.ui.html.Head;
 import io.spotnext.jfly.ui.input.TextField;
@@ -37,7 +37,6 @@ import io.spotnext.jfly.ui.navigation.TreeView.NodeType;
 import io.spotnext.jfly.ui.selection.DropDownBox;
 import io.spotnext.jfly.util.Localizable;
 import io.spotnext.jfly.util.LocalizationBundle;
-import j2html.TagCreator;
 
 public class Demo1 extends SinglePageApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(Server.class);
@@ -113,7 +112,8 @@ public class Demo1 extends SinglePageApplication {
 						e1.printStackTrace();
 					}
 
-					HtmlTag comp = new HtmlTag(getHandler(), TagCreator.h2("Time: " + System.currentTimeMillis()));
+					SimpleHtmlTag comp = new SimpleHtmlTag(getHandler(), "h2");
+					comp.setContent(("Time: " + System.currentTimeMillis()));
 					actualContainer.addChildren(comp);
 
 					flushClientUpdates();

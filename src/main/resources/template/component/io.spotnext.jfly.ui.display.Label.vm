@@ -2,7 +2,8 @@
 	uuid="${_uuid}" v-on="${_state}.eventHandlers"
 	:class="${_state}.styleClasses" class="label" 
 	v-bind="${_state}.attributes"
-	v-show="${_state}.visible">
+	v-show="${_state}.visible"
+	v-html="localize(${_state}.text)"
+	>
 	
-	{{localize(${_state}.text)}}
 </span>

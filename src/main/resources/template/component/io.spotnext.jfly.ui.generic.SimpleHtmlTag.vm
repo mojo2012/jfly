@@ -1,0 +1,7 @@
+#macro( attributes )
+	uuid="${_uuid}" :class="${_state}.styleClasses" #foreach($attr in $!component.attributes.entrySet()) $attr.key="${attr.value}" #end  v-on="${_state}.eventHandlers"
+#end
+
+<${component.tagName} #attributes v-show="${_state}.visible" v-html="${_state}.content">
+	
+</${component.tagName}>

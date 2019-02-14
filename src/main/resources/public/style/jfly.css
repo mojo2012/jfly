@@ -1,5 +1,9 @@
 /* TREE VIEW FIXES */
 
+.justified {
+	text-align: justify;
+}
+
 .center {
 	text-align: center;
 	margin-left: auto;
@@ -60,7 +64,7 @@ div.splitter {
 	display: none;
 }
 
-.tag, .badge, .label {
+.tag, .badge {
 	background-color: #000;
 	border-color: #000;
 	color: #fff;
