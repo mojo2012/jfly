@@ -103,6 +103,10 @@ jfly.websockethandler = {
 	},
 }
 
+jfly.scrollTo = function(y) {
+	
+}
+
 // converts objects to json strings
 jfly.toString = function(object) {
 	return JSON.stringify(object);
