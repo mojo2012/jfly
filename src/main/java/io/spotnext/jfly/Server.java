@@ -62,7 +62,8 @@ public class Server implements ClientCommunicationHandler {
 	protected final KeyValueListMapping<String, ViewHandler> sessionViewHandlers = new KeyValueListMapping<>();
 	protected final KeyValueMapping<String, Consumer<ViewHandler>> urlViewHandlerPostProcessorMapping = new KeyValueMapping<>();
 
-	protected List<BiConsumer<HttpSession, Message>> onMessageReceivedHandlers = new ArrayList<>();
+	protected List<BiConsumer<HttpSession, Message>> onBeforeMessageReceivedHandlers = new ArrayList<>();
+	protected List<BiConsumer<HttpSession, Message>> onAfterMessageReceivedHandlers = new ArrayList<>();
 
 	protected Service service;
 
@@ -126,7 +127,7 @@ public class Server implements ClientCommunicationHandler {
 		final TimerTask scavenger = new TimerTask() {
 			@Override
 			public void run() {
-				final LocalDateTime threshold = LocalDateTime.now().minus(10l, ChronoUnit.MINUTES);
+				final LocalDateTime threshold = LocalDateTime.now().minus(20l, ChronoUnit.MINUTES);
 
 				for (Map.Entry<String, List<ViewHandler>> handlers : sessionViewHandlers.entrySet()) {
 					final List<ViewHandler> expiredHandlers = handlers.getValue().stream() //
@@ -155,8 +156,19 @@ public class Server implements ClientCommunicationHandler {
 		return registerViewHandler(urls, handler, null);
 	}
 
+	/**
+	 * 
+	 * @param urls
+	 *            the urls to handle
+	 * @param handler
+	 *            the {@link ViewHandler} class to be bound to the given urls
+	 * @param postProcessor
+	 *            as first argument the newly created {@link ViewHandler} is
+	 *            passed, the second argument is the current session id.
+	 * @return
+	 */
 	public Server registerViewHandler(List<String> urls, Class<? extends ViewHandler> handler,
-			Consumer<ViewHandler> postProcessor) {
+			BiConsumer<HttpSession, ViewHandler> postProcessor) {
 
 		for (String url : urls) {
 			service.get(url, (req, res) -> {
@@ -203,7 +215,7 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	/*
-	 * Websocket listener implementaito
+	 * Websocket listener implementation
 	 */
 
 	@OnWebSocketConnect
@@ -247,8 +259,6 @@ public class Server implements ClientCommunicationHandler {
 			if (StringUtils.isNotBlank(message)) {
 				final Message msg = JsonUtil.fromJson(message, Message.class);
 
-				onMessageReceivedHandlers.stream().forEach(h -> h.accept(getCurrentHttpSession(), msg));
-
 				final ViewHandler viewHandler = getViewHandler(msg.getSessionId(), msg.getViewId());
 
 				if (viewHandler != null) {
@@ -256,6 +266,8 @@ public class Server implements ClientCommunicationHandler {
 						viewHandler.lastKeepAlive = LocalDateTime.now();
 						sendMessage(new KeepAliveMessage());
 					} else {
+						onBeforeMessageReceivedHandlers.stream().forEach(h -> h.accept(getCurrentHttpSession(), msg));
+
 						try {
 							viewHandler.handleMessage(msg);
 						} catch (Exception e) {
@@ -264,6 +276,9 @@ public class Server implements ClientCommunicationHandler {
 							LOG.error("An error occurred", e);
 
 							sendErrorMessage(null, e);
+						} finally {
+							onAfterMessageReceivedHandlers.stream()
+									.forEach(h -> h.accept(getCurrentHttpSession(), msg));
 						}
 					}
 				} else {
@@ -351,7 +366,7 @@ public class Server implements ClientCommunicationHandler {
 	 * ViewHandler functionality
 	 */
 
-	protected String render(Class<? extends ViewHandler> handler, Consumer<ViewHandler> postProcessor,
+	protected String render(Class<? extends ViewHandler> handler, BiConsumer<HttpSession, ViewHandler> postProcessor,
 			final Request request, final Response response) throws Exception {
 
 		ViewHandler view = null;
@@ -382,19 +397,6 @@ public class Server implements ClientCommunicationHandler {
 		return JsonUtil.fromJson(new String(Base64.getDecoder().decode(cookieString)), Cookie.class);
 	}
 
-	// protected KeyValueMapping<String, ViewHandler>
-	// getViewHandlerMapping(String sessionId) {
-	// KeyValueMapping<String, ViewHandler> mapping =
-	// sessionViewHandlers.get(sessionId);
-	//
-	// if (mapping == null) {
-	// mapping = new KeyValueMapping<>();
-	// sessionViewHandlers.put(sessionId, mapping);
-	// }
-	//
-	// return mapping;
-	// }
-
 	protected ViewHandler getViewHandler(String sessionId, String viewId) {
 		List<ViewHandler> views = sessionViewHandlers.get(sessionId);
 
@@ -402,7 +404,7 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	protected ViewHandler getOrCreateViewHandler(Request request, Class<? extends ViewHandler> handler,
-			Consumer<ViewHandler> postProcessor) throws InstantiationException, IllegalAccessException {
+			BiConsumer<HttpSession, ViewHandler> postProcessor) throws InstantiationException, IllegalAccessException {
 
 		ViewHandler view = null;
 
@@ -411,7 +413,7 @@ public class Server implements ClientCommunicationHandler {
 			final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
 			view = newViewHandler;
 
-			postProcessor.accept(newViewHandler);
+			postProcessor.accept(request.session().raw(), newViewHandler);
 			sessionViewHandlers.putOrAdd(request.session().id(), view);
 		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new InstantiationException(String.format("Could not create view handler for url %s", request.uri()));
@@ -459,7 +461,17 @@ public class Server implements ClientCommunicationHandler {
 	}
 
 	// events
-	public void onReceiveMessage(BiConsumer<HttpSession, Message> handler) {
-		onMessageReceivedHandlers.add(handler);
+	public void onBeforeReceiveMessage(BiConsumer<HttpSession, Message> handler) {
+		onBeforeMessageReceivedHandlers.add(handler);
+	}
+
+	/**
+	 * This will be called after every new message that arrives, regardless if
+	 * the message could be processed successfully.
+	 * 
+	 * @param handler
+	 */
+	public void onAfterReceiveMessage(BiConsumer<HttpSession, Message> handler) {
+		onAfterMessageReceivedHandlers.add(handler);
 	}
 }
