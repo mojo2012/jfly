@@ -104,6 +104,17 @@
 							<arguments>run concat:js</arguments>
 						</configuration>
 					</execution>
+					
+					<execution>
+						<id>Run npm run concat:js-debug</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						
+						<configuration>
+							<arguments>run concat:js-debug</arguments>
+						</configuration>
+					</execution>
 				</executions>
 				
 				<configuration>
