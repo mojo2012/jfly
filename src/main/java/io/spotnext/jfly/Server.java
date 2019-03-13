@@ -413,7 +413,10 @@ public class Server implements ClientCommunicationHandler {
 			final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
 			view = newViewHandler;
 
-			postProcessor.accept(request.session().raw(), newViewHandler);
+			if (postProcessor != null) {
+				postProcessor.accept(request.session().raw(), newViewHandler);
+			}
+
 			sessionViewHandlers.putOrAdd(request.session().id(), view);
 		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new InstantiationException(String.format("Could not create view handler for url %s", request.uri()));
