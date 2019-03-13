@@ -406,15 +406,20 @@ public class Server implements ClientCommunicationHandler {
 	protected ViewHandler getOrCreateViewHandler(Request request, Class<? extends ViewHandler> handler,
 			BiConsumer<HttpSession, ViewHandler> postProcessor) throws InstantiationException, IllegalAccessException {
 
-		ViewHandler view = null;
+		// always use the same instance for single-page apps
+		ViewHandler view = SinglePageApplication.class.isAssignableFrom(handler)
+				? getViewHandler(request.session().id(), SinglePageApplication.VIEW_ID)
+				: null;
 
 		try {
-			Constructor<? extends ViewHandler> constructor = handler.getDeclaredConstructor();
-			final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
-			view = newViewHandler;
+			if (view == null) {
+				Constructor<? extends ViewHandler> constructor = handler.getDeclaredConstructor();
+				final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
+				view = newViewHandler;
+			}
 
 			if (postProcessor != null) {
-				postProcessor.accept(request.session().raw(), newViewHandler);
+				postProcessor.accept(request.session().raw(), view);
 			}
 
 			sessionViewHandlers.putOrAdd(request.session().id(), view);
@@ -424,8 +429,16 @@ public class Server implements ClientCommunicationHandler {
 
 		view.init(createRequest(request), this);
 
-		view.onDestroy(() -> {
+		view.onDestroy(viewHandler -> {
 			LOG.debug(String.format("Destroyed view %s", request.uri()));
+
+			Optional<ViewHandler> vHandler = sessionViewHandlers.get(viewHandler.getSessionId()).stream() //
+					.filter(v -> viewHandler.getViewUid().equals(v.getViewUid())) //
+					.findFirst();
+
+			if (vHandler.isPresent()) {
+				sessionViewHandlers.remove(viewHandler.getSessionId(), vHandler.get());
+			}
 		});
 
 		return view;

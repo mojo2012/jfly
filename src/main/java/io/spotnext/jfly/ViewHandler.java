@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -56,7 +57,7 @@ public abstract class ViewHandler implements ComponentHandler {
 	private boolean formatOutput = true;
 	private Locale currentLocale = Locale.getDefault();
 
-	protected final List<Runnable> onDestroyEventListener = new ArrayList<>();
+	protected final List<Consumer<ViewHandler>> onDestroyEventListener = new ArrayList<>();
 
 	public void init(HttpRequest request, final ClientCommunicationHandler handler) {
 		setSessionId(request.getSession().getId());
@@ -343,11 +344,11 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	public void destroy() {
-		onDestroyEventListener.stream().forEach(e -> e.run());
+		onDestroyEventListener.stream().forEach(e -> e.accept(this));
 		invokeFunctionCall("jfly", "reloadApp");
 	}
 
-	public void onDestroy(Runnable eventListener) {
+	public void onDestroy(Consumer<ViewHandler> eventListener) {
 		onDestroyEventListener.add(eventListener);
 	}
 
