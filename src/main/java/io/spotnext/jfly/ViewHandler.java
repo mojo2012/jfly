@@ -125,6 +125,8 @@ public abstract class ViewHandler implements ComponentHandler {
 		} else if (MessageType.event.equals(message.getType())) {
 			EventMessage eventMessage = (EventMessage) message;
 
+			String componentUuid = eventMessage.getComponentUuid();
+
 			// handle browser history changes
 			if (Events.JsEvent.PopState.equals(eventMessage.getEventType())
 					|| Events.JsEvent.HashChange.equals(eventMessage.getEventType())) {
@@ -135,18 +137,21 @@ public abstract class ViewHandler implements ComponentHandler {
 				// before unload is also called on browser refresh
 				// getHandler().destroy();
 
-			} else if (StringUtils.isNotBlank(eventMessage.getComponentUuid())) {
-				final Component component = getRegisteredComponents().get(eventMessage.getComponentUuid());
+			} else if (StringUtils.isNotBlank(componentUuid)) {
+				final Component component = getRegisteredComponents().get(componentUuid);
 
-				// apply changed states to the component
-				if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
-					ObjectUtils.populate(component, eventMessage.getComponentState());
+				if (component != null) {
+					// apply changed states to the component
+					if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
+						ObjectUtils.populate(component, eventMessage.getComponentState());
+					}
+
+					handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
+				} else {
+					LOG.warn(String.format("Received message of unknown sender component %s", componentUuid));
 				}
-
-				handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
-
 			} else {
-				LOG.warn("Received message of unknown sender component.");
+				LOG.warn(String.format("Received message of unknown sender component %s", componentUuid));
 			}
 		} else {
 			LOG.warn(String.format("Could not handle message of type %s", message.getType()));

@@ -250,6 +250,10 @@ jfly.initVue = function(initMessage) {
 					// events cannot be serialized, so we need this hack
 					message.domEventData = { ...this.serializeEvent(eventData), ...additionalData };
 				} else {
+					if (typeof(eventData) === "string") {
+						eventData = { "data" : eventData };						
+					}
+					
 					message.domEventData = { "eventName": event, "data": eventData };
 				}
 				
