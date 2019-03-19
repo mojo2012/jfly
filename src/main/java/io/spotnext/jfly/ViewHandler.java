@@ -1,5 +1,6 @@
 package io.spotnext.jfly;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ import io.spotnext.jfly.util.ObjectUtils;
 public abstract class ViewHandler implements ComponentHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ViewHandler.class);
 
-	public static final String DEFAULT_COMPONENT_TEMPLATE_PATH = "/template/component";
+	public static final String DEFAULT_COMPONENT_TEMPLATE_PATH = "/template/component".replaceAll("/", File.separator);
 
 	protected transient LocalDateTime lastKeepAlive;
 
@@ -54,7 +55,9 @@ public abstract class ViewHandler implements ComponentHandler {
 	protected String sessionId;
 
 	private Html html;
-	private boolean formatOutput = true;
+
+	// this can destroy the HTML output! (eg. removes misplaces <tr> tags
+	private boolean formatOutput = false;
 	private Locale currentLocale = Locale.getDefault();
 
 	protected final List<Consumer<ViewHandler>> onDestroyEventListener = new ArrayList<>();
@@ -393,7 +396,7 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	public String format(String html) {
-		Document doc = Jsoup.parse(html);
+		final Document doc = Jsoup.parse(html);
 		return doc.outerHtml();
 	}
 

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -115,9 +116,10 @@ public class Server implements ClientCommunicationHandler {
 		// redirect to the error page in case there is an exception during
 		// initial rendering of the view
 		service.exception(Exception.class, (ex, req, res) -> {
+			LOG.error("An error occurred", ex);
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			// TODO return nice error page
-			res.body("An error occurred");
+			res.body("An error occurred: " + ExceptionUtils.getMessage(ex));
 		});
 
 		registerViewHandler(Arrays.asList("/error"), ExceptionViewHandler.class);
