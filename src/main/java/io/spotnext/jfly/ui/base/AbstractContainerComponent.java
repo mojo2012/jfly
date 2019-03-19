@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.spotnext.jfly.ComponentHandler;
 import io.spotnext.jfly.attributes.Styles.Color;
+import io.spotnext.jfly.util.Container;
 
-public abstract class AbstractContainerComponent<C extends AbstractComponent> extends AbstractComponent {
+public abstract class AbstractContainerComponent<C extends AbstractComponent> extends AbstractComponent
+		implements Container<C> {
 
 	protected final transient List<Component> children = new ArrayList<>();
 	private Color color;
@@ -19,10 +19,11 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		super(handler);
 	}
 
-	public List<Component> getChildren() {
-		return Collections.unmodifiableList(children);
+	public List<C> getChildren() {
+		return (List<C>) Collections.unmodifiableList(children);
 	}
 
+	@Override
 	public void addChildren(final C... components) {
 		children.addAll(Arrays.asList(components));
 
@@ -37,11 +38,6 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		for (Component c : components) {
 			updateClient(ComponentManipulationFunction.REMOVE, this.getUuid(), c.getUuid());
 		}
-	}
-
-	@JsonProperty(value = "hasChildren")
-	public boolean hasChildren() {
-		return children.size() > 0;
 	}
 
 	public Color getColor() {

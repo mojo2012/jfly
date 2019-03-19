@@ -19,6 +19,9 @@ import io.spotnext.jfly.attributes.NavigationTarget;
 import io.spotnext.jfly.attributes.Styles.Color;
 import io.spotnext.jfly.ui.action.Button;
 import io.spotnext.jfly.ui.action.LinkAction;
+import io.spotnext.jfly.ui.data.Column;
+import io.spotnext.jfly.ui.data.DataTable;
+import io.spotnext.jfly.ui.data.DataTableRow;
 import io.spotnext.jfly.ui.display.Badge;
 import io.spotnext.jfly.ui.display.Icon;
 import io.spotnext.jfly.ui.display.Label;
@@ -84,6 +87,21 @@ public class Demo1 extends SinglePageApplication {
 		multiLineTextBox.setText("This is a test text");
 		multiLineTextBox.onChange(e -> System.out.print("Entered text: " + e.getData().get("value")));
 
+		final DataTable<DataTableObject> dataTable = new DataTable<>(getHandler());
+		dataTable.setAllowSelect(true);
+		dataTable.setNoDataText(Localizable.of("Empty"));
+		dataTable.setRowsPerPageText(Localizable.of("Max. rows per page"));
+		dataTable.addColumn(new Column("title", "Title"));
+		dataTable.addColumn(new Column("value", "Value"));
+
+		for (Column c : dataTable.getColumns()) {
+			c.setSortable(true);
+		}
+
+		for (int x = 0; x < 100; x++) {
+			dataTable.addChildren(new DataTableObject(x + "", "Test" + x, x + "500,--"));
+		}
+
 		final LinkAction linkAction = new LinkAction(getHandler(), Localizable.of("google.at"), "https://google.at",
 				NavigationTarget.Blank);
 
@@ -130,8 +148,8 @@ public class Demo1 extends SinglePageApplication {
 			throw new RuntimeException("Custom exception.");
 		});
 
-		actualContainer.addChildren(singleLineTextBox, multiLineTextBox, linkAction, dropdown, causeExceptionButton,
-				button);
+		actualContainer.addChildren(dataTable, singleLineTextBox, multiLineTextBox, linkAction, dropdown,
+				causeExceptionButton, button);
 
 		Label label = new Label(getHandler(), Localizable.of("Danger"));
 		label.addStyleClass(Color.RED);
@@ -237,5 +255,40 @@ public class Demo1 extends SinglePageApplication {
 	@Override
 	public void route(String url, boolean flushChanges) {
 
+	}
+
+	public static class DataTableObject implements DataTableRow {
+		String id;
+		String title;
+		String value;
+		boolean selected = false;
+
+		public DataTableObject(String id, String title, String value) {
+			this.id = id;
+			this.title = title;
+			this.value = value;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
+
+		@Override
+		public boolean isSelected() {
+			return false;
+		}
+
+		@Override
+		public String getId() {
+			return this.id;
+		}
 	}
 }

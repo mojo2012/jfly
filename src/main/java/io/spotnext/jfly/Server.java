@@ -419,30 +419,29 @@ public class Server implements ClientCommunicationHandler {
 				Constructor<? extends ViewHandler> constructor = handler.getDeclaredConstructor();
 				final ViewHandler newViewHandler = (ViewHandler) constructor.newInstance();
 				view = newViewHandler;
-			}
 
-			if (postProcessor != null) {
-				postProcessor.accept(request.session().raw(), view);
-			}
+				if (postProcessor != null) {
+					postProcessor.accept(request.session().raw(), view);
+				}
 
-			sessionViewHandlers.putOrAdd(request.session().id(), view);
+				sessionViewHandlers.putOrAdd(request.session().id(), view);
+
+				view.init(createRequest(request), this);
+				view.onDestroy(viewHandler -> {
+					LOG.debug(String.format("Destroyed view %s", request.uri()));
+
+					Optional<ViewHandler> vHandler = sessionViewHandlers.get(viewHandler.getSessionId()).stream() //
+							.filter(v -> viewHandler.getViewUid().equals(v.getViewUid())) //
+							.findFirst();
+
+					if (vHandler.isPresent()) {
+						sessionViewHandlers.remove(viewHandler.getSessionId(), vHandler.get());
+					}
+				});
+			}
 		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new InstantiationException(String.format("Could not create view handler for url %s", request.uri()));
 		}
-
-		view.init(createRequest(request), this);
-
-		view.onDestroy(viewHandler -> {
-			LOG.debug(String.format("Destroyed view %s", request.uri()));
-
-			Optional<ViewHandler> vHandler = sessionViewHandlers.get(viewHandler.getSessionId()).stream() //
-					.filter(v -> viewHandler.getViewUid().equals(v.getViewUid())) //
-					.findFirst();
-
-			if (vHandler.isPresent()) {
-				sessionViewHandlers.remove(viewHandler.getSessionId(), vHandler.get());
-			}
-		});
 
 		return view;
 	}

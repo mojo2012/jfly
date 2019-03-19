@@ -1,0 +1,57 @@
+<v-data-table
+	uuid="${_uuid}"
+	:class="${_state}.styleClasses"
+	:headers="${_state}.columns"
+	:items="${_state}.children"
+	class="elevation-1"
+	v-on="${_state}.eventHandlers"
+	:select-all="${_state}.allowSelect"
+	:hide-actions="!${_state}.showActions"
+	:hide-headers="!${_state}.showColumnHeader"
+	:no-data-text="localize(${_state}.noDataText)"
+	:no-results-text="localize(${_state}.noResultsText)"
+	:rows-per-page-items="${_state}.rowsPerPageItems"
+	:rows-per-page-text="localize(${_state}.rowsPerPageText)"
+	:search="${_state}.filterText"
+	watch-for-state-change="[ 'selected' ]"
+	>
+
+<!-- 	<template v-slot:headers="props"> -->
+<!-- 	<tr> -->
+<!-- 		<th> -->
+<!-- 			<v-checkbox -->
+<!-- 				:input-value="props.all" -->
+<!-- 				:indeterminate="props.indeterminate" -->
+<!-- 				primary -->
+<!-- 				hide-details -->
+<!-- 				@click.stop="toggleAll" -->
+<!-- 			> -->
+				
+<!-- 			</v-checkbox> -->
+<!-- 		</th> -->
+<!-- 		<th -->
+<!-- 			v-for="header in props.headers" -->
+<!-- 			:key="header.text" -->
+<!-- 			> -->
+			
+<!-- 			<v-icon small>arrow_upward</v-icon> -->
+<!-- 			{{ localize(header.text) }} -->
+<!-- 		</th> -->
+<!-- 	</tr> -->
+<!-- 	</template> -->
+	
+	<template slot="headerCell" slot-scope="header">
+		{{ localize(header.header.text) }}
+	</template>
+	
+	<template v-slot:items="rows">
+		<td v-if="${_state}.allowSelect">
+			<v-checkbox v-model="rows.selected" primary hide-details>
+			</v-checkbox>
+		</td>
+
+		<td data-row-id="{{rows.id}}" v-for="header in ${_state}.columns">
+			{{ rows.item[header.value] }}
+		</td>
+	</template>
+</v-data-table>
