@@ -131,6 +131,7 @@ public class Server implements ClientCommunicationHandler {
 
 				for (Map.Entry<String, List<ViewHandler>> handlers : sessionViewHandlers.entrySet()) {
 					final List<ViewHandler> expiredHandlers = handlers.getValue().stream() //
+							.filter(v -> !(v instanceof SinglePageApplication)) // ignore single page apps, they die with the session
 							.filter(v -> v.lastKeepAlive != null && v.lastKeepAlive.isBefore(threshold)) //
 							.collect(Collectors.toList());
 

@@ -165,6 +165,7 @@ public class Demo1 extends SinglePageApplication {
 
 		TreeNode infoNode = new TreeNode(getHandler(), localizations.forKey("action.info"));
 		infoNode.setIcon(new Icon(getHandler(), MaterialIcon.info));
+		infoNode.onClick(e -> System.out.println("info clicked"));
 
 		TreeNode splitter = new TreeNode(getHandler(), null);
 		splitter.setNodeType(NodeType.SPLITTER);
