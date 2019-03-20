@@ -12,7 +12,7 @@ import io.spotnext.jfly.util.Container;
 public abstract class AbstractContainerComponent<C extends AbstractComponent> extends AbstractComponent
 		implements Container<C> {
 
-	protected final transient List<Component> children = new ArrayList<>();
+	protected final transient List<C> children = new ArrayList<>();
 	private Color color;
 
 	public AbstractContainerComponent(final ComponentHandler handler) {
@@ -20,7 +20,7 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 	}
 
 	public List<C> getChildren() {
-		return (List<C>) Collections.unmodifiableList(children);
+		return Collections.unmodifiableList(children);
 	}
 
 	@Override
