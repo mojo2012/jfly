@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.spotnext.jfly.ComponentHandler;
 import io.spotnext.jfly.attributes.TriStateBoolean;
 import io.spotnext.jfly.event.DomEvent;
@@ -17,6 +19,7 @@ import io.spotnext.jfly.event.Events.JsEvent;
 import io.spotnext.jfly.ui.base.AbstractComponent;
 import io.spotnext.jfly.util.Container;
 import io.spotnext.jfly.util.Localizable;
+import io.spotnext.support.util.Comparators;
 
 public class DataTable<I extends DataTableRow> extends AbstractComponent implements Container<I> {
 
@@ -44,6 +47,7 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 
 		onSelect(this::handleOnSelect);
 		onSelectAll(this::handleOnSelectAll);
+		onSort(this::handleOnSort);
 	}
 
 	private void afterPaginationChanged() {
@@ -56,6 +60,10 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 
 	public void onSelectAll(EventHandler handler) {
 		onEvent(DataTableEvents.SelectAll, handler);
+	}
+
+	public void onSort(EventHandler handler) {
+		onEvent(DataTableEvents.Sort, handler);
 	}
 
 	private void handleOnSelect(DomEvent event) {
@@ -73,6 +81,17 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 
 		getStreamOfChildrenOnCurrentPage().forEach(c -> c.setSelected(select));
 		updateClientComponent();
+	}
+
+	private void handleOnSort(DomEvent event) {
+		String sortBy = (String) event.getData().get("sortBy");
+
+		if (StringUtils.isNotBlank(sortBy)) {
+			pagination.setDescending(!pagination.isDescending());
+			pagination.setSortBy(sortBy);
+			this.children.sort(Comparators.propertyBasedComparator(sortBy, !pagination.isDescending()));
+			updateClientComponent();
+		}
 	}
 
 	@Override

@@ -94,10 +94,7 @@ public class Demo1 extends SinglePageApplication {
 		dataTable.setRowsPerPageText(Localizable.of("Max. rows per page"));
 		dataTable.addColumn(new Column("title", "Title"));
 		dataTable.addColumn(new Column("value", "Value"));
-
-		for (Column c : dataTable.getColumns()) {
-			c.setSortable(true);
-		}
+		dataTable.getColumns().get(0).setSortable(true);
 
 		for (int x = 0; x < 100; x++) {
 			dataTable.addChildren(new DataTableObject(x + "", "Test" + x, x + "500,--"));

@@ -36,11 +36,12 @@
 		<th
 			v-for="header in props.headers"
 			:key="header.value"
-			:class="['column sortable text-xs-left', ${_state}.pagination.descending ? 'desc' : 'asc', header.value === ${_state}.pagination.sortBy ? 'active' : '']"
+			:class="['column text-xs-left', header.sortable ? 'sortable' : '', ${_state}.pagination.descending ? 'desc' : 'asc', header.value === ${_state}.pagination.sortBy ? 'active' : '']"
+			@click.stop="if (header.sortable) handleEvent('sort', '${_uuid}', { sortBy: header.value })"
 			>
 			
 			{{ localize(header.text) }}
-			<v-icon small>arrow_upward</v-icon>
+			<v-icon small v-if="header.sortable">arrow_upward</v-icon>
 		</th>
 	</tr>
 	</template>

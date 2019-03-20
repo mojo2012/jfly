@@ -68,5 +68,6 @@ public interface Events {
 		}
 
 		public static JsEvent SelectAll = new JsEvent("selectAll");
+		public static JsEvent Sort = new JsEvent("sort");
 	}
 }
