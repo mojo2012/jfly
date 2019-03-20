@@ -96,30 +96,24 @@ public class VelocityTemplateService implements TemplateService {
 		Template ret = null;
 
 		if (cachedEntry == null) {
-			final Template tmpl = getTemplateTemp(templateFilePath.toString());
+			final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
 
-			if (tmpl != null) {
-				cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
-				templateCache.put(templateFile, cachedEntry);
-				ret = tmpl;
-			} else {
-				ret = COMPONENT_NOT_FOUND_TEMPLATE;
+			if (file.isPresent()) {
+				final Template tmpl = ve.getTemplate(templateFilePath);
+				if (tmpl != null) {
+					cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
+					templateCache.put(templateFile, cachedEntry);
+					ret = tmpl;
+				} else {
+					ret = COMPONENT_NOT_FOUND_TEMPLATE;
+				}
 			}
+
 		} else {
 			ret = cachedEntry.getTemplate();
 		}
 
 		return ret;
-	}
-
-	protected Template getTemplateTemp(String templateFilePath) {
-		final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
-
-		if (file.isPresent()) {
-			return ve.getTemplate(templateFilePath);
-		}
-
-		return null;
 	}
 
 	protected Optional<File> getAbsoluteTemplatePath(String templateFilePath) {
