@@ -2,8 +2,8 @@ package io.spotnext.jfly.templating.impl;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -81,7 +81,7 @@ public class VelocityTemplateService implements TemplateService {
 	 * All successive reads are returned from the cache.
 	 */
 	protected Template getTemplate(String templateFile) {
-		final Path templateFilePath = Paths.get(templateBasePath, templateFile);
+		final String templateFilePath = templateBasePath + "/" + templateFile;
 		final long templateFileLastModifiedTimestamp = getLastModifiedDate(templateFilePath);
 
 		CachedTemplate cachedEntry = templateCache.get(templateFile);
@@ -96,15 +96,19 @@ public class VelocityTemplateService implements TemplateService {
 		Template ret = null;
 
 		if (cachedEntry == null) {
-			final Template tmpl = getTemplate(templateFilePath);
+			final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
 
-			if (tmpl != null) {
-				cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
-				templateCache.put(templateFile, cachedEntry);
-				ret = tmpl;
-			} else {
-				ret = COMPONENT_NOT_FOUND_TEMPLATE;
+			if (file.isPresent()) {
+				final Template tmpl = ve.getTemplate(templateFilePath);
+				if (tmpl != null) {
+					cachedEntry = new CachedTemplate(tmpl, templateFileLastModifiedTimestamp);
+					templateCache.put(templateFile, cachedEntry);
+					ret = tmpl;
+				} else {
+					ret = COMPONENT_NOT_FOUND_TEMPLATE;
+				}
 			}
+
 		} else {
 			ret = cachedEntry.getTemplate();
 		}
@@ -112,27 +116,21 @@ public class VelocityTemplateService implements TemplateService {
 		return ret;
 	}
 
-	protected Template getTemplate(Path templateFilePath) {
-		final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
-
-		if (file.isPresent()) {
-			return ve.getTemplate(templateFilePath.toString());
-		}
-
-		return null;
-	}
-
-	protected Optional<File> getAbsoluteTemplatePath(Path templateFilePath) {
-		final URL resourceUrl = getClass().getResource(templateFilePath.toString());
+	protected Optional<File> getAbsoluteTemplatePath(String templateFilePath) {
+		final URL resourceUrl = getClass().getResource(templateFilePath);
 
 		if (resourceUrl != null) {
-			return Optional.of(Paths.get(resourceUrl.getFile()).toFile());
+			try {
+				return Optional.of(Paths.get(resourceUrl.toURI()).toFile());
+			} catch (URISyntaxException e) {
+				LOG.error(e.getMessage());
+			}
 		}
 
 		return Optional.empty();
 	}
 
-	protected long getLastModifiedDate(Path templateFilePath) {
+	protected long getLastModifiedDate(String templateFilePath) {
 		final Optional<File> file = getAbsoluteTemplatePath(templateFilePath);
 
 		if (file.isPresent()) {
