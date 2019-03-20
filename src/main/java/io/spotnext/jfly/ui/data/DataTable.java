@@ -69,8 +69,6 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 	}
 
 	private void handleOnSelectAll(DomEvent event) {
-		boolean selected = (boolean) event.getData().get("allSelected");
-
 		boolean select = !TriStateBoolean.True.equals(getAllSelected());
 
 		getStreamOfChildrenOnCurrentPage().forEach(c -> c.setSelected(select));
