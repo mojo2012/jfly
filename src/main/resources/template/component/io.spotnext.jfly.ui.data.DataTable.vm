@@ -23,9 +23,9 @@
 		<th v-if="${_state}.allowSelect && ${_state}.allowSelectAll">
 			<v-checkbox 
 				v-if="${_state}.allowSelectAll"
-				v-model="${_state}.allSelected"
+				v-model="${_state}.allSelected == 'true'"
 				:input-value="props.all"
-				:indeterminate="props.indeterminate"
+				:indeterminate="${_state}.allSelected == 'intermediate'"
 				primary
 				hide-details
 				@click.stop="handleEvent('selectAll', '${_uuid}', { allSelected: !${_state}.allSelected })"

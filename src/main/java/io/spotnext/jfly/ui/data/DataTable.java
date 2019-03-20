@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.spotnext.jfly.ComponentHandler;
+import io.spotnext.jfly.attributes.TriStateBoolean;
 import io.spotnext.jfly.event.DomEvent;
 import io.spotnext.jfly.event.EventHandler;
 import io.spotnext.jfly.event.Events.DataTableEvents;
@@ -70,7 +71,9 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 	private void handleOnSelectAll(DomEvent event) {
 		boolean selected = (boolean) event.getData().get("allSelected");
 
-		getStreamOfChildrenOnCurrentPage().forEach(c -> c.setSelected(selected));
+		boolean select = !TriStateBoolean.True.equals(getAllSelected());
+
+		getStreamOfChildrenOnCurrentPage().forEach(c -> c.setSelected(select));
 		updateClientComponent();
 	}
 
@@ -203,8 +206,18 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 	/**
 	 * Check if all children on the current page are selected
 	 */
-	public boolean isAllSelected() {
-		return getStreamOfChildrenOnCurrentPage().allMatch(c -> c.isSelected());
+	public TriStateBoolean getAllSelected() {
+		long selected = getStreamOfChildrenOnCurrentPage().filter(DataTableRow::isSelected).count();
+
+		if (selected > 0) {
+			if (selected != pagination.getRowsPerPage()) {
+				return TriStateBoolean.Intermediate;
+			} else {
+				return TriStateBoolean.True;
+			}
+		}
+
+		return TriStateBoolean.False;
 	}
 
 	public List<I> getChildrenOnCurrentPage() {
