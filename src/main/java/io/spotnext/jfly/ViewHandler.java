@@ -146,7 +146,7 @@ public abstract class ViewHandler implements ComponentHandler {
 				if (component != null) {
 					// apply changed states to the component
 					if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
-						ObjectUtils.populate(component, eventMessage.getComponentState());
+						ObjectUtils.populate(component, eventMessage.getDomEventData().getData());
 					}
 
 					handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());

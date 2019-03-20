@@ -89,6 +89,7 @@ public class Demo1 extends SinglePageApplication {
 
 		final DataTable<DataTableObject> dataTable = new DataTable<>(getHandler());
 		dataTable.setAllowSelect(true);
+		dataTable.setAllowSelectAll(true);
 		dataTable.setNoDataText(Localizable.of("Empty"));
 		dataTable.setRowsPerPageText(Localizable.of("Max. rows per page"));
 		dataTable.addColumn(new Column("title", "Title"));
@@ -277,13 +278,14 @@ public class Demo1 extends SinglePageApplication {
 			return value;
 		}
 
+		@Override
 		public void setSelected(boolean selected) {
 			this.selected = selected;
 		}
 
 		@Override
 		public boolean isSelected() {
-			return false;
+			return selected;
 		}
 
 		@Override
