@@ -3,7 +3,7 @@ package io.spotnext.jfly.ui.base;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +31,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractComponent.class);
 
 	@JsonIgnore
-	private final transient List<ClientUpdateCommand> drawCommands = new LinkedList<>();
+	private final transient Set<ClientUpdateCommand> drawCommands = new LinkedHashSet<>();
 	@JsonIgnore
 	private final transient List<String> eventData = new ArrayList<>();
 	@JsonIgnore
@@ -173,12 +173,16 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	@JsonIgnore
 	@Override
-	public List<ClientUpdateCommand> getClientUpdateCommands() {
+	public Set<ClientUpdateCommand> getClientUpdateCommands() {
 		return drawCommands;
 	}
 
 	public Set<EventType> getRegisteredEvents() {
 		return this.eventHandlers.keySet();
+	}
+
+	public boolean isEventHandled(EventType eventType) {
+		return this.eventHandlers.keySet().stream().anyMatch(k -> eventType.equals(k));
 	}
 
 	/*

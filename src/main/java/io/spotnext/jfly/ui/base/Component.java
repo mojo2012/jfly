@@ -1,6 +1,6 @@
 package io.spotnext.jfly.ui.base;
 
-import java.util.List;
+import java.util.Set;
 
 import io.spotnext.jfly.util.JsonUtil;
 
@@ -43,7 +43,7 @@ public interface Component {
 	 * 
 	 * @return
 	 */
-	List<ClientUpdateCommand> getClientUpdateCommands();
+	Set<ClientUpdateCommand> getClientUpdateCommands();
 
 	void clearPendingClientUpdateCommands();
 }

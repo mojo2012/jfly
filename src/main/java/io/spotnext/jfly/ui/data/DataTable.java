@@ -30,9 +30,9 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 	private boolean allowSelectAll = true;
 	private boolean showActions = true;
 	private boolean showColumnHeader = true;
-	private Localizable<String> noDataText;
+	private Localizable<String> noDataText = Localizable.of("Empty");
 	private Localizable<String> noResultsText = Localizable.of("No matching records found");
-	private Localizable<String> rowsPerPageText;
+	private Localizable<String> rowsPerPageText = Localizable.of("Rows per page");
 	private List<Integer> rowsPerPageItems = List.of(5, 10, 25, 50, 100, 200);
 	private String filterText = "";
 	private final Pagination pagination;
@@ -218,6 +218,10 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 
 	public Pagination getPagination() {
 		return pagination;
+	}
+
+	public void removeAllChildren() {
+		this.children.clear();
 	}
 
 	/**
