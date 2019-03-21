@@ -76,10 +76,6 @@ public class Demo1 extends SinglePageApplication {
 		fluidContainer.addChildren(actualContainer);
 		body.addChildren(mainContainer);
 
-		TextField singleLineTextBox = new TextField(getHandler(), null);
-		singleLineTextBox.setPlaceholder(localizations.forKey("placeholders.search"));
-		// singleLineTextBox.setLabel("Quick search");
-
 		TextField multiLineTextBox = new TextField(getHandler(), null);
 		// multiLineTextBox.setPlaceholder("Enter text here ...");
 		multiLineTextBox.setMultiLine(true);
@@ -95,6 +91,10 @@ public class Demo1 extends SinglePageApplication {
 		dataTable.addColumn(new Column("title", "Title"));
 		dataTable.addColumn(new Column("value", "Value"));
 		dataTable.getColumns().get(0).setSortable(true);
+
+		final TextField filterDataTableBox = new TextField(getHandler(), null);
+		filterDataTableBox.setPlaceholder(localizations.forKey("placeholders.search"));
+		filterDataTableBox.onChange(e -> dataTable.setFilterText((String) e.getData().get("data")));
 
 		for (int x = 0; x < 100; x++) {
 			dataTable.addChildren(new DataTableObject(x + "", "Test" + x, x + "500,--"));
@@ -146,7 +146,7 @@ public class Demo1 extends SinglePageApplication {
 			throw new RuntimeException("Custom exception.");
 		});
 
-		actualContainer.addChildren(dataTable, singleLineTextBox, multiLineTextBox, linkAction, dropdown,
+		actualContainer.addChildren(filterDataTableBox, dataTable, multiLineTextBox, linkAction, dropdown,
 				causeExceptionButton, button);
 
 		Label label = new Label(getHandler(), Localizable.of("Danger"));
