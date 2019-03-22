@@ -61,4 +61,13 @@ public interface Events {
 
 		public static JsEvent StateChanged = new JsEvent("stateChanged");
 	}
+
+	public static class DataTableEvents extends EventEnum implements EventType {
+		private DataTableEvents(String internalName) {
+			super(internalName);
+		}
+
+		public static JsEvent SelectAll = new JsEvent("selectAll");
+		public static JsEvent Sort = new JsEvent("sort");
+	}
 }

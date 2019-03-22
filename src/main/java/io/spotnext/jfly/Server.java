@@ -465,7 +465,13 @@ public class Server implements ClientCommunicationHandler {
 
 	@Override
 	public <M extends Message> void sendMessage(final M message, String sessionId) {
-		sendMessage(message, websocketSessions.get(sessionId).getRemote());
+		Session session = websocketSessions.get(sessionId);
+		
+		if (session != null) {
+			sendMessage(message, session.getRemote());
+		} else {
+			LOG.error(String.format("No websocket session found for id '%s'", sessionId));
+		}
 	}
 
 	protected <M extends Message> void sendMessage(final M message, RemoteEndpoint endpoint) {

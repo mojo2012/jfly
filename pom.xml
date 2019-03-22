@@ -72,47 +72,13 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 					</execution>
-					
 					<execution>
 						<id>Run npm install</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-					
-					<execution>
-						<id>Run npm run concat:css</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						
-						<configuration>
-							<arguments>run concat:css</arguments>
-						</configuration>
-					</execution>
-					
-					<execution>
-						<id>Run npm run concat:js</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						
-						<configuration>
-							<arguments>run concat:js</arguments>
-						</configuration>
-					</execution>
-					
-					<execution>
-						<id>Run npm run concat:js-debug</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						
-						<configuration>
-							<arguments>run concat:js-debug</arguments>
+							<arguments>run install-build</arguments>
 						</configuration>
 					</execution>
 				</executions>
@@ -121,6 +87,39 @@
 					<nodeVersion>v10.0.0</nodeVersion>
 				</configuration>
 			</plugin>
+			
+			<!-- ECLIPSE FIX -->
+				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+<!-- 				<plugin> -->
+<!-- 					<groupId>org.eclipse.m2e</groupId> -->
+<!-- 					<artifactId>lifecycle-mapping</artifactId> -->
+<!-- 					<version>1.0.0</version> -->
+<!-- 					<configuration> -->
+<!-- 						<lifecycleMappingMetadata> -->
+<!-- 							<pluginExecutions> -->
+<!-- 								<pluginExecution> -->
+<!-- 									<pluginExecutionFilter> -->
+<!-- 										<groupId>com.github.eirslett</groupId> -->
+<!-- 										<artifactId>frontend-maven-plugin</artifactId> -->
+<!-- 										<versionRange> -->
+<!-- 											[1.6,) -->
+<!-- 										</versionRange> -->
+<!-- 										<goals> -->
+<!-- 											<goal>install-node-and-npm</goal> -->
+<!-- 											<goal>npm</goal> -->
+<!-- 										</goals> -->
+<!-- 									</pluginExecutionFilter> -->
+<!-- 									<action> -->
+<!-- 										<execute> -->
+<!-- 											<runOnIncremental>false</runOnIncremental> -->
+<!-- 											<runOnConfiguration>true</runOnConfiguration> -->
+<!-- 										</execute> -->
+<!-- 									</action> -->
+<!-- 								</pluginExecution> -->
+<!-- 							</pluginExecutions> -->
+<!-- 						</lifecycleMappingMetadata> -->
+<!-- 					</configuration> -->
+<!-- 				</plugin> -->
 		</plugins>
 	</build>
 

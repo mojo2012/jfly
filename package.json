@@ -6,8 +6,8 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "material-design-icons-iconfont": "^3.0.3",
-    "vue": "^2.6.9",
-    "vuetify": "^1.5.6"
+    "vue": "^2.6.10",
+    "vuetify": "^1.5.7"
   },
   "devDependencies": {
     "node-minify": "^2.4.2",
@@ -18,7 +18,8 @@
     "concat:js": "mkdir -p target/classes/public/script && concat -o target/classes/public/script/deps.min.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.min.js node_modules/vuetify/dist/vuetify.min.js",
     "concat:js-debug": "mkdir -p target/classes/public/script && concat -o target/classes/public/script/deps.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.js node_modules/vuetify/dist/vuetify.js",
     "concat:css": "mkdir -p target/classes/public/style && concat -o target/classes/public/style/deps.css node_modules/vuetify/dist/vuetify.min.css node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css",
-    "concat": "npm run concat:css && npm run concat:js"
+    "build": "npm run concat:css && npm run concat:js && npm run concat:js-debug",
+    "install-build": "npm install && npm run build"
   },
   "repository": {
     "type": "git",

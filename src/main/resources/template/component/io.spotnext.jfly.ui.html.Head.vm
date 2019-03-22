@@ -9,7 +9,8 @@
 		$!stylesheet.render()
 	#end
 	<style type="text/css">
-		.hidden {
+		.hidden,
+		[v-cloak] {
 			display: none;
 		}
 	</style>

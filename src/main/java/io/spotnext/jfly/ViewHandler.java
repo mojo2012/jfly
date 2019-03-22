@@ -143,13 +143,15 @@ public abstract class ViewHandler implements ComponentHandler {
 			} else if (StringUtils.isNotBlank(componentUuid)) {
 				final Component component = getRegisteredComponents().get(componentUuid);
 
-				if (component != null) {
+				if (component instanceof AbstractComponent) {
 					// apply changed states to the component
 					if (GenericEvent.StateChanged.equals(eventMessage.getEventType())) {
-						ObjectUtils.populate(component, eventMessage.getComponentState());
+						ObjectUtils.populate(component, eventMessage.getDomEventData().getData());
 					}
 
-					handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
+					if (((AbstractComponent) component).isEventHandled(eventMessage.getEventType())) {
+						handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
+					}
 				} else {
 					LOG.warn(String.format("Received message of unknown sender component %s", componentUuid));
 				}
