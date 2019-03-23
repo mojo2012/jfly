@@ -7,7 +7,7 @@
 			:prepend-icon="${_state}.icon.icon"
 			>
 			
-			<v-list-tile slot="activator" class="list-hotfix" v-on="${_state}.eventHandlers">
+			<v-list-tile slot="activator" class="list-hotfix" v-on="${_state}.eventHandlers" :href="${_state}.link" >
 				<v-list-tile-content>
 					<v-list-tile-title :title="localize(${_state}.title)">{{localize(${_state}.title)}}</v-list-tile-title>
 					<v-list-tile-sub-title :title="localize(${_state}.subTitle)">{{localize(${_state}.subTitle)}}</v-list-tile-sub-title>
@@ -25,7 +25,7 @@
 			
 		</v-list-group>
 			
-		<v-list-tile v-if="!${_state}.hasChildren" v-on="${_state}.eventHandlers">
+		<v-list-tile v-if="!${_state}.hasChildren" v-on="${_state}.eventHandlers" :href="${_state}.link" >
 			<v-list-tile-action>
 				$!{component.icon.render()}
 			</v-list-tile-action>

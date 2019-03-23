@@ -11,6 +11,7 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 	private Localizable<String> title;
 	private Localizable<String> subTitle;
 	private Localizable<String> badge;
+	private String link;
 	private Icon icon;
 	private boolean isExpanded = false;
 	private NodeType nodeType = NodeType.DEFAULT;
@@ -85,5 +86,13 @@ public class TreeNode extends AbstractContainerComponent<TreeNode> {
 
 	public boolean isSubHeader() {
 		return NodeType.SUB_HEADER.equals(nodeType);
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 }

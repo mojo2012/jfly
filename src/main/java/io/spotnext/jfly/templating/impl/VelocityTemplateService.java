@@ -137,7 +137,7 @@ public class VelocityTemplateService implements TemplateService {
 					out.close();
 					file.deleteOnExit();
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					LOG.error(ex.getMessage(), ex);
 				}
 			} else {
 				// this will probably work in your IDE, but not from a JAR

@@ -157,6 +157,7 @@ public enum MaterialIcon implements Attribute {
 	casino("casino"),
 	cast("cast"),
 	cast_connected("cast_connected"),
+	category("category"),
 	center_focus_strong("center_focus_strong"),
 	center_focus_weak("center_focus_weak"),
 	change_history("change_history"),
