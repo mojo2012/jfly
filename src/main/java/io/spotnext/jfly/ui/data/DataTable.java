@@ -220,8 +220,14 @@ public class DataTable<I extends DataTableRow> extends AbstractComponent impleme
 		return pagination;
 	}
 
-	public void removeAllChildren() {
+	public void clearRows() {
 		this.children.clear();
+	}
+
+	public void clear() {
+		columns.clear();
+		clearRows();
+		filterText = "";
 	}
 
 	/**
