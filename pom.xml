@@ -65,12 +65,14 @@
 
 				<executions>
 					<execution>
-						<!-- optional: you don't really need execution ids, but it looks nice 
-							in your build log. -->
+						<!-- optional: you don't really need execution ids, but it looks nice in your build log. -->
 						<id>Install node and NPM</id>
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
+						<configuration>
+							<nodeVersion>v10.0.0</nodeVersion>
+						</configuration>
 					</execution>
 					<execution>
 						<id>Run npm install</id>
@@ -78,48 +80,49 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
+							<nodeVersion>v10.0.0</nodeVersion>
 							<arguments>run install-build</arguments>
 						</configuration>
 					</execution>
 				</executions>
-				
+
 				<configuration>
 					<nodeVersion>v10.0.0</nodeVersion>
 				</configuration>
 			</plugin>
-			
+
 			<!-- ECLIPSE FIX -->
-				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-<!-- 				<plugin> -->
-<!-- 					<groupId>org.eclipse.m2e</groupId> -->
-<!-- 					<artifactId>lifecycle-mapping</artifactId> -->
-<!-- 					<version>1.0.0</version> -->
-<!-- 					<configuration> -->
-<!-- 						<lifecycleMappingMetadata> -->
-<!-- 							<pluginExecutions> -->
-<!-- 								<pluginExecution> -->
-<!-- 									<pluginExecutionFilter> -->
-<!-- 										<groupId>com.github.eirslett</groupId> -->
-<!-- 										<artifactId>frontend-maven-plugin</artifactId> -->
-<!-- 										<versionRange> -->
-<!-- 											[1.6,) -->
-<!-- 										</versionRange> -->
-<!-- 										<goals> -->
-<!-- 											<goal>install-node-and-npm</goal> -->
-<!-- 											<goal>npm</goal> -->
-<!-- 										</goals> -->
-<!-- 									</pluginExecutionFilter> -->
-<!-- 									<action> -->
-<!-- 										<execute> -->
-<!-- 											<runOnIncremental>false</runOnIncremental> -->
-<!-- 											<runOnConfiguration>true</runOnConfiguration> -->
-<!-- 										</execute> -->
-<!-- 									</action> -->
-<!-- 								</pluginExecution> -->
-<!-- 							</pluginExecutions> -->
-<!-- 						</lifecycleMappingMetadata> -->
-<!-- 					</configuration> -->
-<!-- 				</plugin> -->
+			<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.eclipse.m2e</groupId> -->
+			<!-- <artifactId>lifecycle-mapping</artifactId> -->
+			<!-- <version>1.0.0</version> -->
+			<!-- <configuration> -->
+			<!-- <lifecycleMappingMetadata> -->
+			<!-- <pluginExecutions> -->
+			<!-- <pluginExecution> -->
+			<!-- <pluginExecutionFilter> -->
+			<!-- <groupId>com.github.eirslett</groupId> -->
+			<!-- <artifactId>frontend-maven-plugin</artifactId> -->
+			<!-- <versionRange> -->
+			<!-- [1.6,) -->
+			<!-- </versionRange> -->
+			<!-- <goals> -->
+			<!-- <goal>install-node-and-npm</goal> -->
+			<!-- <goal>npm</goal> -->
+			<!-- </goals> -->
+			<!-- </pluginExecutionFilter> -->
+			<!-- <action> -->
+			<!-- <execute> -->
+			<!-- <runOnIncremental>false</runOnIncremental> -->
+			<!-- <runOnConfiguration>true</runOnConfiguration> -->
+			<!-- </execute> -->
+			<!-- </action> -->
+			<!-- </pluginExecution> -->
+			<!-- </pluginExecutions> -->
+			<!-- </lifecycleMappingMetadata> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
 
@@ -160,6 +163,16 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
+			<version>2.9.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jdk8</artifactId>
+			<version>2.9.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.9.8</version>
 		</dependency>
 

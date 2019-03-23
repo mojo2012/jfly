@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.spotnext.jfly.event.Events.EventEnum;
 import io.spotnext.jfly.event.Events.EventType;
@@ -25,12 +27,15 @@ public class JsonUtil {
 		module.addSerializer(Locale.class, new LocaleSerializer());
 		module.addSerializer(localizable.getClass(), new LocalizableStringSerializer());
 		module.addSerializer(Enum.class, new DynamicEnumSerializer());
+		module.addSerializer(Enum.class, new DynamicEnumSerializer());
 
 		SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
 		resolver.addMapping(EventType.class, EventEnum.class);
 		module.setAbstractTypes(resolver);
 
 		mapper.registerModule(module);
+		mapper.registerModule(new JavaTimeModule());
+		mapper.registerModule(new Jdk8Module());
 	}
 
 	/**
