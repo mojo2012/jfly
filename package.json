@@ -17,7 +17,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "concat:js": "mkdir -p target/classes/public/script && concat -o target/classes/public/script/deps.min.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.min.js node_modules/vuetify/dist/vuetify.min.js",
     "concat:js-debug": "mkdir -p target/classes/public/script && concat -o target/classes/public/script/deps.js node_modules/jquery/dist/jquery.min.js node_modules/vue/dist/vue.js node_modules/vuetify/dist/vuetify.js",
-    "concat:css": "mkdir -p target/classes/public/style && concat -o target/classes/public/style/deps.css node_modules/vuetify/dist/vuetify.min.css node_modules/material-design-icons-iconfont/dist/fonts/material-icons.css",
+    "concat:css": "mkdir -p target/classes/public/style && concat -o target/classes/public/style/deps.css node_modules/vuetify/dist/vuetify.min.css node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
     "build": "npm run concat:css && npm run concat:js && npm run concat:js-debug",
     "install-build": "npm install && npm run build"
   },
