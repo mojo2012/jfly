@@ -3,13 +3,14 @@
 	:class="${_state}.styleClasses" 
 	v-model="${_state}.visible"
 	:mini-variant="${_state}.minimized"
-	app :stateless="true"
+	app 
 	:temporary="${_state}.floating"
 	:disable-resize-watcher="true" 
 	:right="${_state}.horizontalOrientation == 'right'" 
 	v-bind="${_state}.attributes"
 	watch-for-state-change="[ 'visible' ]"
 	v-show="${_state}.visible"
+	:width="${_state}.width"
 	:permanent="${_state}.permanent">
 	
 	$!{component.toolBar.render()}

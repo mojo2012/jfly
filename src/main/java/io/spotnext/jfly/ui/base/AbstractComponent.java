@@ -251,6 +251,10 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		onEvent(JsEvent.Click, handler);
 	}
 
+	public void onDoubleClick(final EventHandler handler) {
+		onEvent(JsEvent.DoubleClick, handler);
+	}
+
 	public void onMouseOut(final EventHandler handler) {
 		onEvent(JsEvent.MouseOut, handler);
 	}

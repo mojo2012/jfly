@@ -8,6 +8,7 @@ public class Drawer extends SideBar {
 	private ToolBar toolBar;
 	private HorizontalOrientation horizontalOrientation;
 	private boolean floating = true;
+	private int width = 300;
 
 	public Drawer(final ComponentHandler handler, HorizontalOrientation horizontalOrientation) {
 		super(handler);
@@ -20,6 +21,7 @@ public class Drawer extends SideBar {
 
 	public void setToolBar(ToolBar toolBar) {
 		this.toolBar = toolBar;
+		updateClientComponent();
 	}
 
 	public HorizontalOrientation getHorizontalOrientation() {
@@ -28,6 +30,7 @@ public class Drawer extends SideBar {
 
 	public void setHorizontalOrientation(HorizontalOrientation horizontalOrientation) {
 		this.horizontalOrientation = horizontalOrientation;
+		updateClientComponent();
 	}
 
 	public boolean isFloating() {
@@ -36,6 +39,16 @@ public class Drawer extends SideBar {
 
 	public void setFloating(boolean floating) {
 		this.floating = floating;
+		updateClientComponent();
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+		updateClientComponent();
 	}
 
 }
