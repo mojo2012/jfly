@@ -8,7 +8,7 @@ import io.spotnext.jfly.ui.base.AbstractLayoutComponent;
 
 public class GridLayout extends AbstractLayoutComponent {
 
-	private GridLayoutSize size = GridLayoutSize.XS6;
+	private GridLayoutSize gridLayoutSize = GridLayoutSize.XS6;
 	private GridGutterSize gutterSize = GridGutterSize.GridListXL;
 	private GridBehavior behavior = GridBehavior.JustifyCenter;
 
@@ -22,7 +22,7 @@ public class GridLayout extends AbstractLayoutComponent {
 		super(handler);
 
 		if (size != null) {
-			this.size = size;
+			this.gridLayoutSize = size;
 		}
 
 		if (gutterSize != null) {
@@ -34,10 +34,6 @@ public class GridLayout extends AbstractLayoutComponent {
 		}
 	}
 
-	public GridLayoutSize getSize() {
-		return size;
-	}
-
 	public GridGutterSize getGutterSize() {
 		return gutterSize;
 	}
@@ -46,4 +42,23 @@ public class GridLayout extends AbstractLayoutComponent {
 		return behavior;
 	}
 
+	public void setGutterSize(GridGutterSize gutterSize) {
+		this.gutterSize = gutterSize;
+		updateClientComponent();
+	}
+
+	public void setBehavior(GridBehavior behavior) {
+		this.behavior = behavior;
+		updateClientComponent();
+	}
+
+	public GridLayoutSize getGridLayoutSize() {
+		return gridLayoutSize;
+	}
+
+	public void setGridLayoutSize(GridLayoutSize gridLayoutSize) {
+		this.gridLayoutSize = gridLayoutSize;
+		updateClientComponent();
+	}
+	
 }

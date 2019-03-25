@@ -11,7 +11,7 @@
 		>
 		
 		#foreach( $!child in $!component.children )
-			<v-flex $!component.size>
+			<v-flex $!component.gridLayoutSize>
 				$!child.render()
 			</v-flex>
 		#end

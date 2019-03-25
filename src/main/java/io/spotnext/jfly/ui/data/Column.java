@@ -10,7 +10,7 @@ public class Column {
 	private Localizable<String> text;
 	@JsonProperty(value = "align")
 	private Alignment alignment;
-	private boolean sortable;
+	private boolean sortable = true;
 	private int width;
 
 	/**

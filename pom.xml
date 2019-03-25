@@ -93,36 +93,37 @@
 
 			<!-- ECLIPSE FIX -->
 			<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-			<!-- <plugin> -->
-			<!-- <groupId>org.eclipse.m2e</groupId> -->
-			<!-- <artifactId>lifecycle-mapping</artifactId> -->
-			<!-- <version>1.0.0</version> -->
-			<!-- <configuration> -->
-			<!-- <lifecycleMappingMetadata> -->
-			<!-- <pluginExecutions> -->
-			<!-- <pluginExecution> -->
-			<!-- <pluginExecutionFilter> -->
-			<!-- <groupId>com.github.eirslett</groupId> -->
-			<!-- <artifactId>frontend-maven-plugin</artifactId> -->
-			<!-- <versionRange> -->
-			<!-- [1.6,) -->
-			<!-- </versionRange> -->
-			<!-- <goals> -->
-			<!-- <goal>install-node-and-npm</goal> -->
-			<!-- <goal>npm</goal> -->
-			<!-- </goals> -->
-			<!-- </pluginExecutionFilter> -->
-			<!-- <action> -->
-			<!-- <execute> -->
-			<!-- <runOnIncremental>false</runOnIncremental> -->
-			<!-- <runOnConfiguration>true</runOnConfiguration> -->
-			<!-- </execute> -->
-			<!-- </action> -->
-			<!-- </pluginExecution> -->
-			<!-- </pluginExecutions> -->
-			<!-- </lifecycleMappingMetadata> -->
-			<!-- </configuration> -->
-			<!-- </plugin> -->
+			<plugin>
+				<groupId>org.eclipse.m2e</groupId>
+				<artifactId>lifecycle-mapping</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<lifecycleMappingMetadata>
+						<pluginExecutions>
+							<pluginExecution>
+								<pluginExecutionFilter>
+									<groupId>com.github.eirslett</groupId>
+									<artifactId>frontend-maven-plugin</artifactId>
+									<versionRange>
+										[1.6,)
+									</versionRange>
+									<goals>
+										<goal>install-node-and-npm</goal>
+										<goal>npm</goal>
+									</goals>
+								</pluginExecutionFilter>
+								<action>
+									<!-- <execute> -->
+									<!-- <runOnIncremental>false</runOnIncremental> -->
+									<!-- <runOnConfiguration>true</runOnConfiguration> -->
+									<!-- </execute> -->
+									<ignore />
+								</action>
+							</pluginExecution>
+						</pluginExecutions>
+					</lifecycleMappingMetadata>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

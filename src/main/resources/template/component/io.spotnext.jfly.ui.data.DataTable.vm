@@ -3,7 +3,6 @@
 	:class="${_state}.styleClasses"
 	:headers="${_state}.columns"
 	:items="${_state}.children"
-	class="elevation-1"
 	v-on="${_state}.eventHandlers"
 	:select-all="${_state}.allowSelect"
 	:hide-actions="!${_state}.showActions"
