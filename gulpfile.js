@@ -19,6 +19,14 @@ gulp.task('default', (done) => {
     });
 
     gulp.src([
+		'node_modules/jquery/dist/jquery.js',
+		'node_modules/vue/dist/vue.js',
+		'node_modules/vuetify/dist/vuetify.js'
+	])
+    .pipe(concat('deps.js'))
+    .pipe(gulp.dest('./target/classes/public/script/'));
+    
+    gulp.src([
     		'node_modules/jquery/dist/jquery.min.js',
     		'node_modules/vue/dist/vue.min.js',
     		'node_modules/vuetify/dist/vuetify.min.js'
