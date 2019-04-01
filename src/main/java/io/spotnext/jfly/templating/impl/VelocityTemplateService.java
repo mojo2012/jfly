@@ -145,7 +145,7 @@ public class VelocityTemplateService implements TemplateService {
 			}
 
 		}
-		return Optional.of(file);
+		return Optional.ofNullable(file);
 
 	}
 

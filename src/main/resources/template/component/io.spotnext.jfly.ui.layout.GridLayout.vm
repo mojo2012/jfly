@@ -1,20 +1,22 @@
-<v-container 
-	uuid="${_uuid}"
-	$!component.gutterSize  
-	
-	v-show="${_state}.visible" 
-	v-bind="${_state}.attributes"
-	:class="${_state}.styleClasses">
-
-	<v-layout
-		wrap row $!component.behavior
-		>
+<div uuid="${_uuid}">
+	<v-container 
+		$!component.gutterSize  
 		
-		#foreach( $!child in $!component.children )
-			<v-flex $!component.gridLayoutSize>
-				$!child.render()
-			</v-flex>
-		#end
-	</v-layout>
+		v-show="${_state}.visible" 
+		v-bind="${_state}.attributes"
+		:class="${_state}.styleClasses">
 	
-</v-container>
+		<v-layout
+			is-container
+			wrap row $!component.behavior
+			>
+			
+			#foreach( $!child in $!component.children )
+				<v-flex $!component.gridLayoutSize>
+					$!child.render()
+				</v-flex>
+			#end
+		</v-layout>
+		
+	</v-container>
+</div>

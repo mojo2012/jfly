@@ -40,6 +40,14 @@ public abstract class AbstractContainerComponent<C extends AbstractComponent> ex
 		}
 	}
 
+	public void removeAllChildren() {
+		for (Component c : children) {
+			updateClient(ComponentManipulationFunction.REMOVE, this.getUuid(), c.getUuid());
+		}
+
+		children.clear();
+	}
+
 	public Color getColor() {
 		return color;
 	}

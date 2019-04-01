@@ -205,7 +205,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 
 	@Override
 	public void redraw() {
-		updateClientComponent("replace", render());
+		updateClientComponent("replaceAll", render());
 	}
 
 	protected void updateClientComponent() {

@@ -85,8 +85,12 @@ jfly.websockethandler = {
 				jfly.initVue(message);
 			});
 		} else if (message.type == "componentManipulation") {
-			let component = jfly.findComponent(message.componentUuid);
-			component[message.method].apply(component, message.parameters);
+			let component = message.componentUuid ? jfly.findComponent(message.componentUuid) : null;
+			if (component) {
+				component[message.method].apply(component, message.parameters);
+			} else {
+				console.log("Got component manipulation message but no component with UUID " + message.componentUuid + " present");
+			}
 		} else if (message.type == "functionCall") {
 			let func = window[message.object][message.functionCall];
 			func.apply(func, message.parameters);
@@ -150,7 +154,7 @@ jfly.getCookies = function(){
 
 jfly.findComponent = function(componentUuid) {
 	let component = $("[" + jfly.constants.ATTRIBUTE_UUID + "='" + componentUuid + "']");
-	
+
 	return component;
 };
 
@@ -159,7 +163,18 @@ jfly.removeComponent = function(componentUuid) {
 };
 
 jfly.removeChildComponent = function(containerUuid, childUuid) {
-	jfly.findComponent(containerUuid).find("[" + jfly.constants.ATTRIBUTE_UUID + "='" + uuid + "']").remove();
+	let component = jfly.findComponent(containerUuid).find("[" + jfly.constants.ATTRIBUTE_UUID + "='" + childUuid + "']");
+	
+	if (component) {
+		// some vuetify elements don't render all their attributes to their destination HTML representation. To be able to inject children into them,
+		// we set a class 'is-container' and inject the children there if it is available
+		let containerChild = component.find(".is-container");
+		if (containerChild.length > 0) {
+			containerChild.remove();
+		} else {
+			component.remove();
+		}
+	}
 };
 
 jfly.addChildComponent = function(containerUuid, childHtml, childContext) {
@@ -347,6 +362,7 @@ jfly.initVue = function(initMessage) {
 				});
 					 
 				let component = new Component().$mount();
+				
 				jfly.findComponent(containerUuid).append(component.$el);
 			},
 			
@@ -416,7 +432,7 @@ jfly.initVue = function(initMessage) {
 							let compUuid = uuid;
 							
 							let handler = function(eventData) {
-								vue.handleEvent(event, compUuid, eventData);
+								vue.handleEvent(event, compUuid, eventData, eventData.target.dataset);
 							};
 							
 							// debounce those event types to prevent too much traffic 

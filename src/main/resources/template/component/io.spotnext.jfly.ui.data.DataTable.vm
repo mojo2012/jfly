@@ -50,8 +50,8 @@
 <!-- 	</template> -->
 	
 	<template v-slot:items="props">
-		<tr :active="props.item.selected" @click="props.item.selected = !props.item.selected" v-on="${_state}.eventHandlers">
-			<td v-if="${_state}.allowSelect">
+		<tr :active="props.item.selected" @click="props.item.selected = !props.item.selected" v-on="${_state}.eventHandlers" :data-row-id="props.item.id">
+			<td v-if="${_state}.allowSelect" :data-row-id="props.item.id">
 				<v-checkbox
 					v-model="props.item.selected"
 					primary hide-details
@@ -60,7 +60,7 @@
 				</v-checkbox>
 			</td>
 	
-			<td :data-row-id="props.id" v-for="header in ${_state}.columns">
+			<td :data-row-id="props.item.id" v-for="header in ${_state}.columns" >
 				{{ props.item[header.value] }}
 			</td>
 		</tr>
