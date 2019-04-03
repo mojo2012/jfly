@@ -70,4 +70,14 @@ public interface Events {
 		public static JsEvent SelectAll = new JsEvent("selectAll");
 		public static JsEvent Sort = new JsEvent("sort");
 	}
+
+	public static class AutoCompleteEvents extends EventEnum implements EventType {
+		private AutoCompleteEvents(String internalName) {
+			super(internalName);
+		}
+
+		public static JsEvent Search = new JsEvent("search");
+		public static JsEvent RemoveItem = new JsEvent("removeItem");
+		public static JsEvent RemoveAllItems = new JsEvent("removeAllItems");
+	}
 }
