@@ -5,6 +5,7 @@
 			:class="${_state}.styleClasses"
 			v-model="${_state}.expanded"
 			:prepend-icon="${_state}.icon.icon"
+			v-show="${_state}.visible"
 			>
 			
 			<v-list-tile slot="activator" class="list-hotfix" v-on="${_state}.eventHandlers" :href="${_state}.link" >
@@ -25,7 +26,7 @@
 			
 		</v-list-group>
 			
-		<v-list-tile v-if="!${_state}.hasChildren" v-on="${_state}.eventHandlers" :href="${_state}.link" >
+		<v-list-tile v-if="!${_state}.hasChildren" v-on="${_state}.eventHandlers" :href="${_state}.link" v-show="${_state}.visible" >
 			<v-list-tile-action>
 				$!{component.icon.render()}
 			</v-list-tile-action>
@@ -43,13 +44,13 @@
 		</v-list-tile>
 	</template>
 	
-	<template v-else-if="${_state}.nodeType == 'SPLITTER'">
+	<template v-else-if="${_state}.nodeType == 'SPLITTER'" v-show="${_state}.visible">
 		<div class="splitter">
 			
 		</div>
 	</template>
 	
-	<template v-else-if="${_state}.nodeType == 'SUB_HEADER'">
+	<template v-else-if="${_state}.nodeType == 'SUB_HEADER'" v-show="${_state}.visible">
 		<v-subheader :title="localize(${_state}.title)" >{{localize(${_state}.title)}}</v-subheader>
 	</template>
 </template>
