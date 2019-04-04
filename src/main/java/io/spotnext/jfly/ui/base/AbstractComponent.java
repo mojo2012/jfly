@@ -77,8 +77,10 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 	}
 
 	public void setVisible(final boolean visible) {
-		this.visible = visible;
-		updateClientComponent();
+		if (this.visible != visible) {
+			this.visible = visible;
+			updateClientComponent();
+		}
 	}
 
 	public Map<Attribute, String> getAttributes() {
