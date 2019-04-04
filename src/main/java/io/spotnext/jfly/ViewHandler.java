@@ -149,6 +149,8 @@ public abstract class ViewHandler implements ComponentHandler {
 						ObjectUtils.populate(component, eventMessage.getDomEventData().getData());
 					}
 
+					component.clearPendingClientUpdateCommands();
+
 					if (((AbstractComponent) component).isEventHandled(eventMessage.getEventType())) {
 						handleEvent(component, eventMessage.getEventType(), eventMessage.getDomEventData());
 					}
