@@ -32,7 +32,8 @@ public class ObjectUtils {
 					boolean changedAccessLevel = false;
 
 					try {
-						Optional<Method> setter = getSetter(klass, propertyName, propertyValue.getClass());
+						Optional<Method> setter = getSetter(klass, propertyName,
+								propertyValue != null ? propertyValue.getClass() : null);
 
 						if (setter.isPresent()) {
 							Method setterMethod = setter.get();

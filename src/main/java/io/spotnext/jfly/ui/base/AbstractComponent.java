@@ -279,7 +279,7 @@ public abstract class AbstractComponent implements Component, EventTarget, Compa
 		onEvent(JsEvent.MouseWheel, handler);
 	}
 
-	public void onStateChanged(final EventHandler handler, String componentPropery) {
+	public void onStateChanged(final EventHandler handler, final String componentPropery) {
 		EventHandler stateChangedHandler = (e) -> {
 			if (StringUtils.equals((String) e.getData().get("property"), componentPropery)) {
 				handler.handle(e);

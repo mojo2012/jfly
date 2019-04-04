@@ -457,7 +457,7 @@ jfly.initVue = function(initMessage) {
 					(function(){
 						vue.$watch(selector, jfly.debounce(function(newValue, oldValue) {
 							// have to create the object like this, otherwise property would be "optimized out" ...
-							let eventData = {};
+							let eventData = { property: property };
 							eventData[property] = newValue;
 							
 							vue.handleEvent("stateChanged", componentUuid, eventData);
