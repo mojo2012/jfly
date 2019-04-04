@@ -15,6 +15,7 @@
 	v-bind="${_state}.attributes"
 	v-show="${_state}.visible"
 	v-on="${_state}.eventHandlers"
+	:expand="${_state}.allowMultiExpand"
 	>
 	
 	#foreach( $!child in $!component.children )

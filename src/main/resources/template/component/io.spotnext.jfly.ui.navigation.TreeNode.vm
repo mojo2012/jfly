@@ -18,6 +18,7 @@
 			<v-list
 				uuid="${_uuid}" 
 				:class="${_state}.styleClasses" 
+				expand
 				>
 				#foreach( $!child in $!component.children )
 					$!child.render()
