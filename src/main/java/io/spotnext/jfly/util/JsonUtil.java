@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -28,6 +29,7 @@ public class JsonUtil {
 		module.addSerializer(localizable.getClass(), new LocalizableStringSerializer());
 		module.addSerializer(Enum.class, new DynamicEnumSerializer());
 		module.addSerializer(Enum.class, new DynamicEnumSerializer());
+		module.addSerializer(Long.class, new ToStringSerializer(Long.class));
 
 		SimpleAbstractTypeResolver resolver = new SimpleAbstractTypeResolver();
 		resolver.addMapping(EventType.class, EventEnum.class);
