@@ -1,15 +1,18 @@
 package io.spotnext.jfly.ui.base;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  * Represents a draw command for the client to update the view.
  */
 public class ClientUpdateCommand {
-	DrawCommandType type;
-	String targetObject;
-	String function;
-	Object[] paramters;
+	private final transient LocalDateTime creationTimestamp = LocalDateTime.now();
+
+	private DrawCommandType type;
+	private String targetObject;
+	private String function;
+	private Object[] paramters;
 
 	public ClientUpdateCommand(final DrawCommandType type, final String targetObject, final String function,
 			final Object[] paramters) {
@@ -35,6 +38,10 @@ public class ClientUpdateCommand {
 
 	public Object[] getParamters() {
 		return paramters;
+	}
+
+	public LocalDateTime getCreationTimestamp() {
+		return creationTimestamp;
 	}
 
 	@Override

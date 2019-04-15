@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -32,6 +35,7 @@ import io.spotnext.jfly.templating.impl.VelocityTemplateService;
 import io.spotnext.jfly.ui.base.AbstractComponent;
 import io.spotnext.jfly.ui.base.ClientUpdateCommand;
 import io.spotnext.jfly.ui.base.Component;
+import io.spotnext.jfly.ui.base.DrawCommandType;
 import io.spotnext.jfly.ui.base.EventTarget;
 import io.spotnext.jfly.ui.html.Body;
 import io.spotnext.jfly.ui.html.Head;
@@ -179,7 +183,12 @@ public abstract class ViewHandler implements ComponentHandler {
 	}
 
 	protected void flushClientUpdates() {
-		for (final Component c : getRegisteredComponents().values()) {
+		// find the components that need to be updated
+		final List<Component> components = getRegisteredComponents().values().stream() //
+				.filter(c -> c.hasPendingClientUpdateCommands()) //
+				.collect(Collectors.toList());
+
+		for (final Component c : components) {
 			flushClientUpdates(c);
 		}
 	}
@@ -187,25 +196,39 @@ public abstract class ViewHandler implements ComponentHandler {
 	@Override
 	public void flushClientUpdates(Component component) {
 		if (component.hasPendingClientUpdateCommands()) {
-			for (ClientUpdateCommand cmd : component.getClientUpdateCommands()) {
-				switch (cmd.getType()) {
-				case ComponentStateUpdate:
-					updateComponentState(component);
-					break;
-				case FunctionCall:
-					invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
-					break;
-				case ObjectManipulation:
-					invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
-					break;
-				default:
-					break;
-				}
-			}
+			final Set<ClientUpdateCommand> updateCommands = component.getClientUpdateCommands();
 
-			// clear draw commands of the current component, as they have
-			// all been worked off
-			component.clearPendingClientUpdateCommands();
+			if (updateCommands.size() > 0) {
+				final Optional<ClientUpdateCommand> fullComponentUpdate = updateCommands.stream() //
+						.filter(c -> DrawCommandType.ComponentStateUpdate.equals(c.getType())) //
+						.max((c1, c2) -> c1.getCreationTimestamp().compareTo(c2.getCreationTimestamp()));
+
+				for (ClientUpdateCommand cmd : component.getClientUpdateCommands()) {
+					switch (cmd.getType()) {
+					case ComponentStateUpdate:
+
+						// only execute the last created component update,
+						// ignore
+						// the rest, to save some bandwidth and client updates
+						if (fullComponentUpdate.isEmpty() || cmd.equals(fullComponentUpdate.get())) {
+							updateComponentState(component, null);
+						}
+						break;
+					case FunctionCall:
+						invokeFunctionCall(cmd.getTargetObject(), cmd.getFunction(), cmd.getParamters());
+						break;
+					case ObjectManipulation:
+						invokeComponentManipulation(component, cmd.getFunction(), cmd.getParamters());
+						break;
+					default:
+						break;
+					}
+				}
+
+				// clear draw commands of the current component, as they have
+				// all been worked off
+				component.clearPendingClientUpdateCommands();
+			}
 		}
 	}
 
@@ -245,10 +268,13 @@ public abstract class ViewHandler implements ComponentHandler {
 		sendMessage(message);
 	}
 
-	public void updateComponentState(final Component component) {
+	public void updateComponentState(final Component component, Set<String> propertyBeanPaths) {
 
 		ComponentStateUpdateMessage message = new ComponentStateUpdateMessage();
-		message.setComponent(component);
+
+		if (propertyBeanPaths == null) {
+			message.setComponent(component);
+		}
 
 		sendMessage(message);
 	}
