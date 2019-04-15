@@ -8,6 +8,7 @@
 	v-bind="${_state}.attributes"
 	v-on="${_state}.eventHandlers"
 	v-if="${_state}.visible"
+	:disabled="!${_state}.enabled"
 	>
 	
 	$!{component.icon.render()}
