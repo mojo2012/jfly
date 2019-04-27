@@ -4,14 +4,14 @@
   "description": "modern vuetifyjs-based java web UI toolkit",
   "main": "index.js",
   "dependencies": {
-    "gulp": "^4.0.0",
-    "gulp-cli": "^2.1.0",
+    "gulp": "^4.0.1",
+    "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",
     "jquery": "^3.4.0",
     "material-design-icons-iconfont": "^4.0.5",
     "semver": "^6.0.0",
     "vue": "^2.6.10",
-    "vuetify": "^1.5.12"
+    "vuetify": "^1.5.13"
   },
   "devDependencies": {
     "node-minify": "^2.4.2",
