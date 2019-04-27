@@ -48,7 +48,7 @@ public class ObjectUtils {
 								changedAccessLevel = true;
 							}
 
-							if (getNonPrimitiveType(propertyValue.getClass())
+							if (getNonPrimitiveType(field.getType())
 									.equals(getNonPrimitiveType(field.getType()))) {
 								field.set(object, propertyValue);
 							} else if (propertyValue instanceof Map) {

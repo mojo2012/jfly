@@ -387,7 +387,7 @@ jfly.initVue = function(initMessage) {
 				}
 				
 				return ret;
-			}
+			},
 		},
 		computed: {
 		},
@@ -447,8 +447,43 @@ jfly.initVue = function(initMessage) {
 			}
 			
 			// search for all components that want one or more of its properties being watched for changes
+//			$("[watch-for-state-change]").each(function(i) {
+//				let propertiesToWatch = eval($(this).attr("watch-for-state-change"));
+//				let componentUuid = $(this).attr(jfly.constants.ATTRIBUTE_UUID);
+//				
+//				propertiesToWatch.forEach(function(property) {
+//					let selector = jfly.constants.COMPONENT_STATES + "." + componentUuid + "." + property;
+//					
+//					(function(){
+//						vue.$watch(selector, jfly.debounce(function(newValue, oldValue) {
+//							// have to create the object like this, otherwise property would be "optimized out" ...
+//							let eventData = { property: property };
+//							eventData[property] = newValue;
+//							
+//							vue.handleEvent("stateChanged", componentUuid, eventData);
+//						}, 400), { deep: true }); // deep also tracks nested changes
+//					})();
+//				});
+//			});
+		},
+		mounted: function() {
+			console.debug("Vue mounted");
+			
+			let vue = this;
+			
+			// search for all components that want one or more of its properties being watched for changes
 			$("[watch-for-state-change]").each(function(i) {
-				let propertiesToWatch = eval($(this).attr("watch-for-state-change"));
+				let propertiesToWatch = $(this).attr("watch-for-state-change");
+				
+				if (propertiesToWatch.includes("[")) {
+					// this weird regex replace is necessary, because there is no replaceAll
+					propertiesToWatch = JSON.parse($(this).attr("watch-for-state-change").replace(/'/g, '"'))
+					// alternatively we could use "eval":
+					// let propertiesToWatch = eval($(this).attr("watch-for-state-change"));
+				} else {
+					propertiesToWatch = [propertiesToWatch];
+				}
+				
 				let componentUuid = $(this).attr(jfly.constants.ATTRIBUTE_UUID);
 				
 				propertiesToWatch.forEach(function(property) {
@@ -461,14 +496,10 @@ jfly.initVue = function(initMessage) {
 							eventData[property] = newValue;
 							
 							vue.handleEvent("stateChanged", componentUuid, eventData);
-						}, 400));
+						}, 400), { deep: true }); // deep also tracks nested changes
 					})();
 				});
-				
 			});
-		},
-		mounted: function() {
-			console.debug("Vue mounted");
 			
 			let body = $("body")[0];
 			let bodyComponentId = body.attributes["uuid"].value;
