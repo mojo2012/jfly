@@ -1,0 +1,13 @@
+<v-radio-group 
+	uuid="${_uuid}" 
+	v-model="${_state}.selected.value" 
+	:mandatory="${_state}.mandatory">
+	
+  <v-radio v-for="(entry, index) in ${_state}.entries" 
+  	:data-id="entry.id"
+  	:label="entry.label" 
+  	:value="entry.value" 
+  	:checked="${_state}.selected != null && ${_state}.selected.id == entry.id">
+  </v-radio>
+  
+</v-radio-group>
